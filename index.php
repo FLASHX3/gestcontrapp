@@ -10,12 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
     <link rel="shortcut icon" href="images/logo_sci_sotradic.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="javascript/index.js"></script>
     <title>GestContrApp</title>
 </head>
 <body>
     <div id="container">
-        <img src="images/logo_sci_sotradic_2.png" alt="logo_sci_scotradic">
+        <div style="width: 9%; height: 120px; position: absolute; left: 80px; top: 10px;">
+            <img src="images/logo_sci_sotradic_2.png" alt="logo_sci_scotradic" class="img-fluid">
+        </div>
         <form action="index.php" method="post" onsubmit="return verifForm(this);">
             <h2>GestContrApp</h2>
             <span class="mdi-light--account"></span>

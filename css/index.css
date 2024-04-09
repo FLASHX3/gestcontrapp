@@ -1,34 +1,40 @@
 @charset "utf-8";
 
+:root {
+    --primary-color: rgb(108, 31, 20);
+    --secondary-color: rgb(224, 181, 79);
+    --thirty-color: rgb(246, 222, 155);
+}
+
 * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-    font-family: "century";
+    margin: 0;
+    padding: 0;
     color: white;
+    font-family: "century";
+    box-sizing: border-box;
 }
 
 #container {
+    display: flex;
     height: 100vh;
     width: 100vw;
-    display: flex;
-    background-image: url("../images/background.png");
-    background-position: "center";
-    background-size: cover;
     position: relative;
+    background-size: cover;
+    background-position: "center";
+    background-image: url("../images/background.png");
 }
 
 #container form {
-    margin: 12% auto;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
     width: 400px;
+    display: flex;
     height: 285px;
-    justify-content: space-evenly;
     padding: 10px;
+    flex-wrap: wrap;
+    margin: 12% auto;
     align-items: center;
+    flex-direction: column;
     border: 1px dashed white;
+    justify-content: space-evenly;
 }
 
 h2 {
@@ -38,26 +44,31 @@ h2 {
 input {
     width: 70%;
     height: 30px;
-    font-size: 20px;
     border: none;
-    border-bottom: 1px solid white;
     outline: none;
-    background-color: transparent;
+    color: white;
+    font-size: 20px;
     padding-left: 25px;
     padding-bottom: 10px;
-    color: white;
+    background-color: transparent;
+    border-bottom: 1px solid white;
+}
+
+input:focus{
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
 }
 
 [type="submit"] {
-    border-radius: 10px;
-    margin-top: 30px;
-    cursor: pointer;
+    width: 60%;
     padding: 0;
     height: 30px;
-    width: 60%;
-    font-weight: bold;
-    background-color: rgb(224, 181, 179);
     color: white;
+    cursor: pointer;
+    margin-top: 30px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: transparent;
 }
 
 [type="submit"]:hover {
@@ -106,16 +117,16 @@ input {
 }
 
 img {
-    width: 100px;
+    /* width: 100px;
     height: 120px;
     position: absolute;
     left: 80px;
-    top: 10px;
+    top: 10px; */
 }
 
 .forgot {
-    font-size: 12px;
     color: black;
+    font-size: 12px;
 }
 
 .forgot a {
@@ -130,19 +141,19 @@ img {
 }
 
 #forgot{
-    position: absolute;
     top: 0;
     height: 0%;
-    width: 100%;
     opacity: 0;
-    background-color: rgba(224, 181, 79, 0.8);
     z-index: 1;
-    transition: all 0.6s ease-in;
+    width: 100%;
+    position: absolute;
     pointer-events: none;
+    transition: all 0.6s ease-in;
+    background-color: rgba(224, 181, 79, 0.8);
 }
 
 #forgot:target {
-    pointer-events: all;
-    height: 100%;
     opacity: 1;
+    height: 100%;
+    pointer-events: all;
 }

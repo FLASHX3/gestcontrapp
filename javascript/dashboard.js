@@ -1,5 +1,6 @@
 /*-------------------------------------------navbar----------------------------------------*/
 document.addEventListener("DOMContentLoaded", onPageLoad);
+var audio = document.querySelector("#notificationSound");
 
 function onPageLoad() {
     var url = window.location.href;
@@ -83,7 +84,6 @@ h1.addEventListener('click', () => {
 
 //liste du menu principal
 const listemenu = document.querySelectorAll('nav ul li');
-var audio = document.querySelector("#notificationSound");
 
 var date = new Date();  // objet Date représentant la date et l'heure actuelles
 var compte = 0;     //nombre de contrat à surveiller
@@ -94,10 +94,136 @@ var mois = (date.getMonth() + 1).toString().padStart(2, '0'); // Le mois commenc
 var jour = date.getDate().toString().padStart(2, '0');
 
 /*-------------------------------------------main1----------------------------------------*/
+function surligne(champ, erreur) {
+    champ.style.borderColor = erreur ? "red" : "";
+}
+
+function verifEntite(entite) {
+    const erreurEntite = document.querySelector('#erreurEntite');
+    if (entite.value == "") {
+        surligne(entite, true);
+        erreurEntite.innerHTML = "Veuillez choisir une entité valide!";
+        return false;
+    } else {
+        surligne(entite, false);
+        erreurEntite.innerHTML = "";
+        return true;
+    }
+}
+
+function verifNom(nom) {
+    var regex = /^[a-zA-Zéèêâôï -]{0,25}$/;
+    var erreurNom = document.querySelector('#erreurNom');
+
+    if (nom.value == "") {
+        surligne(nom, true);
+        erreurNom.innerHTML = "Veuillez entrez un nom valide!";
+        return false;
+    }
+    else {
+        if (!regex.test(nom.value)) {
+            surligne(nom, true);
+            erreurNom.innerHTML = "nom invalide!";
+            return false;
+        }
+        else {
+            surligne(nom, false);
+            erreurNom.innerHTML = "";
+            return true;
+        }
+    }
+}
+
+function verifContact(contact) {
+    var regex = /^(\+237)?[- ]?6([-. ]?[0-9]{2}){4}$/;
+    const erreurContact = document.querySelector('#erreurContact');
+
+    if (contact.value == "") {
+        surligne(contact, true);
+        erreurContact.innerHTML = "Veuillez entrez un numéro";
+        return false;
+    }
+    else {
+        if (!regex.test(contact.value)) {
+            erreurContact.innerHTML = "Le numéro de téléphone est invalide!";
+            surligne(contact, true);
+            return true;
+        }
+        else {
+            erreurContact.innerHTML = "";
+            surligne(contact, false);
+            return false;
+        }
+    }
+}
+
+function verifChampVide(champ, idChampErreur) {
+    const champErreur = document.querySelector(idChampErreur);
+    if (champ.value == "") {
+        surligne(champ, true);
+        champErreur.innerHTML = "Veuillez remplir ce champ";
+        return false;
+    } else {
+        surligne(champ, false);
+        champErreur.innerHTML = "";
+        return true;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const loyerInput = document.querySelector('#loy_mens');
+    loyerInput.addEventListener('input', function () {
+        const cautionInput = document.querySelector('#caution');
+        const valeurLoyer = parseFloat(this.value);
+        if (!isNaN(valeurLoyer)) {
+            cautionInput.value = valeurLoyer * 2;
+        } else {
+            cautionInput.value = '';
+        }
+    });
+});
+
+// Récupérer les éléments de date de début et de fin
+const dateDebut = document.querySelector('#date_start');
+const dateFin = document.querySelector('#date_end');
+
+// Ajouter un écouteur d'événements sur le champ de date de début
+dateDebut.addEventListener('input', function () {
+    // Récupérer la date sélectionnée dans le champ de date de début
+    const dateDebutValue = new Date(this.value);
+    // Mettre à jour la propriété min du champ de date de fin pour empêcher les dates antérieures
+    dateFin.min = this.value;
+
+    // Si une date a déjà été sélectionnée dans le champ de date de fin
+    if (dateFin.value) {
+        // Récupérer la date sélectionnée dans le champ de date de fin
+        const dateFinValue = new Date(dateFin.value);
+        // Si la date de fin est antérieure à la date de début, effacer la valeur du champ de date de fin
+        if (dateFinValue < dateDebutValue) {
+            dateFin.value = '';
+        }
+    }
+});
+
+function veriform(form) {
+    var entiteOk = verifEntite(form.entite);
+    var nomOk = verifNom(form.nom);
+    var contactOk = verifContact(form.contact);
+    var logementOk = verifChampVide(form.logement, '#erreurLogement');
+    var dureeOk = verifChampVide(form.time_c, '#erreurDuree');
+    var loyerOk = verifChampVide(form.loy_mens, '#erreurLoyer');
+    var nbMoisOk = verifChampVide(form.nb_mois_paye, '#erreurNbMois');
+    var cautionOk = verifChampVide(form.caution, '#erreurCaution');
+    var penaliteOk = verifChampVide(form.erreurPenalite, '#erreurPenalite');
+    var droitOk = verifChampVide(form.droit_reg, '#erreurEnregistrement');
+
+    return (entiteOk && nomOk && contactOk && logementOk && dureeOk && loyerOk && nbMoisOk && nbMoisOk && cautionOk && penaliteOk && droitOk) ? true : false;
+}
+
 const prevBtns = document.querySelectorAll(".btn-prev");
 const nextBtns = document.querySelectorAll(".btn-next");
 const wrapperList = document.querySelector("#wrapper-list");
-const progress = document.getElementById("progress");
+const progress = document.querySelector("#progress");
 const progressSteps = document.querySelectorAll(".progress-step");
 
 let translate = 0;
@@ -141,7 +267,9 @@ function updateProgressbar() {
 /*-------------------------------------------main2----------------------------------------*/
 attacherEcouteursEdition();
 showContratSelect();
-const buttonSearch = document.querySelector('#main2 #actionMain2 form [type="submit"]');
+activeEtat();
+gestionnaireFavori();
+const buttonSearch = document.querySelector('#main2 #actionMain2 form [type="button"]');
 
 searchMain2 = document.querySelector("#searchMain2");
 searchMain2.addEventListener('input', (event) => {
@@ -151,6 +279,116 @@ searchMain2.addEventListener('input', (event) => {
         buttonSearch.style.display = "block";
     }
 })
+
+const searchKeyword = async () => {
+    document.querySelector('#synthese tbody').innerHTML = "";
+    let keyword = document.querySelector('#searchMain2').value;
+    if (keyword.length >= 2 || keyword.length == 0) {
+        const req = await fetch(`search.php?searchMain2=${keyword}`);
+        const json = await req.json();
+        console.log(json);
+        if (json.length > 0) {
+            json.forEach((post) => {
+                tr = document.createElement('tr');
+                var compte = 0;
+
+                for (var key in post) {
+                    compte++;
+                    td = document.createElement('td');
+
+                    if (compte == 13) { // loyer mensuel
+                        td.textContent = (post[key] * post['loyer_mensuel']).toLocaleString('fr-FR', { minimumFractionDigits: 0 });
+                        tr.appendChild(td);
+                    } else if (compte == 14 || compte == 19) {
+                        td.textContent = post[key].toLocaleString('fr-FR', { minimumFractionDigits: 0 });
+                        tr.appendChild(td);
+                    } else if (compte == 22) {
+                        td.classList.add(post[key]);
+                        td.classList.add('ft-w');
+                        td.setAttribute('data-idClient', post['id_operatoire']);
+                        a = document.createElement('a');
+                        a.href = "#main3";
+                        var percent = 0;
+                        var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
+                        var elab_contrat = (parseInt(post['elaboration_contrat']) === 1 || parseInt(post['elaboration_contrat']) === 0) ? 1 : 0;
+                        var control_final = (parseInt(post['control_final']) === 1 || parseInt(post['control_final']) === 0) ? 1 : 0;
+                        percent = parseInt(post['negoce']) + val_offre + parseInt(post['info_client']) + elab_contrat + parseInt(post['transmition_contrat_client']) + parseInt(post['finalisation_dossier']) + control_final + parseInt(post['validation_dossier']) + parseInt(post['transmition_contrat_remise']) + parseInt(post['transmition_decharge']) + parseInt(post['reception_dossier']) + parseInt(post['archivage']);
+                        percent = parseFloat(percent * 100 / 12).toFixed(2);
+                        h5 = document.createElement('h5');
+                        h5.textContent = percent + '%';
+                        span = document.createElement('span');
+                        span.textContent = post[key];
+                        div1 = document.createElement('div');
+                        div1.classList.add('evolutionBar');
+                        div2 = document.createElement('div');
+                        div2.classList.add('evolution');
+                        div2.style.width = percent + '%';
+                        div1.appendChild(div2);
+                        a.appendChild(h5);
+                        a.appendChild(div1);
+                        a.appendChild(span);
+                        td.appendChild(a);
+                        tr.appendChild(td);
+                    } else if (compte == 23) {
+                        td.classList.add('edition');
+                        icon1 = document.createElement('ion-icon');
+                        icon1.setAttribute('name', 'create-outline');
+                        icon1.setAttribute('size', 'small');
+                        icon1.setAttribute('title', 'Modifiez');
+                        icon1.setAttribute('data-numDoc', 'numDoc' + post['id']);
+                        form = document.createElement('form');
+                        form.classList.add('favoris');
+                        form.setAttribute('method', 'get');
+                        button = document.createElement('button');
+                        button.setAttribute('name', 'favori');
+                        button.setAttribute('type', 'button');
+                        button.setAttribute('value', post[key]);
+                        icon2 = document.createElement('ion-icon');
+                        icon2.setAttribute('size', 'small');
+                        icon2.setAttribute('title', 'Marquez comme important');
+                        if (post[key] == 0) { var name = "bookmark-outline"; } else { var name = "bookmark"; }
+                        icon2.setAttribute('name', name);
+                        inputHidden = document.createElement('input');
+                        inputHidden.setAttribute('type', 'hidden');
+                        inputHidden.setAttribute('name', 'id_operatoire');
+                        inputHidden.setAttribute('value', post['id']);
+                        button.appendChild(icon2);
+                        form.appendChild(button);
+                        form.appendChild(inputHidden);
+                        icon3 = document.createElement('ion-icon');
+                        icon3.setAttribute('name', 'trash-outline');
+                        icon3.setAttribute('size', 'small');
+                        icon3.setAttribute('title', 'supprimez');
+                        td.appendChild(icon1);
+                        td.appendChild(form);
+                        td.appendChild(icon3);
+                        tr.appendChild(td);
+                        break;
+                    } else {
+                        td.textContent = post[key];
+                        tr.appendChild(td);
+                    }
+                }
+                document.querySelector('#synthese tbody').appendChild(tr);
+            });
+            showContratSelect();
+            attacherEcouteursEdition();
+            activeEtat();
+            gestionnaireFavori();
+        } else {        //aucun resultat correspndant
+            document.querySelector("#synthese tbody").innerHTML = "";
+            tr = document.createElement('tr');
+            td = document.createElement('td');
+            td.style.backgroundColor = "orange";
+            td.style.color = "White";
+            td.setAttribute('align', 'center');
+            td.setAttribute('colspan', 23);
+            td.textContent = 'Aucun résultat';
+            tr.appendChild(td);
+            document.querySelector("#synthese tbody").appendChild(tr);
+        }
+    }
+}
 
 const selectTrie = document.querySelector('#main2 #actionMain2 #tri');
 const synthese = document.querySelector('#main2 #synthese');
@@ -258,6 +496,7 @@ selectTrie.addEventListener('change', (event) => {
     });
     attacherEcouteursEdition();
     showContratSelect();
+    gestionnaireFavori();
 });
 
 function exportToExcel(tableId, filename) {
@@ -267,9 +506,22 @@ function exportToExcel(tableId, filename) {
 }
 
 function exportToPDF(tableId, filename) {
-    var doc = new jsPDF();
-    doc.autoTable({ html: '#' + tableId });
-    doc.save(filename + '.pdf');
+    const table = document.querySelector(tableId);
+    // Options pour html2pdf
+    const options = {
+        margin: 0.5,
+        filename: filename,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: {
+            unit: 'in',
+            format: [table.offsetWidth / 96, table.offsetHeight / 96], // Utilise la largeur et la hauteur du tableau pour définir la taille de la page
+            orientation: 'landscape' // Changez l'orientation en paysage si nécessaire
+        }
+    };
+
+    // Utilise html2pdf pour générer le PDF
+    html2pdf().from(table).set(options).save();
 }
 
 function confirmExport() {
@@ -286,18 +538,13 @@ document.querySelector('#pdf').addEventListener('click', function () {
     document.querySelector('.custom-confirm').style.display = "none";
 });
 
-document.querySelector('.close').addEventListener('click', ()=>{
+document.querySelector('.close').addEventListener('click', () => {
     document.querySelector('#customConfirm').style.display = "none";
 });
 
-document.querySelector('#synthese').addEventListener('click', ()=>{
+document.querySelector('#synthese').addEventListener('click', () => {
     document.querySelector('#customConfirm').style.display = "none";
 })
-
-// function closeCustomConfirm() {
-//     var customConfirm = document.querySelector('#customConfirm');
-//     customConfirm.parentNode.removeChild(customConfirm);
-// }
 
 function showContratSelect() {
     const etats = document.querySelectorAll('.ft-w');
@@ -318,42 +565,45 @@ evolutions.forEach((evolution) => {
     }
 });
 
-var actifs = document.querySelectorAll('.Actif a');
-actifs.forEach(function (element) {
-    var icon = document.createElement('ion-icon');
-    icon.setAttribute('name', 'checkmark-circle');
-    icon.setAttribute('size', 'small');
-    icon.style.position = 'relative';
-    icon.style.top = '5px';
-    icon.style.left = 0;
-    element.appendChild(icon);
-});
 
-var encours = document.querySelectorAll('.En-cours a');
-encours.forEach(function (element) {
-    var icon = document.createElement('ion-icon');
-    icon.setAttribute('name', 'ellipsis-horizontal-outline');
-    icon.setAttribute('size', 'small');
-    icon.style.position = 'relative';
-    icon.style.top = '5px';
-    icon.style.left = 0;
-    element.appendChild(icon);
-});
+function activeEtat() {
+    var actifs = document.querySelectorAll('.Actif a');
+    actifs.forEach(function (element) {
+        var icon = document.createElement('ion-icon');
+        icon.setAttribute('name', 'checkmark-circle');
+        icon.setAttribute('size', 'small');
+        icon.style.position = 'relative';
+        icon.style.top = '5px';
+        icon.style.left = 0;
+        element.appendChild(icon);
+    });
 
-/*var resilies = document.querySelectorAll('.Résilié a');
-resilie.forEach(function (element) {
-    var icon = document.createElement('ion-icon');
-    icon.setAttribute('name', 'close');
-    icon.style.position = 'relative';
-    icon.style.top = '5px';
-    icon.style.left = '5px';
-    element.appendChild(icon);
-})*/
+    var encours = document.querySelectorAll('.En-cours a');
+    encours.forEach(function (element) {
+        var icon = document.createElement('ion-icon');
+        icon.setAttribute('name', 'ellipsis-horizontal-outline');
+        icon.setAttribute('size', 'small');
+        icon.style.position = 'relative';
+        icon.style.top = '5px';
+        icon.style.left = 0;
+        element.appendChild(icon);
+    });
+
+    var resilies = document.querySelectorAll('.Résilié a');
+    resilies.forEach(function (element) {
+        var icon = document.createElement('ion-icon');
+        icon.setAttribute('name', 'close');
+        icon.style.position = 'relative';
+        icon.style.top = '5px';
+        icon.style.left = '5px';
+        element.appendChild(icon);
+    })
+}
 
 //boutons d'édition (pencil, favoris, supprimer)
 function attacherEcouteursEdition() {
     var etatIcon = false;
-    const edits = document.querySelectorAll('#main2 td.edition ion-icon');
+    const edits = document.querySelectorAll('#main2 td.edition ion-icon[name="create-outline"], #main2 td.edition ion-icon[name="create"]');
     edits.forEach((edit) => {
         edit.addEventListener('click', () => {
             etatIcon = (etatIcon) ? false : true;
@@ -377,6 +627,33 @@ function attacherEcouteursEdition() {
         });
     });
 }
+
+function gestionnaireFavori() {
+    const favoris = document.querySelectorAll('[name="favori"]');
+    favoris.forEach(async function (button) {
+        button.addEventListener('click', async function () {
+            var id = this.getAttribute('data-id');
+            var valeur = this.value;
+            try {
+                const req = await fetch(`favori.php?favori=${valeur}&id=${id}`);
+                const json = await req.json();
+
+                this.value = json[0].favori;
+
+                if (this.value == 0) {
+                    // Changement d'icône pour "bookmark-outline"
+                    desactiveIcon(this.querySelector('ion-icon'));
+                } else {
+                    // Changement d'icône pour "bookmark"
+                    activeIcon(this.querySelector('ion-icon'));
+                }
+            } catch (error) {
+                console.log('Erreur lors de la mise à jour : ' + error.message);
+            }
+        });
+    });
+}
+
 /*-------------------------------------------main3----------------------------------------*/
 const iconSearch = document.querySelector('#main3 #form_search [name="search-outline"]');
 

@@ -39,7 +39,7 @@ if (isset($_SESSION["id"])) {
             <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
             <script src="../javascript/dashboard.js" defer></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js" defer></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js" defer></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js" defer></script>
             <title>Dashboard</title>
         </head>
 
@@ -61,7 +61,7 @@ if (isset($_SESSION["id"])) {
                 </nav>
                 <aside>
                     <div id="main1" class="main">
-                        <form action="index.php" method="post">
+                        <form action="index.php" method="post" onsubmit="return veriform(this);">
                             <h2>Mode Opératoire</h2>
                             <div class="progressbar">
                                 <div class="progress" id="progress"></div>
@@ -77,7 +77,6 @@ if (isset($_SESSION["id"])) {
                                     <div class="input-group">
                                         <label for="site">Site <span class="obligatoire">*</span></label>
                                         <select name="site" id="site" required>
-                                            <option value="">--Choisissez un site--</option>
                                             <?php
                                             while ($row = $requetesite->fetch()) {
                                             ?>
@@ -90,7 +89,7 @@ if (isset($_SESSION["id"])) {
                                     </div>
                                     <div class="input-group">
                                         <label for="entite">Entité <span class="obligatoire">*</span></label>
-                                        <select name="entite" id="entite" required>
+                                        <select name="entite" id="entite" required onchange="verifEntite(this)" onblur="verifEntite(this)">
                                             <?php
                                             while ($rows = $requeteEntite->fetch()) {
                                             ?>
@@ -100,6 +99,7 @@ if (isset($_SESSION["id"])) {
                                             $requeteEntite->closeCursor();
                                             ?>
                                         </select>
+                                        <span id="erreurEntite" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="ville">Ville <span class="obligatoire">*</span></label>
@@ -128,19 +128,23 @@ if (isset($_SESSION["id"])) {
                                 <div class="wrapper">
                                     <div class="input-group">
                                         <label for="nom">Nom locataire <span class="obligatoire">*</span></label>
-                                        <input type="text" name="nom" id="nom" required>
+                                        <input type="text" name="nom" id="nom" placeholder="moins de 25 caractères" required onblur="verifNom(this)">
+                                        <span id="erreurNom" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="contact">Contact <span class="obligatoire">*</span></label>
-                                        <input type="tel" name="contact" id="contact" required>
+                                        <input type="tel" name="contact" id="contact" required onblur="verifContact(this)">
+                                        <span id="erreurContact" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
-                                        <label for="logement">Logement <span class="obligatoire">*</span></label>
-                                        <input type="text" name="logement" id="logement" required>
+                                        <label for="logement">Logement / Boutique / Référence du lieu <span class="obligatoire">*</span></label>
+                                        <input type="text" name="logement" id="logement" required onblur="verifChampVide(this, '#erreurLogement');">
+                                        <span id="erreurLogement" style="color:red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="time_c">Durée contrat (en mois) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="time_c" id="time_c" required>
+                                        <input type="number" name="time_c" id="time_c" required onblur="verifChampVide(this, '#erreurDuree');">
+                                        <span id="erreurDuree" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="btns-group">
                                         <a href="#" class="btn btn-prev"><ion-icon name="chevron-back" size="large"></ion-icon>Previous</a>
@@ -150,7 +154,8 @@ if (isset($_SESSION["id"])) {
                                 <div class="wrapper">
                                     <div class="input-group">
                                         <label for="loy_mens">Loyer mensuel (en fcfa) <span class="obligatoire">*</span></label>
-                                        <input type="text" name="loy_mens" id="loy_mens" required>
+                                        <input type="number" name="loy_mens" id="loy_mens" required onblur="verifChampVide(this, '#erreurLoyer');">
+                                        <span id="erreurLoyer" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="freq_paie">Fréquence de paiement <span class="obligatoire">*</span></label>
@@ -158,6 +163,7 @@ if (isset($_SESSION["id"])) {
                                             <option value="Anuelle">Anuelle</option>
                                             <option value="Semestrielle">Semestrielle</option>
                                             <option value="Trimestrielle">Trimestrielle</option>
+                                            <option value="Autre">Autre</option>
                                         </select>
                                     </div>
                                     <div class="input-group">
@@ -173,7 +179,8 @@ if (isset($_SESSION["id"])) {
                                     </div>
                                     <div class="input-group">
                                         <label for="nb_mois_paye">Nombre de mois payé <span class="obligatoire">*</span></label>
-                                        <input type="number" name="nb_mois_paye" id="nb_mois_paye" required>
+                                        <input type="number" name="nb_mois_paye" id="nb_mois_paye" required onblur="verifChampVide(this, '#erreurNbMois');">
+                                        <span id="erreurNbMois" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="btns-group">
                                         <a href="#" class="btn btn-prev"><ion-icon name="chevron-back" size="large"></ion-icon>Previous</a>
@@ -183,22 +190,26 @@ if (isset($_SESSION["id"])) {
                                 <div class="wrapper">
                                     <div class="input-group">
                                         <label for="caution">Montant caution (en fcfa) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="caution" id="caution" required>
+                                        <input type="number" name="caution" id="caution" required onblur="verifChampVide(this, '#erreurCaution');">
+                                        <span id="erreurCaution" style="color: red; font-size: 14px"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="rev_loyer">Révision loyer <span class="obligatoire">*</span></label>
                                         <select name="rev_loyer" id="rev_loyer" required>
                                             <option value="Biennale">Biennale</option>
                                             <option value="Triennale">Triennale</option>
+                                            <option value="Autre">Autre</option>
                                         </select>
                                     </div>
                                     <div class="input-group">
                                         <label for="pen_retard">Pénalités de retard (en %) <span class="obligatoire">*</span></label>
-                                        <input type="text" name="pen_retard" id="pen_retard" required>
+                                        <input type="number" name="pen_retard" id="pen_retard" value="7" required onblur="verifChampVide(this, '#erreurPenalite');">
+                                        <span id="erreurPenalite" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="droit_reg">Droit d'enregistrement (en fcfa) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="droit_reg" id="droit_reg" required>
+                                        <input type="number" name="droit_reg" id="droit_reg" required onblur="verifChampVide(this, '#erreurEnregistrement');">
+                                        <span id="erreurEnregistrement" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="btns-group">
                                         <a href="#" class="btn btn-prev"><ion-icon name="chevron-back" size="large"></ion-icon>Previous</a>
@@ -217,15 +228,15 @@ if (isset($_SESSION["id"])) {
                                     <div class="input-group">
                                         <label for="gi">Nom du GI <span class="obligatoire">*</span></label>
                                         <select name="gi" id="gi" required>
-                                            <option value="Mme Kaptche">Mme Kaptche</option>
+                                            <option value="Mme Kaptche">Mme Kapche</option>
                                             <option value="Mr Thierry">Mr Thierry</option>
                                             <option value="Mr Yannick">Mr Yannick</option>
                                             <option value="Mr Tsafack">Mr Tsafack</option>
                                         </select>
                                     </div>
-                                    <div class="input-group">
+                                    <div class="input-group" style="visibility: hidden;">
                                         <label for="num_doc">Numéro du dossier</label>
-                                        <input type="text" name="num_doc" id="num_doc">
+                                        <input type="text" name="num_doc" id="num_doc" disabled>
                                     </div>
                                     <div class="btns-group">
                                         <a href="#" class="btn btn-prev"><ion-icon name="chevron-back" size="large"></ion-icon>Previous</a>
@@ -238,11 +249,9 @@ if (isset($_SESSION["id"])) {
                     <div id="main2" class="main">
                         <h1>Contrats en cours</h1>
                         <div id="actionMain2">
-                            <form action="searchMain2.php" method="post" id="formMain2">
-                                <input type="search" name="searchMain2" id="searchMain2" value="<?php if (isset($_GET['searchMain2'])) {
-                                                                                                    echo $_GET['searchMain2'];
-                                                                                                } ?>" placeholder="search">
-                                <button type="submit"><ion-icon name="search-outline"></ion-icon></button>
+                            <form action="" method="get" id="formMain2" oninput="searchKeyword();">
+                                <input type="search" name="searchMain2" id="searchMain2" value="" placeholder="search">
+                                <button type="button"><ion-icon name="search-outline"></ion-icon></button>
                                 <label for="tri">Trier : </label>
                                 <select name="tri" id="tri">
                                     <option value="id">&#8470;</option>
@@ -252,7 +261,7 @@ if (isset($_SESSION["id"])) {
                                     <option value="natureBail">Nature bail</option>
                                     <option value="nomLocataire">Nom Locataire</option>
                                     <option value="logement">Logement</option>
-                                    <option value="dureeContrat">Duere contrat</option>
+                                    <option value="dureeContrat">Durée contrat</option>
                                     <option value="loyerMensuel">Loyer mensuel</option>
                                     <option value="frequencePaiement">Frequence paiement</option>
                                     <option value="modePaiement">Montant loyer payer</option>
@@ -306,16 +315,7 @@ if (isset($_SESSION["id"])) {
                             </thead>
                             <tbody>
                                 <?php
-                                if (isset($_GET['searchMain2'])) {
-                                    $searchMain2 = $_GET['searchMain2'];
-                                    if (empty($searchMain2)) {
-                                        $affichage = "SELECT mode_operatoire.*, adhesion.* FROM mode_operatoire, adhesion WHERE mode_operatoire.id=adhesion.id_operatoire";
-                                    } else {
-                                        $affichage = "SELECT *  FROM `gestcontrapp`.`mode_operatoire`,  adhesion WHERE (CONVERT(`id` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`site` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`entite` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`ville` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`nature_bail` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`nom_locataire` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`contact` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`logement` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`duree_contrat` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`loyer_mensuel` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`frequence_paiement` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`mode_paiement` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`nombre_mois` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`montant_caution` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`revision_loyer` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`pénalites_retard` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`date_debut_contrat` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`date_fin_contrat` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`droit_enregistrement` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`nom_GI` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`numero_dossier` USING utf8) LIKE '%$searchMain2%' OR CONVERT(`etat` USING utf8) LIKE '%$searchMain2%') AND mode_operatoire.id=adhesion.id_operatoire";
-                                    }
-                                } else {
-                                    $affichage = "SELECT mode_operatoire.*, adhesion.* FROM mode_operatoire, adhesion WHERE mode_operatoire.id=adhesion.id_operatoire";
-                                }
+                                $affichage = "SELECT mode_operatoire.*, adhesion.* FROM mode_operatoire, adhesion WHERE mode_operatoire.id=adhesion.id_operatoire";
                                 $requete = $bdd->prepare($affichage);
                                 $requete->execute();
                                 $nbResultat = $requete->rowCount();
@@ -383,13 +383,8 @@ if (isset($_SESSION["id"])) {
                                             </td>
                                             <td class="edition">
                                                 <ion-icon name="create-outline" size="small" title="Modifiez" data-numDoc="numDoc<?php echo $resultat['id']; ?>"></ion-icon>
-                                                <form action="favori.php" method="post" class="favoris">
-                                                    <button type="submit" name="favori" value="1"><ion-icon name="<?php if ($resultat['favori'] == 0) {
-                                                                                                                        echo "bookmark-outline";
-                                                                                                                    } else {
-                                                                                                                        echo "bookmark";
-                                                                                                                    } ?>" size="small" title="Marquez comme important"></ion-icon></button>
-                                                    <input type="hidden" name="id_operatoire" value="<?php echo $resultat['id']; ?>">
+                                                <form action="" method="get" class="favoris">
+                                                    <button type="button" name="favori" data-id="<?php echo $resultat['id']; ?>" value="<?php if($resultat['favori'] == 0){echo 1;}else{echo 0;} ?>"><ion-icon name="<?php if ($resultat['favori'] == 0) {echo "bookmark-outline";} else {echo "bookmark";} ?>" size="small" title="Marquez comme important"></ion-icon></button>
                                                 </form>
                                                 <ion-icon name="trash-outline" size="small" title="Supprimez"></ion-icon>
                                             </td>
@@ -429,7 +424,7 @@ if (isset($_SESSION["id"])) {
                                     $percent = number_format($percent, 2);
                             ?>
                                     <div class="contrat" id="contrat<?php echo $resultat['id_operatoire']; ?>" title="<?php echo "$percent%" ?>" data-num_dossier="<?php echo $resultat['numero_dossier']; ?>" data-choix="<?php echo htmlspecialchars(json_encode($choix)); ?>" data-id_operatoire="<?php echo $resultat['id_operatoire']; ?>" data-logement="<?php echo $resultat['logement']; ?>" data-date_ajout="<?php echo $resultat['date_ajout']; ?>" data-date_fin="<?php echo $resultat['date_fin_contrat']; ?>" data-nom_client="<?php echo $resultat['nom_locataire']; ?>" data-site="<?php echo $resultat['site']; ?>" data-nom_Gi="<?php echo $resultat['nom_GI']; ?>" data-negoce="<?php echo $resultat['negoce']; ?>" data-validation_offre="<?php echo $resultat['validation_offre']; ?>" data-info_client="<?php echo $resultat['info_client']; ?>" data-elaboration_contrat="<?php echo $resultat['elaboration_contrat']; ?>" data-transmition_contrat_client="<?php echo $resultat['transmition_contrat_client']; ?>" data-finalisation_dossier="<?php echo $resultat['finalisation_dossier']; ?>" data-control_final="<?php echo $resultat['control_final']; ?>" data-validation_dossier="<?php echo $resultat['validation_dossier']; ?>" data-trans_contrat_remise="<?php echo $resultat['transmition_contrat_remise']; ?>" data-transmition_decharge="<?php echo $resultat['transmition_decharge']; ?>" data-reception_dossier="<?php echo $resultat['reception_dossier']; ?>" data-archivage="<?php echo $resultat['archivage']; ?>">
-                                        <ion-icon name="folder-open" size="large"></ion-icon>
+                                    <ion-icon name="checkmark-circle-outline"></ion-icon><ion-icon name="ban-outline"></ion-icon><ion-icon name="folder-open" size="large"></ion-icon>
                                         <h5><?php if (!empty($resultat['numero_dossier'])) {
                                                 echo "&#8470;: " . $resultat['numero_dossier'];
                                             } ?></h5>
