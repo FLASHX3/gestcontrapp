@@ -45,11 +45,9 @@
 
 <?php
     }else if(isset($_POST['login']) AND isset($_POST['password'])){
-        $login = $_POST['login'];
-        $password = $_POST['password'];
 
-        $login=strip_tags(htmlspecialchars($login));
-        $password=strip_tags(htmlspecialchars($password));
+        $login=strip_tags(htmlspecialchars($_POST['login']));
+        $password=strip_tags(htmlspecialchars($_POST['password']));
 
         if(!preg_match('#^[a-zA-Z]{6,25}$#',$login)){
             header('Location: index.php?err=login wrong');
@@ -67,7 +65,7 @@
             $requete->execute(array($login,$password));
             $userexist=$requete->rowCount();
 
-            if($userexist==1)        #s'il existe on ouvre sa session
+            if($userexist==1)        #s'il existe, on ouvre sa session
             {
                 $userinfo=$requete->fetch();
                 

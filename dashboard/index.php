@@ -7,24 +7,29 @@ if (isset($_SESSION["id"])) {
         $bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
         //main1
-        $requeteville = $bdd->prepare("SELECT DISTINCT ville FROM immeubles_entites ORDER BY ville ASC");
-        $requeteville->execute();
-        $requetesite = $bdd->prepare("SELECT DISTINCT site FROM immeubles_entites ORDER BY site ASC");
-        $requetesite->execute();
+        $requeteVille = $bdd->prepare("SELECT DISTINCT ville FROM immeubles_entites ORDER BY ville ASC");
+        $requeteVille->execute();
+        $villes = $requeteVille->fetchAll(PDO::FETCH_ASSOC);
+
+        $requeteSite = $bdd->prepare("SELECT DISTINCT site FROM immeubles_entites ORDER BY site ASC");
+        $requeteSite->execute();
+        $sites = $requeteSite->fetchAll(PDO::FETCH_ASSOC);
+
         $requeteEntite = $bdd->prepare("SELECT DISTINCT entite FROM immeubles_entites ORDER BY entite ASC");
         $requeteEntite->execute();
+        $entites = $requeteEntite->fetchAll(PDO::FETCH_ASSOC);
 
         //main3
-        if (isset($_GET['searchMain3'])) {
-            $searchMain3 = $_GET['searchMain3'];
-            if (empty($searchMain3)) {
-                $recherche = "SELECT mode_operatoire.nom_GI, mode_operatoire.entite, mode_operatoire.site, mode_operatoire.logement, mode_operatoire.nom_locataire, mode_operatoire.numero_dossier, mode_operatoire.date_fin_contrat, adhesion.* FROM adhesion, mode_operatoire WHERE mode_operatoire.id=adhesion.id_operatoire";
-            } else {
-                $recherche = "SELECT mode_operatoire.nom_GI, mode_operatoire.entite, mode_operatoire.site, mode_operatoire.logement, mode_operatoire.nom_locataire, mode_operatoire.numero_dossier, mode_operatoire.date_fin_contrat, adhesion.*  FROM mode_operatoire,  adhesion WHERE (CONVERT(`nom_locataire` USING utf8) LIKE '%$searchMain3%' OR CONVERT(`numero_dossier` USING utf8) LIKE '%$searchMain3%') AND mode_operatoire.id=adhesion.id_operatoire";
-            }
-        } else {
-            $recherche = "SELECT mode_operatoire.nom_GI, mode_operatoire.entite, mode_operatoire.site, mode_operatoire.logement, mode_operatoire.nom_locataire, mode_operatoire.numero_dossier, mode_operatoire.date_fin_contrat, adhesion.* FROM adhesion, mode_operatoire WHERE mode_operatoire.id=adhesion.id_operatoire";
-        }
+        $recherche = "SELECT mode_operatoire.*, `adhesion`.* FROM `mode_operatoire`, `adhesion` WHERE `mode_operatoire`.`id` = `adhesion`.`id_operatoire` AND `mode_operatoire`.`etat` != \"En-Résiliation\" AND `mode_operatoire`.`etat` != \"Résilié\"";
+        $adhesion = $bdd->prepare($recherche);
+        $adhesion->execute();
+        $data = $adhesion->fetchAll(PDO::FETCH_ASSOC);
+
+        //main4
+        $requeteResiliation = "SELECT mode_operatoire.nom_locataire, mode_operatoire.ville, mode_operatoire.logement, mode_operatoire.numero_dossier, mode_operatoire.nom_GI, mode_operatoire.site, `resiliation`.* FROM `mode_operatoire`, `resiliation` WHERE `mode_operatoire`.`id` = `resiliation`.`id_mode`";
+        $resiliation = $bdd->prepare($requeteResiliation);
+        $resiliation->execute();
+        $dataResiliation = $resiliation->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
         <!DOCTYPE html>
@@ -38,8 +43,8 @@ if (isset($_SESSION["id"])) {
             <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
             <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
             <script src="../javascript/dashboard.js" defer></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js" defer></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js" defer></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js" defer></script> <!--bibliothèque d'exportation Excel-->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js" defer></script> <!--bibliothèque d'exportation JsPDF-->
             <title>Dashboard</title>
         </head>
 
@@ -53,8 +58,9 @@ if (isset($_SESSION["id"])) {
                             <li onclick="activeLi(this);"><a href="#main1" class="on"> <ion-icon name="add-outline"></ion-icon> Ajouter un contrat</a></li>
                             <li onclick="activeLi(this);"><a href="#main2"> <ion-icon name="clipboard-outline"></ion-icon> Synthèse des contrats</a></li>
                             <li onclick="activeLi(this);"><a href="#main3"> <ion-icon name="bar-chart-outline"></ion-icon> Evolution des contrats </a></li>
-                            <li onclick="activeLi(this);"><a href="#main4"> <ion-icon name="stats-chart-outline"></ion-icon> Statistiques</a></li>
-                            <li onclick="activeLi(this);"><a href="#main5"> <ion-icon name="settings-outline"></ion-icon> Paramètres</a></li>
+                            <li onclick="activeLi(this);"><a href="#main4"> <ion-icon name="document-text-outline"></ion-icon> Contrats Résiliés </a></li>
+                            <li onclick="activeLi(this);"><a href="#main5"> <ion-icon name="stats-chart-outline"></ion-icon> Statistiques</a></li>
+                            <li onclick="activeLi(this);"><a href="#main6"> <ion-icon name="settings-outline"></ion-icon> Paramètres</a></li>
                             <li><a href="deconnexion.php"><ion-icon name="log-out-outline"></ion-icon>Se deconnecter</a></li>
                         </ul>
                     </div>
@@ -77,26 +83,22 @@ if (isset($_SESSION["id"])) {
                                     <div class="input-group">
                                         <label for="site">Site <span class="obligatoire">*</span></label>
                                         <select name="site" id="site" required>
-                                            <?php
-                                            while ($row = $requetesite->fetch()) {
+                                            <?php foreach ($sites as $site) {
                                             ?>
-                                                <option value="<?php echo ucwords($row['site']); ?>"><?php echo ucwords($row['site']); ?></option>
+                                                <option value="<?= $site['site'] ?>"><?= $site['site'] ?></option>
                                             <?php
                                             }
-                                            $requetesite->closeCursor();
                                             ?>
                                         </select>
                                     </div>
                                     <div class="input-group">
                                         <label for="entite">Entité <span class="obligatoire">*</span></label>
-                                        <select name="entite" id="entite" required onchange="verifEntite(this)" onblur="verifEntite(this)">
-                                            <?php
-                                            while ($rows = $requeteEntite->fetch()) {
+                                        <select name="entite" id="entite" required onchange="verifEntite(this, '#erreurEntite')" onblur="verifEntite(this, '#erreurEntite')">
+                                            <?php foreach ($entites as $entite) {
                                             ?>
-                                                <option value="<?php echo $rows['entite']; ?>"><?php echo $rows['entite']; ?></option>
+                                                <option value="<?= $entite['entite'] ?>"><?= $entite['entite'] ?></option>
                                             <?php
                                             }
-                                            $requeteEntite->closeCursor();
                                             ?>
                                         </select>
                                         <span id="erreurEntite" style="color: red; font-size: 14px;"></span>
@@ -104,13 +106,11 @@ if (isset($_SESSION["id"])) {
                                     <div class="input-group">
                                         <label for="ville">Ville <span class="obligatoire">*</span></label>
                                         <select name="ville" id="ville" required>
-                                            <?php
-                                            while ($sotradic = $requeteville->fetch()) {
+                                            <?php foreach ($villes as $ville) {
                                             ?>
-                                                <option value="<?php echo ucfirst(strtolower($sotradic['ville'])); ?>"><?php echo ucfirst(strtolower($sotradic['ville'])); ?></option>
+                                                <option value="<?= $ville['ville'] ?>"><?= $ville['ville'] ?></option>
                                             <?php
                                             }
-                                            $requeteville->closeCursor();
                                             ?>
                                         </select>
                                     </div>
@@ -128,12 +128,12 @@ if (isset($_SESSION["id"])) {
                                 <div class="wrapper">
                                     <div class="input-group">
                                         <label for="nom">Nom locataire <span class="obligatoire">*</span></label>
-                                        <input type="text" name="nom" id="nom" placeholder="moins de 25 caractères" required onblur="verifNom(this)">
+                                        <input type="text" name="nom" id="nom" placeholder="moins de 25 caractères" required onblur="verifNom(this,'#erreurNom');">
                                         <span id="erreurNom" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="contact">Contact <span class="obligatoire">*</span></label>
-                                        <input type="tel" name="contact" id="contact" required onblur="verifContact(this)">
+                                        <input type="tel" name="contact" id="contact" required onblur="verifContact(this,'#erreurContact')">
                                         <span id="erreurContact" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
@@ -160,7 +160,7 @@ if (isset($_SESSION["id"])) {
                                     <div class="input-group">
                                         <label for="freq_paie">Fréquence de paiement <span class="obligatoire">*</span></label>
                                         <select name="freq_paie" id="freq_paie" required>
-                                            <option value="Anuelle">Anuelle</option>
+                                            <option value="Annuelle">Annuelle</option>
                                             <option value="Semestrielle">Semestrielle</option>
                                             <option value="Trimestrielle">Trimestrielle</option>
                                             <option value="Autre">Autre</option>
@@ -208,8 +208,8 @@ if (isset($_SESSION["id"])) {
                                     </div>
                                     <div class="input-group">
                                         <label for="droit_reg">Droit d'enregistrement (en fcfa) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="droit_reg" id="droit_reg" required onblur="verifChampVide(this, '#erreurEnregistrement');">
-                                        <span id="erreurEnregistrement" style="color: red; font-size: 14px;"></span>
+                                        <input type="number" name="droit_reg" id="droit_reg" required onblur="verifChampVide(this, '#erreurSave');">
+                                        <span id="erreurSave" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="btns-group">
                                         <a href="#" class="btn btn-prev"><ion-icon name="chevron-back" size="large"></ion-icon>Previous</a>
@@ -219,19 +219,21 @@ if (isset($_SESSION["id"])) {
                                 <div class="wrapper">
                                     <div class="input-group">
                                         <label for="date_start">Date début de contrat <span class="obligatoire">*</span></label>
-                                        <input type="date" name="date_start" id="date_start" required>
+                                        <input type="date" name="date_start" id="date_start" required onblur="verifChampVide(this, '#erreurDatestart');">
+                                        <span id="erreurDatestart" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="date_end">Date fin de contrat <span class="obligatoire">*</span></label>
-                                        <input type="date" name="date_end" id="date_end" required>
+                                        <input type="date" name="date_end" id="date_end" required onblur="verifChampVide(this, '#erreurDatefin');">
+                                        <span id="erreurDatefin" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="gi">Nom du GI <span class="obligatoire">*</span></label>
                                         <select name="gi" id="gi" required>
                                             <option value="Mme Kaptche">Mme Kapche</option>
                                             <option value="Mr Thierry">Mr Thierry</option>
-                                            <option value="Mr Yannick">Mr Yannick</option>
                                             <option value="Mr Tsafack">Mr Tsafack</option>
+                                            <option value="Mr Yannick">Mr Yannick</option>
                                         </select>
                                     </div>
                                     <div class="input-group" style="visibility: hidden;">
@@ -247,12 +249,12 @@ if (isset($_SESSION["id"])) {
                         </form>
                     </div>
                     <div id="main2" class="main">
-                        <h1>Contrats en cours</h1>
+                        <h1>Synthèse des contrats</h1>
                         <div id="actionMain2">
                             <form action="" method="get" id="formMain2" oninput="searchKeyword();">
                                 <input type="search" name="searchMain2" id="searchMain2" value="" placeholder="search">
-                                <button type="button"><ion-icon name="search-outline"></ion-icon></button>
-                                <label for="tri">Trier : </label>
+                                <ion-icon name="search-outline"></ion-icon>
+                                <label for="tri">Trier</label>
                                 <select name="tri" id="tri">
                                     <option value="id">&#8470;</option>
                                     <option value="site">Site</option>
@@ -268,13 +270,14 @@ if (isset($_SESSION["id"])) {
                                     <option value="montantLoyerPayer">Mode paiement</option>
                                     <option value="montantCaution">Montant caution</option>
                                     <option value="revisionLoyer">Revision loyer</option>
-                                    <!-- <option value="dateDebut">Date Debut</option>
-                                    <option value="dateFin">Date Fin</option> -->
+                                    <option value="dateDebut">Date Debut</option>
+                                    <option value="dateFin">Date Fin</option>
+                                    <option value="dateAjout">Date Ajout</option>
                                     <option value="droitEnregistrement">Droit d'enregistrement</option>
                                     <option value="nomGi">Nom GI</option>
                                     <option value="numeroDossier">Numéro Dossier</option>
                                 </select>
-                                <label for="export">Exporter : </label>
+                                <label for="export">Exporter</label>
                                 <button type="button" id="export" onclick='confirmExport();'><ion-icon name="download-outline"></ion-icon></button>
                                 <div id="customConfirm" class="custom-confirm">
                                     <div class="message"><ion-icon name="print-outline"></ion-icon>Exportez au format : </div><span class="close">&times;</span>
@@ -306,6 +309,7 @@ if (isset($_SESSION["id"])) {
                                     <th>Pénalités de retard (en %)</th>
                                     <th>Date_debut contrat</th>
                                     <th>Date_de_fin contrat</th>
+                                    <th>Date_création dossier</th>
                                     <th>Droit d'enregistrement (en fcfa)</th>
                                     <th>Nom GI</th>
                                     <th>Numero dossier</th>
@@ -315,7 +319,7 @@ if (isset($_SESSION["id"])) {
                             </thead>
                             <tbody>
                                 <?php
-                                $affichage = "SELECT mode_operatoire.*, adhesion.* FROM mode_operatoire, adhesion WHERE mode_operatoire.id=adhesion.id_operatoire";
+                                $affichage = "SELECT mode_operatoire.*, adhesion.*, resiliation.* FROM mode_operatoire LEFT JOIN adhesion on mode_operatoire.id = adhesion.id_operatoire LEFT JOIN resiliation ON mode_operatoire.id = resiliation.id_mode";
                                 $requete = $bdd->prepare($affichage);
                                 $requete->execute();
                                 $nbResultat = $requete->rowCount();
@@ -353,24 +357,29 @@ if (isset($_SESSION["id"])) {
                                                 $dateEnd = $dateEnd->format('d-m-Y');
                                                 echo $dateEnd; ?>
                                             </td>
+                                            <td>
+                                                <?php $datecreation = new DateTime($resultat['date_ajout']);
+                                                $datecreation = $datecreation->format('d-m-Y');
+                                                echo $datecreation; ?>
+                                            </td>
                                             <td><?php $droit_reg = number_format($resultat['droit_enregistrement'], 0, ',', '.');
                                                 echo $droit_reg; ?>
                                             </td>
                                             <td><?php echo $resultat['nom_GI']; ?></td>
-                                            <td>
-                                                <form action="updateNumcontrat.php" method="post">
-                                                    <input type="text" id="numDoc<?php echo $resultat['id']; ?>" class="numDoc" name="numDoc" value="<?php echo $resultat['numero_dossier']; ?>" disabled>
-                                                    <input type="hidden" name="id_operatoire" value="<?php echo $resultat['id']; ?>">
-                                                </form>
-                                            </td>
+                                            <td><?php echo $resultat['numero_dossier']; ?></td>
                                             <td class="ft-w <?php echo $resultat['etat']; ?>" data-idClient="<?php echo $resultat['id_operatoire']; ?>">
                                                 <a href="#main3">
                                                     <?php
                                                     $percent = 0;
-                                                    $val_offre = ($resultat['validation_offre'] === 1 || $resultat['validation_offre'] === 0) ? 1 : 0;
-                                                    $elab_contrat = ($resultat['elaboration_contrat'] === 1 || $resultat['elaboration_contrat'] === 0) ? 1 : 0;
-                                                    $control_final = ($resultat['control_final'] === 1 || $resultat['control_final'] === 0) ? 1 : 0;
-                                                    $percent = $resultat['negoce'] + $val_offre + $resultat['info_client'] + $elab_contrat + $resultat['transmition_contrat_client'] + $resultat['finalisation_dossier'] + $control_final + $resultat['validation_dossier'] + $resultat['transmition_contrat_remise'] + $resultat['transmition_decharge'] + $resultat['reception_dossier'] + $resultat['archivage'];
+                                                    if ($resultat['etat'] == "En-cours" || $resultat['etat'] == "Actif") {
+                                                        $val_offre = ($resultat['validation_offre'] === 1 || $resultat['validation_offre'] === 0) ? 1 : 0;
+                                                        $elab_contrat = ($resultat['elaboration_contrat'] === 1 || $resultat['elaboration_contrat'] === 0) ? 1 : 0;
+                                                        $control_final = ($resultat['control_final'] === 1 || $resultat['control_final'] === 0) ? 1 : 0;
+                                                        $percent = $resultat['negoce'] + $val_offre + $resultat['info_client'] + $elab_contrat + $resultat['transmition_contrat_client'] + $resultat['finalisation_dossier'] + $control_final + $resultat['validation_dossier'] + $resultat['transmition_contrat_remise'] + $resultat['transmition_decharge'] + $resultat['reception_dossier'] + $resultat['archivage'];
+                                                    } else {
+                                                        $control_val = ($resultat['controle_validation_dossier'] === 1 || $resultat['controle_validation_dossier'] === 0) ? 1 : 0;
+                                                        $percent = $resultat['lettre_preavis'] + $control_val + $resultat['transmition_elements'] + $resultat['prevalidation_dossier'] + $resultat['validation_provisoire'] + $resultat['transmition_element_provisoire'] + $resultat['transmition_reponse'] + $resultat['etat_lieux'] + $resultat['transmition_elements_complet'] + $resultat['approbation_dossier'] + $resultat['paiement_locataire'] + $resultat['archivage_resiliation'];
+                                                    }
                                                     $percent = $percent * 100 / 12;
                                                     $percent = number_format($percent, 2);
                                                     ?>
@@ -378,13 +387,15 @@ if (isset($_SESSION["id"])) {
                                                     <div class="evolutionBar">
                                                         <div class="evolution" style="width: <?php echo $percent; ?>%"></div>
                                                     </div>
-                                                    <?php echo $resultat['etat']; ?>
+                                                    <span><?php echo $resultat['etat']; ?></span>
                                                 </a>
                                             </td>
                                             <td class="edition">
-                                                <ion-icon name="create-outline" size="small" title="Modifiez" data-numDoc="numDoc<?php echo $resultat['id']; ?>"></ion-icon>
+                                                <ion-icon name="create-outline" size="small" title="Modifiez" data-numDoc="numDoc<?php echo $resultat['id']; ?>" data-etat="false"></ion-icon>
                                                 <form action="" method="get" class="favoris">
-                                                    <button type="button" name="favori" data-id="<?php echo $resultat['id']; ?>" value="<?php if($resultat['favori'] == 0){echo 1;}else{echo 0;} ?>"><ion-icon name="<?php if ($resultat['favori'] == 0) {echo "bookmark-outline";} else {echo "bookmark";} ?>" size="small" title="Marquez comme important"></ion-icon></button>
+                                                    <button type="button" name="favori" data-id="<?php echo $resultat['id']; ?>" value="<?= ($resultat['favori'] == 0) ? 1 : 0; ?>">
+                                                        <ion-icon name="<?= ($resultat['favori'] == 0) ? "bookmark-outline" : "bookmark"; ?>" size="small" title="Marquez comme important"></ion-icon>
+                                                    </button>
                                                 </form>
                                                 <ion-icon name="trash-outline" size="small" title="Supprimez"></ion-icon>
                                             </td>
@@ -398,53 +409,155 @@ if (isset($_SESSION["id"])) {
                                 ?>
                             </tbody>
                         </table>
+                        <div id="modification">
+                            <form action="updateContrat.php" method="post" onsubmit="return veriform(this);">
+                                <h2>Modification contrat</h2>
+                                <hr noshade="">
+                                <div class="champs">
+                                    <div class="input-group"><label for="siteM">Site <span class="obligatoire">*</span></label>
+                                        <select name="siteM" id="siteM" required>
+                                            <?php foreach ($sites as $site) {
+                                            ?>
+                                                <option value="<?= $site['site'] ?>"><?= $site['site'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label for="entiteM">Entite <span class="obligatoire">*</span></label>
+                                        <select name="entiteM" id="entiteM" required onchange="verifEntite(this,'#erreurentiteM');" onblur="verifEntite(this,'#erreurEntiteM')">
+                                            <?php foreach ($entites as $entite) {
+                                            ?>
+                                                <option value="<?= $entite['entite'] ?>"><?= $entite['entite'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                        <span id="erreurEntiteM" style="color: red; font-size: 10px;"></span>
+                                    </div>
+                                    <div class="input-group"><label for="villeM">Ville <span class="obligatoire">*</span></label>
+                                        <select name="villeM" id="villeM" required>
+                                            <?php foreach ($villes as $ville) {
+                                            ?>
+                                                <option value="<?= $ville['ville'] ?>"><?= $ville['ville'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label for="natureBailM">Nature Bail <span class="obligatoire">*</span></label>
+                                        <select name="natureBailM" id="natureBailM" required>
+                                            <option value="Habitation">Habitation</option>
+                                            <option value="Commerciale">Commerciale</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label for="nomM">Nom Locataire <span class="obligatoire">*</span></label><input type="text" name="nomM" id="nomM" required onblur="verifNom(this,'#erreurNomM');"><span id="erreurNomM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="contactM">Contact <span class="obligatoire">*</span></label><input type="tel" name="contactM" id="contactM" required onblur="verifContact(this,'#erreurContactM');"><span id="erreurContactM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="logementM">Logement <span class="obligatoire">*</span></label><input type="text" name="logementM" id="logementM" required onblur="verifChampVide(this,'#erreureLogementM');"><span id="erreureLogementM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="timeM">Durée Contrat <span class="obligatoire">*</span></label><input type="number" name="timeM" id="timeM" required onblur="verifChampVide(this,'#erreurDureeM');"><span id="erreurDureeM" style="color: red; font-size: 14px;"></span></div>
+                                    <div class="input-group"><label for="loyerM">Loyer Mensuel (Fcfa) <span class="obligatoire">*</span></label><input type="number" name="loyerM" id="loyerM" required onblur="verifChampVide(this,'#erreurLoyerM');"><span id="erreurLoyerM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="frequenceM">Fréquence Paiement <span class="obligatoire">*</span> </label>
+                                        <select name="frequenceM" id="frequenceM" required>
+                                            <option value="Annuelle">Annuelle</option>
+                                            <option value="Semestrielle">Semestrielle</option>
+                                            <option value="Trimestrielle">Trimestrielle</option>
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label for="modePaiementM">Mode Paiement <span class="obligatoire">*</span></label>
+                                        <select name="modePaiementM" id="modePaiementM" required>
+                                            <option value="Chèque">Chèque</option>
+                                            <option value="Carte">Carte</option>
+                                            <option value="Espèces">Espèces</option>
+                                            <option value="Momo">MoMo</option>
+                                            <option value="OM">OM</option>
+                                            <option value="Virement">Virement</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label for="nombreMoisM">Nombre mois <span class="obligatoire">*</span></label><input type="number" name="nombreMoisM" id="nombreMoisM" required onblur="verifChampVide(this,'#erreurNbMoisM');"><span id="erreurNbMmoisM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="montantCautionM">Montant Caution <span class="obligatoire">*</span></label><input type="number" name="montantCautionM" id="montantCautionM" required onblur="verifChampVide(this,'#erreurCautionM');"><span id="erreurCautionM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="revisionM">Révision Loyer <span class="obligatoire">*</span></label>
+                                        <select name="revisionM" id="revisionM" required>
+                                            <option value="Biennale">Biennale</option>
+                                            <option value="Triennale">Triennale</option>
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label for="penaliteM">Pénaités Retard (%) <span class="obligatoire">*</span></label><input type="number" name="penaliteM" id="penaliteM" required onblur="verifChampVide(this,'#erreurPenaliteM');"><span id="erreurPenaliteM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="debutM">Date Debut Contrat <span class="obligatoire">*</span></label><input type="date" name="debutM" id="debutM" required onblur="verifChampVide(this,'#erreurDatestartM');"><span id="erreurDatestartM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="finM">Date Fin Contrat <span class="obligatoire">*</span></label><input type="date" name="finM" id="finM" required onblur="verifChampVide(this,'#erreurDatefinM');"><span id="erreurDatefinM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="saveM">D. Enregistrement <span class="obligatoire">*</span></label><input type="number" name="saveM" id="saveM" required onblur="verifChampVide(this,'#erreurSaveM');"><span id="erreurSaveM" style="color: red; font-size: 10px;"></span></div>
+                                    <div class="input-group"><label for="giM">Nom GI <span class="obligatoire">*</span></label>
+                                        <select name="giM" id="giM" required>
+                                            <option value="Mme Kapche">Mme Kapche</option>
+                                            <option value="Mr Thierry">Mr Thierry</option>
+                                            <option value="Mr Tsafack">Mr Tsafack</option>
+                                            <option value="Mr Yannick">Mr Yannick</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label for="numDocM">Numéro Dossier</label><input type="text" name="numDocM" id="numDocM"><span id="erreurnumdocM" style="color: red; font-size: 10px;"></span></div>
+                                    <input type="hidden" name="idM" id="idM">
+                                </div>
+                                <input type="submit" name="Modifiez" id="Modif" value="Modifiez">
+                            </form>
+                        </div>
+                        <?php
+                        if (isset($_GET['modif'])) {
+                        ?>
+                            <div id="modifBull" onclick="closePopup(this);">
+                                <?php echo $_GET['modif']; ?>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                        <?php
+                        if (isset($_GET['erreurUpdatecontrat'])) {
+                        ?>
+                            <div id="erreurUpdatecontrat" onclick="closePopup(this);">
+                                <?php echo $_GET['erreurUpdatecontrat']; ?>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                        <?php
+                        if (isset($_GET['erreurFavori'])) {
+                        ?>
+                            <div id="erreurFav" onclick="closePopup(this);">
+                                <?php echo $_GET['erreurFavori']; ?>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </div>
                     <div id="main3" class="main">
-                        <h1>Galeries de Contrats</h1>
-                        <form action="searchMain3.php" method="post" id="form_search">
-                            <input type="search" name="search" id="search" value="<?php if (isset($_GET['searchMain3'])) {
-                                                                                        echo $_GET['searchMain3'];
-                                                                                    } ?>" placeholder="search">
+                        <h1>Contrats en cours</h1>
+                        <form action="" method="get" id="form_search">
+                            <select name="zone" id="zone">
+                                <option value="Bafoussam">Bafoussam</option>
+                                <option value="Bamenda">Bamenda</option>
+                                <option value="Bertoua">Bertoua</option>
+                                <option value="Buéa">Buéa</option>
+                                <option value="Douala" selected>Douala</option>
+                                <option value="Kribi">Kribi</option>
+                                <option value="Kumbo">Kumbo</option>
+                                <option value="Kyossi">Kyossi</option>
+                                <option value="Limbé">Limbé</option>
+                                <option value="Mfou">Mfou</option>
+                                <option value="Ngaoundéré">Ngaoundéré</option>
+                                <option value="Obala">Obala</option>
+                                <option value="Soa">Soa</option>
+                                <option value="Yaoundé">Yaoundé</option>
+                            </select>
+                            <input type="search" name="search" id="search" value="" placeholder="search" oninput="searchContrat();">
                             <ion-icon name="search-outline"></ion-icon>
                         </form>
+                        <?php echo "<div id='allContrats' data-resultat='" . htmlspecialchars(json_encode($data)) . "'></div>"; ?>
                         <div id="table">
-                            <?php
-                            $adhesion = $bdd->prepare($recherche);
-                            $adhesion->execute(array());
-                            $nbContrats = $adhesion->rowCount();
-                            if ($nbContrats > 0) {
-                                while ($resultat = $adhesion->fetch()) {
-                                    $percent = 0;   //pourcentage progression
-                                    $val_offre = ($resultat['validation_offre'] === 1 || $resultat['validation_offre'] === 0) ? 1 : 0;
-                                    $elab_contrat = ($resultat['elaboration_contrat'] === 1 || $resultat['elaboration_contrat'] === 0) ? 1 : 0;
-                                    $control_final = ($resultat['control_final'] === 1 || $resultat['control_final'] === 0) ? 1 : 0;
-                                    $choix = ["val_offre" => $resultat['validation_offre'], "elab_contrat" => $resultat['elaboration_contrat'], "control_final" => $resultat['control_final']];
-                                    $percent = $resultat['negoce'] + $val_offre + $resultat['info_client'] + $elab_contrat + $resultat['transmition_contrat_client'] + $resultat['finalisation_dossier'] + $control_final + $resultat['validation_dossier'] + $resultat['transmition_contrat_remise'] + $resultat['transmition_decharge'] + $resultat['reception_dossier'] + $resultat['archivage'];
-                                    $percent = $percent * 100 / 12;
-                                    $percent = number_format($percent, 2);
-                            ?>
-                                    <div class="contrat" id="contrat<?php echo $resultat['id_operatoire']; ?>" title="<?php echo "$percent%" ?>" data-num_dossier="<?php echo $resultat['numero_dossier']; ?>" data-choix="<?php echo htmlspecialchars(json_encode($choix)); ?>" data-id_operatoire="<?php echo $resultat['id_operatoire']; ?>" data-logement="<?php echo $resultat['logement']; ?>" data-date_ajout="<?php echo $resultat['date_ajout']; ?>" data-date_fin="<?php echo $resultat['date_fin_contrat']; ?>" data-nom_client="<?php echo $resultat['nom_locataire']; ?>" data-site="<?php echo $resultat['site']; ?>" data-nom_Gi="<?php echo $resultat['nom_GI']; ?>" data-negoce="<?php echo $resultat['negoce']; ?>" data-validation_offre="<?php echo $resultat['validation_offre']; ?>" data-info_client="<?php echo $resultat['info_client']; ?>" data-elaboration_contrat="<?php echo $resultat['elaboration_contrat']; ?>" data-transmition_contrat_client="<?php echo $resultat['transmition_contrat_client']; ?>" data-finalisation_dossier="<?php echo $resultat['finalisation_dossier']; ?>" data-control_final="<?php echo $resultat['control_final']; ?>" data-validation_dossier="<?php echo $resultat['validation_dossier']; ?>" data-trans_contrat_remise="<?php echo $resultat['transmition_contrat_remise']; ?>" data-transmition_decharge="<?php echo $resultat['transmition_decharge']; ?>" data-reception_dossier="<?php echo $resultat['reception_dossier']; ?>" data-archivage="<?php echo $resultat['archivage']; ?>">
-                                    <ion-icon name="checkmark-circle-outline"></ion-icon><ion-icon name="ban-outline"></ion-icon><ion-icon name="folder-open" size="large"></ion-icon>
-                                        <h5><?php if (!empty($resultat['numero_dossier'])) {
-                                                echo "&#8470;: " . $resultat['numero_dossier'];
-                                            } ?></h5>
-                                        <h4 style="text-align: center"><?php echo $resultat['nom_locataire']; ?></h4>
-                                        <p style="font-size: 12px; font-style: italic"><?php echo "$percent%"; ?></p>
-                                        <div class="progressBar">
-                                            <div class="progression" style="width: <?php echo $percent; ?>%"></div>
-                                        </div>
-                                    </div>
-                            <?php
-                                }
-                            } else {
-                                echo "<p style='text-align: center; width: 100%'>Aucun contrats</p>";
-                            }
-                            $adhesion->closeCursor();
-                            ?>
+                            <!-- liste des contrats -->
                         </div>
                         <div id="checkliste">
                             <form action="updateAdhesion.php" method="post">
-                                <h2>CHECKLIST D'ADHESION CONTRAT DE BAIL VS.N°4 <ion-icon name="pencil"></ion-icon></h2><span class="croix" onclick="close();">&times;</span>
+                                <h2>CHECKLIST D'ADHESION CONTRAT DE BAIL VS.N°4 <ion-icon name="pencil"></ion-icon></h2><span class="croix">&times;</span>
                                 <span class="mini-title">(Voir la note de service N°30 du 15 Avril 2021 portant implémentation de la check-list d'adhésion de bail)</span>
                                 <table id="table1">
                                     <tr>
@@ -548,15 +661,181 @@ if (isset($_SESSION["id"])) {
                                 <button type="submit" name="enregistrer" id="submit"><ion-icon name="save" size="small"></ion-icon>Enregistrer</button>
                             </form>
                         </div>
+
+                        <!-- bloc maj checkliste -->
+                        <?php
+                        if (isset($_GET['maj'])) {
+                        ?>
+                            <div id="maj" onclick="closePopup(this);">
+                                <?php echo $_GET['maj']; ?>
+                            </div>
+                        <?php
+                        }
+                        ?>
                         <audio id="notificationSound">
                             <source src="../ressources/699705__skyernaklea__notification-bell-and-water.wav" type="audio/wav">
                         </audio>
                     </div>
                     <div id="main4" class="main">
-                        Statistiques
+                        <h1>Contrats Résiliés</h1>
+
+                        <form action="" method="get" id="formMain4">
+                            <select name="zone" id="zoneR">
+                                <option value="Bafoussam">Bafoussam</option>
+                                <option value="Bamenda">Bamenda</option>
+                                <option value="Bertoua">Bertoua</option>
+                                <option value="Buéa">Buéa</option>
+                                <option value="Douala" selected>Douala</option>
+                                <option value="Kribi">Kribi</option>
+                                <option value="Kumbo">Kumbo</option>
+                                <option value="Kyossi">Kyossi</option>
+                                <option value="Limbé">Limbé</option>
+                                <option value="Mfou">Mfou</option>
+                                <option value="Ngaoundéré">Ngaoundéré</option>
+                                <option value="Obala">Obala</option>
+                                <option value="Soa">Soa</option>
+                                <option value="Yaoundé">Yaoundé</option>
+                            </select>
+                            <input type="search" name="search" id="searchResilie" value="" placeholder="search" oninput="">
+                            <ion-icon name="search-outline"></ion-icon>
+                        </form>
+
+                        <?php echo "<div id='allResiliations' data-resultat='" . htmlspecialchars(json_encode($dataResiliation)) . "'></div>"; ?>
+
+                        <div id="th">
+                            <h4>Doc</h4>
+                            <h4>&#8470;</h4>
+                            <h4>Numero</h4>
+                            <h4>Nom_Client</h4>
+                            <h4>Nom_Gi</h4>
+                            <h4>&#8470; Espace</h4>
+                            <h4>Date de resiliation</h4>
+                            <h4>Progression</h4>
+                        </div>
+                        <div id="tableResilie">
+                            <!-- Liste des contrats Résiliés -->
+                        </div>
+
+                        <div id=checklisteResiliation>
+                            <form action="updateResiliation.php" method="POST">
+                                <h2>CHECKLIST DE RESILIATION CONTRAT DE BAIL VS.N°3<ion-icon name="pencil"></ion-icon></h2>
+                                </h2><span class="croix">&times;</span>
+                                <span class="mini-title">(Voir la note de service N°31 du 15 Avril 2021 portant implémentation de la check-list de résiliation de bail)</span>
+                                <table id="table1R">
+                                    <tr>
+                                        <td id="dateAjoutR">Date : </td>
+                                        <td>N° D'ESPACE : </td>
+                                        <td id="numEspaceR"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="nomClientR">Nom client : </td>
+                                        <td>CONTRAT N° : </td>
+                                        <td id="numContratR"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="nomGIR">Nom gestionnaire : </td>
+                                        <td>SITE : </td>
+                                        <td id="nomSiteR"></td>
+                                    </tr>
+                                </table>
+                                <table id="table2R">
+                                    <tr>
+                                        <th>TACHES</th>
+                                        <th>PILOTES</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="font-size: 10px; font-weight: bold; text-align: center;">AVANT LA SORTIE DU CLIENT</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="preavis">Obtention de la lettre de préavis et transmission à l'assistante du DSF</label></td>
+                                        <td><label for="preavis">GI</label></td>
+                                        <td><input type="checkbox" name="preavis" id="preavis" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="const_trans_elem_repert">Constituer et transmettre les éléments de résiliation repertoriés sur la check-list éléments ci-jointe (Elements d'adhésion) et transmettre au RGI </label></td>
+                                        <td><label for="const_trans_elem_repert">GI</label></td>
+                                        <td><input type="checkbox" name="const_trans_elem_repert" id="const_trans_elem_repert" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="preval_dossier">Pré-validation des éléments du dossier de résiliation provisoire</label></td>
+                                        <td><label for="preval_dossier">RGI/RAF</label></td>
+                                        <td><input type="checkbox" name="preval_dossier" id="preval_dossier" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="val_dos_res">Validation du dossier de résiliation provisoire </label></td>
+                                        <td><label for="val_dos_res">DSF/DO</label></td>
+                                        <td><input type="checkbox" name="val_dos_res" id="val_dos_res" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="trans_elem_res">Transmission des éléments de résiliation provisoire au GI</label></td>
+                                        <td><label for="trans_elem_res">Assist.DSF</label></td>
+                                        <td><input type="checkbox" name="trans_elem_res" id="trans_elem_res" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="trans_rep_client">Transmission de la réponse au client</label></td>
+                                        <td><label for="trans_rep_client">GI</label></td>
+                                        <td><input type="checkbox" name="trans_rep_client" id="trans_rep_client" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="font-size: 10px; font-weight: bold; text-align: center;">APRES LA SORTIE DU CLIENT</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="etat_lieux">Etat des lieux à la sortie et récupération des clés</label></td>
+                                        <td><label for="etat_lieux">GI</label></td>
+                                        <td><input type="checkbox" name="etat_lieux" id="etat_lieux" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="const_trans_elem_res">Constituer et transmettre les éléments de résiliation complet repertoriés sur la check-list éléments ci-jointe (Elements de résiliation) et transmettre au RGI</label></td>
+                                        <td><label for="const_trans_elem_res">GI</label></td>
+                                        <td><input type="checkbox" name="const_trans_elem_res" id="const_trans_elem_res" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">Contrôle et validation du dossier de résiliation finale</td>
+                                        <td><label for="control_val">RAF</label></td>
+                                        <td><input type="radio" name="control_val" id="control_val" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="control_val2">RGI</label></td>
+                                        <td><input type="radio" name="control_val" id="control_val2" value="0"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="approb_doc_final">Approbation du dossier de résiliation final</label></td>
+                                        <td><label for="approb_doc_final"><label for="approb_doc_final">DSF/DO</label></label></td>
+                                        <td><input type="checkbox" name="approb_doc_final" id="approb_doc_final" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="paiement">Paiement du locataire ( remboursement caution)</label></td>
+                                        <td><label for="paiement">Caissière</label></td>
+                                        <td><input type="checkbox" name="paiement" id="paiement" value="1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="archivage_doc">Archivage du dossier de résiliation</label></td>
+                                        <td><label for="archivage_doc">Assist.DSF</label></td>
+                                        <td><input type="checkbox" name="archivage_doc" id="archivage_doc" value="1"></td>
+                                    </tr>
+                                </table>
+                                <input type="hidden" name="id_mode">
+                                <button type="submit" name="save" id="submit"><ion-icon name="save" size="small"></ion-icon>Enregistrer</button>
+                            </form>
+                        </div>
+
+                        <!-- bloc maj checkliste résiliation -->
+                        <?php
+                        if (isset($_GET['majR'])) {
+                        ?>
+                            <div id="majR" onclick="closePopup(this);">
+                                <?php echo $_GET['majR']; ?>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </div>
                     <div id="main5" class="main">
-                        main5
+                        Statistiques
+                    </div>
+                    <div id="main6" class="main">
+                        main6
                     </div>
                 </aside>
             </div>
@@ -566,45 +845,26 @@ if (isset($_SESSION["id"])) {
 
 <?php
     } else if (isset($_POST["submit1"])) {
-        $site = $_POST['site'];
-        $entite = $_POST['entite'];
-        $ville = $_POST['ville'];
-        $natbail = $_POST['natbail'];
-        $nom = $_POST['nom'];
-        $contact = $_POST['contact'];
-        $logement = $_POST['logement'];
-        $time_c = $_POST['time_c'];
-        $loy_mens = $_POST['loy_mens'];
-        $freq_paie = $_POST['freq_paie'];
-        $mode_paie = $_POST['mode_paie'];
-        $nb_mois_paye = $_POST['nb_mois_paye'];
-        $caution = $_POST['caution'];
-        $rev_loyer = $_POST['rev_loyer'];
-        $pen_retard = $_POST['pen_retard'];
-        $droit_reg = $_POST['droit_reg'];
-        $date_start = $_POST['date_start'];
-        $date_end = $_POST['date_end'];
-        $gi = $_POST['gi'];
-        $num_doc = $_POST['num_doc'];
-
-        $site = strip_tags(htmlspecialchars($site));
-        $entite = strip_tags(htmlspecialchars($entite));
-        $ville = strip_tags(htmlspecialchars($ville));
-        $natbail = strip_tags(htmlspecialchars($natbail));
-        $contact = strip_tags(htmlspecialchars($contact));
-        $logement = strip_tags(htmlspecialchars($logement));
-        $time_c = strip_tags(htmlspecialchars($time_c));
-        $loy_mens = strip_tags(htmlspecialchars($loy_mens));
-        $freq_paie = strip_tags(htmlspecialchars($freq_paie));
-        $mode_paie = strip_tags(htmlspecialchars($mode_paie));
-        $nb_mois_paye = strip_tags(htmlspecialchars($nb_mois_paye));
-        $caution = strip_tags(htmlspecialchars($caution));
-        $rev_loyer = strip_tags(htmlspecialchars($rev_loyer));
-        $droit_reg = strip_tags(htmlspecialchars($droit_reg));
-        $date_start = strip_tags(htmlspecialchars($date_start));
-        $date_end = strip_tags(htmlspecialchars($date_end));
-        $gi = strip_tags(htmlspecialchars($gi));
-        $num_doc = strip_tags(htmlspecialchars($num_doc));
+        $site = strip_tags(htmlspecialchars($_POST['site']));
+        $entite = strip_tags(htmlspecialchars($_POST['entite']));
+        $ville = strip_tags(htmlspecialchars($_POST['ville']));
+        $natbail = strip_tags(htmlspecialchars($_POST['natbail']));
+        $nom = strip_tags(htmlspecialchars($_POST['nom']));
+        $contact = strip_tags(htmlspecialchars($_POST['contact']));
+        $logement = strip_tags(htmlspecialchars($_POST['logement']));
+        $time_c = strip_tags(htmlspecialchars($_POST['time_c']));
+        $loy_mens = strip_tags(htmlspecialchars($_POST['loy_mens']));
+        $freq_paie = strip_tags(htmlspecialchars($_POST['freq_paie']));
+        $mode_paie = strip_tags(htmlspecialchars($_POST['mode_paie']));
+        $nb_mois_paye = strip_tags(htmlspecialchars($_POST['nb_mois_paye']));
+        $caution = strip_tags(htmlspecialchars($_POST['caution']));
+        $rev_loyer = strip_tags(htmlspecialchars($_POST['rev_loyer']));
+        $pen_retard = strip_tags(htmlspecialchars($_POST['pen_retard']));
+        $droit_reg = strip_tags(htmlspecialchars($_POST['droit_reg']));
+        $date_start = strip_tags(htmlspecialchars($_POST['date_start']));
+        $date_end = strip_tags(htmlspecialchars($_POST['date_end']));
+        $gi = strip_tags(htmlspecialchars($_POST['gi']));
+        //$num_doc = strip_tags(htmlspecialchars($_POST['num_doc']));
 
         $etat = "En-cours";
 

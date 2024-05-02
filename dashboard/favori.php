@@ -8,6 +8,10 @@ $dbname = "gestcontrapp";
 $favori = isset($_GET["favori"]) ? strip_tags(htmlspecialchars($_GET["favori"])) : null;
 $id = isset($_GET['id']) ? strip_tags(htmlspecialchars($_GET['id'])) : null;
 
+if($favori == null){
+    header('location: index.php?erreurFavori=Erreur lors de l\'ajout en favori#main2');
+}
+
 try {
     $bdd = new PDO("mysql:host=$serveurname;dbname=$dbname;charset=utf8", $username, $password);
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

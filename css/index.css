@@ -15,9 +15,9 @@
 }
 
 #container {
+    width: 100vw;
     display: flex;
     height: 100vh;
-    width: 100vw;
     position: relative;
     background-size: cover;
     background-position: "center";
@@ -116,14 +116,6 @@ input:focus{
     color: rgb(224, 181, 179);
 }
 
-img {
-    /* width: 100px;
-    height: 120px;
-    position: absolute;
-    left: 80px;
-    top: 10px; */
-}
-
 .forgot {
     color: black;
     font-size: 12px;
@@ -137,6 +129,7 @@ img {
 .erreur {
     color: red;
     font-size: 10px;
+    text-align: center;
     display: inline-block;
 }
 

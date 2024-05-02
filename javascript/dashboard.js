@@ -6,8 +6,8 @@ function onPageLoad() {
     var url = window.location.href;
     lien = url.slice(-6);
     lien = 'a[href="' + lien + '"]';
-    activeLi(document.querySelector(lien).parentElement);
-    // document.querySelector(lien).parentElement.click();
+    // activeLi(document.querySelector(lien).parentElement);
+    document.querySelector(lien).parentElement.click();
 }
 
 function activeIcon(icon) {
@@ -25,7 +25,7 @@ function desactiveIcon(icon) {
 }
 
 function desactiveLi() {
-    var liste = document.getElementsByTagName('li');
+    var liste = document.querySelectorAll('nav li');
     Array.from(liste).forEach(li => {
         li.classList.remove("actif");
         li.childNodes[0].classList.remove("on");
@@ -36,15 +36,20 @@ function desactiveLi() {
 function activeLi(li) {
     desactiveLi();
     li.classList.add("actif");
-    lien = li.childNodes[0];  //le lien a correspondant
+    lien = li.childNodes[0];  //le lien "<a/>" correspondant
     lien.classList.add("on");
+    console.log("Menu: " + lien.textContent);
     activeIcon(li.querySelector('ion-icon'));
-    checkliste.style.display = "none";
+    document.querySelector('#checkliste').style.display = "none";
     document.querySelector('#customConfirm').style.display = "none";
 }
 
 function notification() {
     evolutionContrat = listemenu[2];
+
+    // Récupérer le lien
+    var linkElement = evolutionContrat.querySelector('a');
+
     // Créer l'élément span avec la classe "notif"
     var spanElement = document.createElement("span");
     spanElement.className = "spanNotif";
@@ -63,9 +68,6 @@ function notification() {
     // Ajouter l'élément sup à span
     spanElement.appendChild(supElement);
 
-    // Récupérer le lien
-    var linkElement = evolutionContrat.querySelector('a');
-
     // Récupérer le texte du lien
     var linkText = linkElement.innerHTML;
 
@@ -73,7 +75,7 @@ function notification() {
     linkElement.innerHTML = linkText + spanElement.outerHTML;
 
     // Lancer la lecture du son
-    audio.play();
+    // audio.play();
 }
 
 h1 = document.querySelector("nav h1");
@@ -98,59 +100,59 @@ function surligne(champ, erreur) {
     champ.style.borderColor = erreur ? "red" : "";
 }
 
-function verifEntite(entite) {
-    const erreurEntite = document.querySelector('#erreurEntite');
+function verifEntite(entite, idChampErreur) {
+    const champErreur = document.querySelector(idChampErreur);
     if (entite.value == "") {
         surligne(entite, true);
-        erreurEntite.innerHTML = "Veuillez choisir une entité valide!";
+        champErreur.innerHTML = "Veuillez choisir une entité valide!";
         return false;
     } else {
         surligne(entite, false);
-        erreurEntite.innerHTML = "";
+        champErreur.innerHTML = "";
         return true;
     }
 }
 
-function verifNom(nom) {
+function verifNom(nom, idChampErreur) {
     var regex = /^[a-zA-Zéèêâôï -]{0,25}$/;
-    var erreurNom = document.querySelector('#erreurNom');
+    const champErreur = document.querySelector(idChampErreur);
 
     if (nom.value == "") {
         surligne(nom, true);
-        erreurNom.innerHTML = "Veuillez entrez un nom valide!";
+        champErreur.innerHTML = "Veuillez entrez un nom valide!";
         return false;
     }
     else {
         if (!regex.test(nom.value)) {
             surligne(nom, true);
-            erreurNom.innerHTML = "nom invalide!";
+            champErreur.innerHTML = "nom invalide!";
             return false;
         }
         else {
             surligne(nom, false);
-            erreurNom.innerHTML = "";
+            champErreur.innerHTML = "";
             return true;
         }
     }
 }
 
-function verifContact(contact) {
+function verifContact(contact, idChampErreur) {
     var regex = /^(\+237)?[- ]?6([-. ]?[0-9]{2}){4}$/;
-    const erreurContact = document.querySelector('#erreurContact');
+    const champErreur = document.querySelector(idChampErreur);
 
     if (contact.value == "") {
         surligne(contact, true);
-        erreurContact.innerHTML = "Veuillez entrez un numéro";
+        champErreur.innerHTML = "Veuillez entrez un numéro";
         return false;
     }
     else {
         if (!regex.test(contact.value)) {
-            erreurContact.innerHTML = "Le numéro de téléphone est invalide!";
+            champErreur.innerHTML = "Le numéro de téléphone est invalide!";
             surligne(contact, true);
             return true;
         }
         else {
-            erreurContact.innerHTML = "";
+            champErreur.innerHTML = "";
             surligne(contact, false);
             return false;
         }
@@ -206,16 +208,16 @@ dateDebut.addEventListener('input', function () {
 });
 
 function veriform(form) {
-    var entiteOk = verifEntite(form.entite);
-    var nomOk = verifNom(form.nom);
-    var contactOk = verifContact(form.contact);
-    var logementOk = verifChampVide(form.logement, '#erreurLogement');
-    var dureeOk = verifChampVide(form.time_c, '#erreurDuree');
-    var loyerOk = verifChampVide(form.loy_mens, '#erreurLoyer');
-    var nbMoisOk = verifChampVide(form.nb_mois_paye, '#erreurNbMois');
-    var cautionOk = verifChampVide(form.caution, '#erreurCaution');
-    var penaliteOk = verifChampVide(form.erreurPenalite, '#erreurPenalite');
-    var droitOk = verifChampVide(form.droit_reg, '#erreurEnregistrement');
+    var entiteOk = verifEntite(form.entite, "#" + form.querySelector('[id^="erreurEntite"] span').id);
+    var nomOk = verifNom(form.nom, "#" + form.querySelector('[id^="erreurNom"] span').id);
+    var contactOk = verifContact(form.contact, "#" + form.querySelector('[id^="erreurContact"] span').id);
+    var logementOk = verifChampVide(form.logement, "#" + form.querySelector('[id^="erreurLogement"] span').id);
+    var dureeOk = verifChampVide(form.time_c, "#" + form.querySelector('[id^="erreurDuree"] span').id);
+    var loyerOk = verifChampVide(form.loy_mens, "#" + form.querySelector('[id^="erreurLoyer"] span').id);
+    var nbMoisOk = verifChampVide(form.nb_mois_paye, "#" + form.querySelector('[id^="erreurNbMois"] span').id);
+    var cautionOk = verifChampVide(form.caution, "#" + form.querySelector('[id^="erreurCaution"] span').id);
+    var penaliteOk = verifChampVide(form.erreurPenalite, "#" + form.querySelector('[id^="erreurPenalite"] span').id);
+    var droitOk = verifChampVide(form.droit_reg, "#" + form.querySelector('[id^="erreurSave"] span').id);
 
     return (entiteOk && nomOk && contactOk && logementOk && dureeOk && loyerOk && nbMoisOk && nbMoisOk && cautionOk && penaliteOk && droitOk) ? true : false;
 }
@@ -269,7 +271,7 @@ attacherEcouteursEdition();
 showContratSelect();
 activeEtat();
 gestionnaireFavori();
-const buttonSearch = document.querySelector('#main2 #actionMain2 form [type="button"]');
+const buttonSearch = document.querySelector('#main2 #actionMain2 form [name="search-outline"]');
 
 searchMain2 = document.querySelector("#searchMain2");
 searchMain2.addEventListener('input', (event) => {
@@ -286,89 +288,139 @@ const searchKeyword = async () => {
     if (keyword.length >= 2 || keyword.length == 0) {
         const req = await fetch(`search.php?searchMain2=${keyword}`);
         const json = await req.json();
-        console.log(json);
         if (json.length > 0) {
             json.forEach((post) => {
                 tr = document.createElement('tr');
-                var compte = 0;
-
-                for (var key in post) {
-                    compte++;
-                    td = document.createElement('td');
-
-                    if (compte == 13) { // loyer mensuel
-                        td.textContent = (post[key] * post['loyer_mensuel']).toLocaleString('fr-FR', { minimumFractionDigits: 0 });
-                        tr.appendChild(td);
-                    } else if (compte == 14 || compte == 19) {
-                        td.textContent = post[key].toLocaleString('fr-FR', { minimumFractionDigits: 0 });
-                        tr.appendChild(td);
-                    } else if (compte == 22) {
-                        td.classList.add(post[key]);
-                        td.classList.add('ft-w');
-                        td.setAttribute('data-idClient', post['id_operatoire']);
-                        a = document.createElement('a');
-                        a.href = "#main3";
-                        var percent = 0;
-                        var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
-                        var elab_contrat = (parseInt(post['elaboration_contrat']) === 1 || parseInt(post['elaboration_contrat']) === 0) ? 1 : 0;
-                        var control_final = (parseInt(post['control_final']) === 1 || parseInt(post['control_final']) === 0) ? 1 : 0;
-                        percent = parseInt(post['negoce']) + val_offre + parseInt(post['info_client']) + elab_contrat + parseInt(post['transmition_contrat_client']) + parseInt(post['finalisation_dossier']) + control_final + parseInt(post['validation_dossier']) + parseInt(post['transmition_contrat_remise']) + parseInt(post['transmition_decharge']) + parseInt(post['reception_dossier']) + parseInt(post['archivage']);
-                        percent = parseFloat(percent * 100 / 12).toFixed(2);
-                        h5 = document.createElement('h5');
-                        h5.textContent = percent + '%';
-                        span = document.createElement('span');
-                        span.textContent = post[key];
-                        div1 = document.createElement('div');
-                        div1.classList.add('evolutionBar');
-                        div2 = document.createElement('div');
-                        div2.classList.add('evolution');
-                        div2.style.width = percent + '%';
-                        div1.appendChild(div2);
-                        a.appendChild(h5);
-                        a.appendChild(div1);
-                        a.appendChild(span);
-                        td.appendChild(a);
-                        tr.appendChild(td);
-                    } else if (compte == 23) {
-                        td.classList.add('edition');
-                        icon1 = document.createElement('ion-icon');
-                        icon1.setAttribute('name', 'create-outline');
-                        icon1.setAttribute('size', 'small');
-                        icon1.setAttribute('title', 'Modifiez');
-                        icon1.setAttribute('data-numDoc', 'numDoc' + post['id']);
-                        form = document.createElement('form');
-                        form.classList.add('favoris');
-                        form.setAttribute('method', 'get');
-                        button = document.createElement('button');
-                        button.setAttribute('name', 'favori');
-                        button.setAttribute('type', 'button');
-                        button.setAttribute('value', post[key]);
-                        icon2 = document.createElement('ion-icon');
-                        icon2.setAttribute('size', 'small');
-                        icon2.setAttribute('title', 'Marquez comme important');
-                        if (post[key] == 0) { var name = "bookmark-outline"; } else { var name = "bookmark"; }
-                        icon2.setAttribute('name', name);
-                        inputHidden = document.createElement('input');
-                        inputHidden.setAttribute('type', 'hidden');
-                        inputHidden.setAttribute('name', 'id_operatoire');
-                        inputHidden.setAttribute('value', post['id']);
-                        button.appendChild(icon2);
-                        form.appendChild(button);
-                        form.appendChild(inputHidden);
-                        icon3 = document.createElement('ion-icon');
-                        icon3.setAttribute('name', 'trash-outline');
-                        icon3.setAttribute('size', 'small');
-                        icon3.setAttribute('title', 'supprimez');
-                        td.appendChild(icon1);
-                        td.appendChild(form);
-                        td.appendChild(icon3);
-                        tr.appendChild(td);
-                        break;
-                    } else {
-                        td.textContent = post[key];
-                        tr.appendChild(td);
-                    }
+                td = document.createElement('td');
+                td.textContent = post['id'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['site'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['entite'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['ville'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nature_bail'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nom_locataire'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['contact'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['logement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['duree_contrat'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['loyer_mensuel'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['frequence_paiement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['mode_paiement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nombre_mois'] * post['loyer_mensuel'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['montant_caution'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['revision_loyer'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['pénalites_retard'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['date_debut_contrat'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['date_fin_contrat'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['date_ajout'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['droit_enregistrement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nom_GI'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['numero_dossier'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.classList.add(post['etat']);
+                td.classList.add('ft-w');
+                td.setAttribute('data-idClient', post['id_operatoire']);
+                a = document.createElement('a');
+                a.href = "#main3";
+                var percent = 0;
+                if (post['etat'] == "En-cours" || post['etat'] == "Actif") {
+                    var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
+                    var elab_contrat = (parseInt(post['elaboration_contrat']) === 1 || parseInt(post['elaboration_contrat']) === 0) ? 1 : 0;
+                    var control_final = (parseInt(post['control_final']) === 1 || parseInt(post['control_final']) === 0) ? 1 : 0;
+                    percent = parseInt(post['negoce']) + val_offre + parseInt(post['info_client']) + elab_contrat + parseInt(post['transmition_contrat_client']) + parseInt(post['finalisation_dossier']) + control_final + parseInt(post['validation_dossier']) + parseInt(post['transmition_contrat_remise']) + parseInt(post['transmition_decharge']) + parseInt(post['reception_dossier']) + parseInt(post['archivage']);
+                } else {
+                    var control_val = (parseInt(post['controle_validation_dossier']) === 1 || parseInt(post['controle_validation_dossier']) === 0) ? 1 : 0;
+                    percent = parseInt(post['lettre_preavis']) + control_val + parseInt(post['transmition_elements']) + parseInt(post['prevalidation_dossier']) + parseInt(post['validation_provisoire']) + parseInt(post['transmition_element_provisoire']) + parseInt(post['transmition_reponse']) + parseInt(post['etat_lieux']) + parseInt(post['transmition_elements_complet']) + parseInt(post['approbation_dossier']) + parseInt(post['paiement_locataire']) + parseInt(post['archivage_resiliation']);
                 }
+                percent = parseFloat(percent * 100 / 12).toFixed(2);
+                h5 = document.createElement('h5');
+                h5.textContent = percent + '%';
+                span = document.createElement('span');
+                span.textContent = post['etat'];
+                div1 = document.createElement('div');
+                div1.classList.add('evolutionBar');
+                div2 = document.createElement('div');
+                div2.classList.add('evolution');
+                div2.style.width = percent + '%';
+                div1.appendChild(div2);
+                a.appendChild(h5);
+                a.appendChild(div1);
+                a.appendChild(span);
+                td.appendChild(a);
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.classList.add('edition');
+                icon1 = document.createElement('ion-icon');
+                icon1.setAttribute('name', 'create-outline');
+                icon1.setAttribute('size', 'small');
+                icon1.setAttribute('title', 'Modifiez');
+                icon1.setAttribute('data-numDoc', 'numDoc' + post['id']);
+                icon1.setAttribute('data-etat', 'false');
+                form = document.createElement('form');
+                form.classList.add('favoris');
+                form.setAttribute('method', 'get');
+                form.setAttribute('action', '');
+                button = document.createElement('button');
+                button.setAttribute('type', 'button');
+                button.setAttribute('name', 'favori');
+                button.setAttribute('data-id', post['id']);
+                button.setAttribute('value', post['favori']);
+                icon2 = document.createElement('ion-icon');
+                icon2.setAttribute('size', 'small');
+                icon2.setAttribute('title', 'Marquez comme important');
+                var name = (post['favori'] == 0) ? "bookmark-outline" : "bookmark";
+                icon2.setAttribute('name', name);
+                button.appendChild(icon2);
+                form.appendChild(button);
+                icon3 = document.createElement('ion-icon');
+                icon3.setAttribute('name', 'trash-outline');
+                icon3.setAttribute('size', 'small');
+                icon3.setAttribute('title', 'supprimez');
+                td.appendChild(icon1);
+                td.appendChild(form);
+                td.appendChild(icon3);
+                tr.appendChild(td);
                 document.querySelector('#synthese tbody').appendChild(tr);
             });
             showContratSelect();
@@ -380,9 +432,9 @@ const searchKeyword = async () => {
             tr = document.createElement('tr');
             td = document.createElement('td');
             td.style.backgroundColor = "orange";
-            td.style.color = "White";
+            td.style.color = "white";
             td.setAttribute('align', 'center');
-            td.setAttribute('colspan', 23);
+            td.setAttribute('colspan', 24);
             td.textContent = 'Aucun résultat';
             tr.appendChild(td);
             document.querySelector("#synthese tbody").appendChild(tr);
@@ -391,11 +443,11 @@ const searchKeyword = async () => {
 }
 
 const selectTrie = document.querySelector('#main2 #actionMain2 #tri');
-const synthese = document.querySelector('#main2 #synthese');
-const tbody = synthese.querySelector('tbody');
 
 selectTrie.addEventListener('change', (event) => {
-    selectValue = event.target.value;
+    const synthese = document.querySelector('#main2 #synthese');
+    const tbody = synthese.querySelector('tbody');
+    var selectValue = event.target.value;
     // Convertir les lignes du tableau en un tableau d'objets pour faciliter le tri
     const rows = Array.from(tbody.querySelectorAll('tr'));
     const rowData = rows.map(row => {
@@ -424,11 +476,12 @@ selectTrie.addEventListener('change', (event) => {
             penaliteRetard: parseInt(row.cells[15].textContent),
             dateDebut: row.cells[16].textContent,
             dateFin: row.cells[17].textContent,
-            droitEnregistrement: row.cells[18].textContent,
-            nomGi: row.cells[19].textContent,
-            numeroDossier: row.cells[20].innerHTML,
-            etat: row.cells[21].innerHTML,
-            edify: row.cells[22].innerHTML,
+            dateAjout: cell[18].textContent,
+            droitEnregistrement: row.cells[19].textContent,
+            nomGi: row.cells[20].textContent,
+            numeroDossier: row.cells[21].textContent,
+            etat: row.cells[22].innerHTML,
+            edify: row.cells[23].innerHTML,
             cells: cellsData,
         };
     });
@@ -441,7 +494,9 @@ selectTrie.addEventListener('change', (event) => {
         case "montantLoyerPayer":
         case "montantCaution":
         case "droitEnregistrement":
+        case "etat":
             rowData.sort((a, b) => a[selectValue] - b[selectValue]);
+            console.log("Tri par " + selectValue + " choisie");
             break;
         case "site":
         case "entite":
@@ -466,6 +521,7 @@ selectTrie.addEventListener('change', (event) => {
                     return 0; // Les noms sont identiques
                 }
             });
+            console.log("tri par " + selectValue + " choisie");
             break;
         // case "dateDebut":
         // case "dateFin":
@@ -477,12 +533,13 @@ selectTrie.addEventListener('change', (event) => {
         //     });
         //     break;
         default:
-            rowData.sort((a, b) => a.id - b.id);
+            rowData.sort((a, b) => a[id] - b[id]);
+            console.log("Tri par défaut sur " + selectValue);
             break;
     }
 
     // Remplacer les lignes du tableau d'origine par les lignes triées
-    tbody.innerHTML = '';
+    tbody.innerHTML = "";
     rowData.forEach(data => {
         const row = document.createElement('tr');
         data.cells.forEach(cell => {
@@ -493,9 +550,11 @@ selectTrie.addEventListener('change', (event) => {
             row.appendChild(td);
         });
         tbody.appendChild(row);
+        exit;
     });
     attacherEcouteursEdition();
     showContratSelect();
+    activeEtat();
     gestionnaireFavori();
 });
 
@@ -558,17 +617,11 @@ function showContratSelect() {
     });
 }
 
-const evolutions = document.querySelectorAll('.evolution');
-evolutions.forEach((evolution) => {
-    if (evolution.style.width == "100%") {
-        evolution.style.backgroundColor = "green";
-    }
-});
-
-
 function activeEtat() {
     var actifs = document.querySelectorAll('.Actif a');
     actifs.forEach(function (element) {
+        evolution = element.querySelector('.evolution');
+        evolution.style.backgroundColor = "green";
         var icon = document.createElement('ion-icon');
         icon.setAttribute('name', 'checkmark-circle');
         icon.setAttribute('size', 'small');
@@ -589,39 +642,115 @@ function activeEtat() {
         element.appendChild(icon);
     });
 
+    var en_resilieation = document.querySelectorAll('.En-Résiliation a');
+    en_resilieation.forEach(function (element) {
+        evolution = element.querySelector('.evolution');
+        evolution.style.backgroundColor = "black";
+        // var icon = document.createElement('ion-icon');
+        // icon.setAttribute('name', 'close');
+        // icon.style.position = 'relative';
+        // icon.style.top = '5px';
+        // icon.style.left = '5px';
+        // element.appendChild(icon);
+    });
+
     var resilies = document.querySelectorAll('.Résilié a');
     resilies.forEach(function (element) {
+        evolution = element.querySelector('.evolution');
+        evolution.style.backgroundColor = "red";
         var icon = document.createElement('ion-icon');
-        icon.setAttribute('name', 'close');
+        icon.setAttribute('name', 'remove-circle');
+        icon.setAttribute('size', 'small');
         icon.style.position = 'relative';
         icon.style.top = '5px';
         icon.style.left = '5px';
         element.appendChild(icon);
-    })
+    });
 }
 
-//boutons d'édition (pencil, favoris, supprimer)
+// Récupérer les éléments de date de début et de fin
+const dateDebutM = document.querySelector('#debutM');
+const dateFinM = document.querySelector('#finM');
+
+// Ajouter un écouteur d'événements sur le champ de date de début
+dateDebutM.addEventListener('input', function () {
+    // Récupérer la date sélectionnée dans le champ de date de début
+    const dateDebutValue = new Date(this.value);
+    // Mettre à jour la propriété min du champ de date de fin pour empêcher les dates antérieures
+    dateFinM.min = this.value;
+
+    // Si une date a déjà été sélectionnée dans le champ de date de fin
+    if (dateFinM.value) {
+        // Récupérer la date sélectionnée dans le champ de date de fin
+        const dateFinValue = new Date(dateFinM.value);
+        // Si la date de fin est antérieure à la date de début, effacer la valeur du champ de date de fin
+        if (dateFinValue < dateDebutValue) {
+            dateFinM.value = '';
+        }
+    }
+});
+
+//boutons d'édition (pencil)
 function attacherEcouteursEdition() {
-    var etatIcon = false;
+    var idDoc = "";
+    var etatIcon;
+    var modification = document.querySelector('#modification');
     const edits = document.querySelectorAll('#main2 td.edition ion-icon[name="create-outline"], #main2 td.edition ion-icon[name="create"]');
     edits.forEach((edit) => {
-        edit.addEventListener('click', () => {
-            etatIcon = (etatIcon) ? false : true;
-            if (etatIcon) {
-                newNameIcone = activeIcon(edit);
-                if (newNameIcone == "create") {
-                    var val_num_doc = edit.getAttribute('data-numDoc');
-                    val_num_doc = "#" + val_num_doc;
-                    document.querySelector(val_num_doc).disabled = false;
-                    document.querySelector(val_num_doc).focus();
+        edit.addEventListener('click', async () => {
+            var val_num_doc = edit.getAttribute('data-numDoc');
+            etatIcon = edit.getAttribute('data-etat');
+            if (etatIcon == "false") {
+                if (idDoc == val_num_doc || idDoc == "") {
+                    var rect = edit.getBoundingClientRect();
+                    modification.style.position = 'absolute';
+                    modification.style.left = rect.left + 'px';
+                    modification.style.top = rect.bottom + 'px';
+
+                    activeIcon(edit);
+                    modification.style.display = "block";
+                    edit.setAttribute('data-etat', 'true');
+                    idDoc = val_num_doc;
+                    var chiffre = val_num_doc.match(/\d+$/);
+                    if (chiffre) {
+                        var numero = parseInt(chiffre[0]);
+                        document.querySelector('#idM').value = numero;
+                    }
+                    try {
+                        const req = await fetch(`getDonnee.php?id=${numero}`);
+                        const json = await req.json();
+                        console.log("Nom GI à modifier " + json[0].nom_GI);
+
+                        document.querySelector('#siteM').value = json[0].site;
+                        document.querySelector('#entiteM').value = json[0].entite;
+                        document.querySelector('#villeM').value = json[0].ville;
+                        document.querySelector('#natureBailM').value = json[0].nature_bail;
+                        document.querySelector('#nomM').value = json[0].nom_locataire;
+                        document.querySelector('#contactM').value = json[0].contact;
+                        document.querySelector('#logementM').value = json[0].logement;
+                        document.querySelector('#timeM').value = json[0].duree_contrat;
+                        document.querySelector('#loyerM').value = json[0].loyer_mensuel;
+                        document.querySelector('#frequenceM').value = json[0].frequence_paiement;
+                        document.querySelector('#modePaiementM').value = json[0].mode_paiement;
+                        document.querySelector('#nombreMoisM').value = json[0].nombre_mois;
+                        document.querySelector('#montantCautionM').value = json[0].montant_caution;
+                        document.querySelector('#revisionM').value = json[0].revision_loyer;
+                        document.querySelector('#penaliteM').value = json[0].pénalites_retard;
+                        document.querySelector('#debutM').value = json[0].date_debut_contrat;
+                        document.querySelector('#finM').value = json[0].date_fin_contrat;
+                        document.querySelector('#saveM').value = json[0].droit_enregistrement;
+                        document.querySelector('#giM').value = json[0].nom_GI;
+                        document.querySelector('#numDocM').value = json[0].numero_dossier;
+                    } catch (error) {
+                        console.log("Erreur de recuperation de donnée! " + error.message);
+                    }
                 }
-            } else {
-                newNameIcone = desactiveIcon(edit);
-                if (newNameIcone == "create-outline") {
-                    var val_num_doc = edit.getAttribute('data-numDoc');
-                    val_num_doc = "#" + val_num_doc;
-                    document.querySelector(val_num_doc).disabled = true;
-                    document.querySelector(val_num_doc).blur();
+            } else if (etatIcon == "true") {
+                if (idDoc == val_num_doc) {
+                    modification.style.display = "none";
+                    desactiveIcon(edit);
+                    edit.setAttribute('data-etat', 'false');
+                    idDoc = "";
                 }
             }
         });
@@ -638,17 +767,17 @@ function gestionnaireFavori() {
                 const req = await fetch(`favori.php?favori=${valeur}&id=${id}`);
                 const json = await req.json();
 
-                this.value = json[0].favori;
+                newValue = (json[0].favori == 0) ? 1 : 0;
+                console.log("newValue Favori = " + newValue);
+                document.querySelector(`.edition form button[data-id="${id}"]`).value = newValue;
 
-                if (this.value == 0) {
-                    // Changement d'icône pour "bookmark-outline"
+                if (newValue == 1) {
                     desactiveIcon(this.querySelector('ion-icon'));
                 } else {
-                    // Changement d'icône pour "bookmark"
                     activeIcon(this.querySelector('ion-icon'));
                 }
             } catch (error) {
-                console.log('Erreur lors de la mise à jour : ' + error.message);
+                console.log('Erreur lors de la mise à jour des favoris : ' + error.message);
             }
         });
     });
@@ -664,38 +793,121 @@ searchMain3.addEventListener('input', (event) => {
     } else if (event.target.value == "") {
         iconSearch.style.display = "block";
     }
-})
+});
 
-const contrats = document.querySelectorAll(".contrat"); //liste des contrats
-const checkliste = document.querySelector("#checkliste"); //checkliste
-const modify = document.querySelector('[name="pencil"]'); //bouton modifiier checkliste
-const closer = document.querySelector(".croix"); //bouton fermeture checklise
-const formElements = document.querySelectorAll('input[type="checkbox"], input[type="radio"]');
-const submitButton = document.querySelector('#main3 button[type="submit"]');
-let modified;
+const allContrats = document.querySelector('#allContrats');
+const dataContrat = JSON.parse(allContrats.getAttribute('data-resultat'));
+console.log("Tous les contrats en-cours: " + dataContrat.length);
 
-//recuperation des champs d'entête
-const dateAjout = document.querySelector("#dateAjout");
-const logement = document.querySelector("#numEspace");
-const nomClient = document.querySelector("#nomClient");
-const numContrat = document.querySelector("#numContrat");
-const nomGI = document.querySelector("#nomGI");
-const nomSite = document.querySelector("#nomSite");
+function showContrat(defaultSelected = "Douala") {
+    document.querySelector('#table').innerHTML = "";
+    if (dataContrat.length >= 0) {
+        dataContrat.forEach((post) => {
+            if (post['ville'] == defaultSelected) {
+                var percent = 0;
+                var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
+                var elab_contrat = (parseInt(post['elaboration_contrat']) === 1 || parseInt(post['elaboration_contrat']) === 0) ? 1 : 0;
+                var control_final = (parseInt(post['control_final']) === 1 || parseInt(post['control_final']) === 0) ? 1 : 0;
+                var choix = { "val_offre": post['validation_offre'], "elab_contrat": post['elaboration_contrat'], "control_final": post['control_final'] };
+                percent = parseInt(post['negoce']) + val_offre + parseInt(post['info_client']) + elab_contrat + parseInt(post['transmition_contrat_client']) + parseInt(post['finalisation_dossier']) + control_final + parseInt(post['validation_dossier']) + parseInt(post['transmition_contrat_remise']) + parseInt(post['transmition_decharge']) + parseInt(post['reception_dossier']) + parseInt(post['archivage']);
+                percent = parseFloat(percent * 100 / 12).toFixed(2);
+                var divContrat = document.createElement('div');
+                divContrat.setAttribute('class', 'contrat');
+                divContrat.setAttribute('id', 'contrat' + parseInt(post['id_operatoire']));
+                divContrat.setAttribute('title', 'date fin : ' + post['date_fin_contrat']);
+                divContrat.setAttribute('data-num_dossier', post['numero_dossier']);
+                divContrat.setAttribute('data-choix', JSON.stringify(choix));
+                divContrat.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                divContrat.setAttribute('data-logement', post['logement']);
+                divContrat.setAttribute('data-date_ajout', post['date_ajout']);
+                divContrat.setAttribute('data-date_fin', post['date_fin_contrat']);
+                divContrat.setAttribute('data-nom_client', post['nom_locataire']);
+                divContrat.setAttribute('data-site', post['site']);
+                divContrat.setAttribute('data-nom_Gi', post['nom_GI']);
+                divContrat.setAttribute('data-negoce', parseInt(post['negoce']));
+                divContrat.setAttribute('data-validation_offre', parseInt(post['validation_offre']));
+                divContrat.setAttribute('data-info_client', parseInt(post['info_client']));
+                divContrat.setAttribute('data-elaboration_contrat', parseInt(post['elaboration_contrat']));
+                divContrat.setAttribute('data-transmition_contrat_client', parseInt(post['transmition_contrat_client']));
+                divContrat.setAttribute('data-finalisation_dossier', parseInt(post['finalisation_dossier']));
+                divContrat.setAttribute('data-control_final', parseInt(post['control_final']));
+                divContrat.setAttribute('data-validation_dossier', parseInt(post['validation_dossier']));
+                divContrat.setAttribute('data-trans_contrat_remise', parseInt(post['transmition_contrat_remise']));
+                divContrat.setAttribute('data-transmition_decharge', parseInt(post['transmition_decharge']));
+                divContrat.setAttribute('data-reception_dossier', parseInt(post['reception_dossier']));
+                divContrat.setAttribute('data-archivage', parseInt(post['archivage']));
+                divContrat.setAttribute('onclick', "activeCheckliste()");
 
-//inputs du formulaire de la checkliste
-const negoce = document.querySelector("#main3 #negoce");
-const val_off = document.querySelectorAll('#main3 input[type="radio"][name="val_off"]');
-const info_client = document.querySelector("#main3 #info_client");
-const elab_contrat = document.querySelectorAll('#main3 input[type="radio"][name="elab_contrat"]');
-const trans_contrat = document.querySelector("#main3 #trans_contrat");
-const final_dossier = document.querySelector("#main3 #final_dossier");
-const control_final = document.querySelectorAll('#main3 input[type="radio"][name="control_final"]');
-const val_doss = document.querySelector("#main3 #val_doss");
-const trans_contrat_remise = document.querySelector("#main3 #trans_contrat_remise");
-const trans_decharge = document.querySelector("#main3 #trans_decharge");
-const recept_doc = document.querySelector("#main3 #recept_doc");
-const archivage = document.querySelector("#main3 #archivage");
-const input_hidden = document.querySelector('#main3 [name="id_operatoire"]');
+                if (percent == 100) {       //Contrats actifs
+                    var divEndcontrat = document.createElement('div');
+                    divEndcontrat.classList.add('end_contrat');
+                    icnonJuste = document.createElement('ion-icon');
+                    icnonJuste.setAttribute('name', 'checkmark-circle-outline');
+                    icnonJuste.setAttribute('size', 'small');
+                    icnonResilie = document.createElement('ion-icon');
+                    icnonResilie.setAttribute('name', 'ban-outline');
+                    icnonResilie.setAttribute('size', 'small');
+                    icnonResilie.setAttribute('data-id_operatoire', post['id_operatoire']);
+                    divEndcontrat.appendChild(icnonJuste);
+                    divEndcontrat.appendChild(icnonResilie);
+                    divContrat.appendChild(divEndcontrat);
+                }
+
+                iconfolder = document.createElement('ion-icon');
+                iconfolder.setAttribute('name', 'folder-open');
+                iconfolder.setAttribute('size', 'large');
+                iconfolder.setAttribute('font-size', '64px');
+                divContrat.appendChild(iconfolder);
+                h5 = document.createElement('h5');
+                h5.textContent = post['numero_dossier'];
+                divContrat.appendChild(h5);
+                h4 = document.createElement('h4');
+                h4.textContent = post['nom_locataire'];
+                h4.style.textAlign = "center";
+                divContrat.appendChild(h4);
+                p = document.createElement('p');
+                p.style.fontSize = "12px";
+                p.style.fontStyle = "italc";
+                p.textContent = `${percent}%`;
+                divContrat.appendChild(p);
+                divProgressBar = document.createElement('div');
+                divProgressBar.classList.add('progressBar');
+                divProgression = document.createElement('div');
+                divProgression.classList.add('progression');
+                divProgression.style.width = `${percent}%`;
+                divProgressBar.appendChild(divProgression);
+                divContrat.appendChild(divProgressBar);
+                document.querySelector("#table").appendChild(divContrat);
+            }
+        });
+    } else {
+        p = document.createElement('p');
+        p.textContent = "Aucun contrat en cours";
+        p.style.textAlign = "center";
+        document.querySelector("#table").appendChild(p);
+    }
+
+    const iconsResiliation = document.querySelectorAll('#main3 [name="ban-outline"]');
+    iconsResiliation.forEach((iconResiliation) => {
+        iconResiliation.addEventListener('click', (e) => {
+            activeResilition = confirm("Activez la résiliation de ce dossier?");
+            if (activeResilition) {
+                regex = /^([0-9]{2}[-/]){2}[0-9]{4}$/;
+                dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
+
+                while (!regex.test(dateResiliation)) {
+                    alert("Etrez la date dans le bon format ex: 01/01/2024");
+                    dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
+                }
+
+                let idResiliation = iconResiliation.getAttribute('data-id_operatoire');
+                console.log(dateResiliation);
+                window.location = `activeResiliation.php?id=${idResiliation}&dateResiliation=${dateResiliation}`;
+            }
+            e.stopPropagation();
+        });
+    });
+} showContrat();
 
 function differenceEnJours(date1, date2) {
     var differenceEnMillisecondes = date1 - date2;
@@ -727,146 +939,653 @@ function substringDate(parts) {
     return new Date(annee, mois, jour);
 }
 
-//affichage checkliste
-contrats.forEach((contrat) => {
-    var date_fin_string = contrat.getAttribute("data-date_fin");
-    // Divisez la chaîne en parties pour extraire le jour, le mois et l'année
-    var date_fin = substringDate(date_fin_string);
-    // Normalisez les deux dates
-    date = normaliserDate(date);
-    date_fin = normaliserDate(date_fin);
+function verifDelai() {
+    const contrats = document.querySelectorAll(".contrat");
+    contrats.forEach((contrat) => {
+        var date_fin_string = contrat.getAttribute("data-date_fin");
+        // Divisez la chaîne en parties pour extraire le jour, le mois et l'année
+        var date_fin = substringDate(date_fin_string);
+        // Normalisez les deux dates
+        date = normaliserDate(date);
+        date_fin = normaliserDate(date_fin);
 
-    if (comparerJourMoisAnnee(date, date_fin)) {    //La date d'expiration est aujourd'hui
-        contrat.style.backgroundColor = "rgba(255, 165, 0, 0.5)";       //orange
-        contrat.style.animation = 'pulse 0.5s linear infinite';
-        compte++;
-    } else if (date < date_fin) {
-        var difference = differenceEnJours(date_fin, date);
-        if (difference > 7) {       // date d'expiration encore loin
+        if (comparerJourMoisAnnee(date, date_fin)) {    //La date d'expiration est aujourd'hui
+            contrat.style.backgroundColor = "rgba(255, 165, 0, 0.5)";       //orange
+            contrat.style.animation = 'pulse 0.5s linear infinite';
+            compte++;
+        } else if (date < date_fin) {
+            var difference = differenceEnJours(date_fin, date);
+            if (difference > 7) {       // date d'expiration encore loin
 
-        } else {        // Date d'expiration en approche (-7jours)
-            contrat.style.backgroundColor = "rgba(0, 128, 0, 0.5)";     //green
+            } else {        // Date d'expiration en approche (-7jours)
+                contrat.style.backgroundColor = "rgba(0, 128, 0, 0.5)";     //green
+                contrat.style.animation = 'pulse 0.5s linear infinite';
+                compte++;
+            }
+        } else if (date > date_fin) {       // Date d'expiration passée
+            contrat.style.backgroundColor = "rgba(255, 0, 0, 0.5)";     //red
             contrat.style.animation = 'pulse 0.5s linear infinite';
             compte++;
         }
-    } else if (date > date_fin) {       // Date d'expiration passée
-        contrat.style.backgroundColor = "rgba(255, 0, 0, 0.5)";     //red
-        contrat.style.animation = 'pulse 0.5s linear infinite';
-        compte++;
-    }
-
-    contrat.addEventListener("click", () => {
-        const inputs = document.querySelectorAll("#checkliste #table2 input");
-        checkliste.style.display = "block";
-        inputs.forEach((input) => {
-            input.disabled = true;
-        });
-        submitButton.style.display = "none";
-        submitButton.style.disabled = true;
-        modified = false;
-
-        //recuperation des valeurs de l'entête
-        const val_dateAjout = contrat.getAttribute("data-date_ajout");
-        const val_logement = contrat.getAttribute("data-logement");
-        const val_nomClient = contrat.getAttribute("data-nom_client");
-        const val_site = contrat.getAttribute("data-site");
-        const val_nomGi = contrat.getAttribute("data-nom_Gi");
-        const val_num_dossier = contrat.getAttribute("data-num_dossier");
-
-        //Mise à jours de l'entête
-        dateAjout.textContent = "Date : " + val_dateAjout;
-        logement.textContent = val_logement;
-        nomClient.textContent = "Nom client : " + val_nomClient;
-        numContrat.textContent = val_num_dossier;
-        nomGI.textContent = "Nom gestionnaire : " + val_nomGi;
-        nomSite.textContent = val_site;
-
-        //recuperation des valeurs des inputs
-        const val_negoce = contrat.getAttribute("data-negoce");
-        const choix = JSON.parse(contrat.dataset.choix);        //val_offre,elab_offre,control_final
-        const val_info_client = contrat.getAttribute("data-info_client");
-        const val_transmition_contrat_client = contrat.getAttribute("data-transmition_contrat_client");
-        const val_finalisation_dossier = contrat.getAttribute("data-finalisation_dossier");
-        const val_validation_dossier = contrat.getAttribute("data-validation_dossier");
-        const val_trans_contrat_remise = contrat.getAttribute("data-trans_contrat_remise");
-        const val_transmition_decharge = contrat.getAttribute("data-transmition_decharge");
-        const val_reception_dossier = contrat.getAttribute("data-reception_dossier");
-        const val_archivage = contrat.getAttribute("data-archivage");
-        const val_input_hidden = contrat.getAttribute("data-id_operatoire");
-
-        //mise à jours des inputs
-        negoce.checked = (val_negoce == 1) ? true : false;
-        val_off[0].checked = (choix["val_offre"] === 1) ? 1 : (choix["val_offre"] === null) ? false : 0;
-        val_off[1].checked = (choix["val_offre"] === 0) ? 1 : (choix["val_offre"] === null) ? false : 0;
-        info_client.checked = (val_info_client == 1) ? true : false;
-        elab_contrat[0].checked = (choix["elab_contrat"] === 1) ? 1 : (choix["elab_contrat"] === null) ? false : 0;
-        elab_contrat[1].checked = (choix["elab_contrat"] === 0) ? 1 : (choix["elab_contrat"] === null) ? false : 0;
-        trans_contrat.checked = (val_transmition_contrat_client == 1) ? true : false;
-        final_dossier.checked = (val_finalisation_dossier == 1) ? true : false;
-        control_final[0].checked = (choix["control_final"] === 1) ? 1 : (choix["control_final"] === null) ? false : 0;
-        control_final[1].checked = (choix["control_final"] === 0) ? 1 : (choix["control_final"] === null) ? false : 0;
-        val_doss.checked = (val_validation_dossier == 1) ? true : false;
-        trans_contrat_remise.checked = (val_trans_contrat_remise == 1) ? true : false;
-        trans_decharge.checked = (val_transmition_decharge == 1) ? true : false;
-        recept_doc.checked = (val_reception_dossier == 1) ? true : false;
-        archivage.checked = (val_archivage == 1) ? true : false;
-        input_hidden.setAttribute("value", val_input_hidden);
-
-        formElements.forEach(element => {
-            element.addEventListener('change', () => {
-                modified = true;
-                submitButton.style.display = "flex";
-                submitButton.style.disabled = false;
-            });
-        });
+        console.log(compte + " Contrat à surveiller dans cette ville");
     });
-});
+} verifDelai();
 
-compte > 0 ? notification() : null;
-if (compte > 0) {
-    // Fonction pour rejouer le son
-    function replaySound() {
-        audio.currentTime = 0; // Réinitialiser la lecture au début
-        audio.play(); // Jouer le son à nouveau
-    }
-
-    // Ajouter un événement 'timeupdate' pour détecter le milieu de la lecture
-    audio.addEventListener("timeupdate", function () {
-        // Vérifier si le temps de lecture est à la moitié
-        if (audio.currentTime >= audio.duration / 4) {
-            replaySound(); // Appeler la fonction pour rejouer le son
-        }
-    });
-
-    var spanNotif = document.querySelector(".spanNotif");
-    iconNotif = spanNotif.querySelector('ion-icon');
-    etatIcon = true;
-
-    // Ajouter un événement de clic à l'élément avec la classe spanNotif
-    spanNotif.addEventListener("click", function () {
-        etatIcon = etatIcon ? false : true;
-        if (!etatIcon) {
-            iconNotif.setAttribute('name', "notifications-off-circle-outline");
-            audio.pause(); // Mettre en pause la lecture du son
-        } else {
-            iconNotif.setAttribute('name', "notifications-circle-outline");
-            audio.play(); // Mettre sur play la lecture du son
-        }
-    });
-}
+var modified;       //booleen verifiant le changement de la checkliste
+const modify = document.querySelector('#main3 [name="pencil"]'); //bouton modifiier checkliste
+const formElements = document.querySelectorAll('#main3 #checkliste #table2 input');
+const submitButton = document.querySelector('#main3 button[type="submit"]');
 
 //activation de la modification de la checkliste
 modify.addEventListener("click", () => {
-    const inputs = document.querySelectorAll("#checkliste #table2 input");
-    inputs.forEach((input) => {
-        input.disabled = (input.disabled) ? false : true;
+    formElements.forEach((element) => {
+        element.disabled = (element.disabled) ? false : true;
+        console.log("etat inputs form: " + element.disabled);
     });
 });
 
-closer.addEventListener("click", () => {
-    if (modified === false) { checkliste.style.display = "none"; }
-    else {
+//function affichage checkliste
+function activeCheckliste() {
+    const contrats = document.querySelectorAll(".contrat"); //liste des contrats
+    const checkliste = document.querySelector("#checkliste"); //checkliste
+
+    contrats.forEach((contrat) => {
+        contrat.addEventListener("click", () => {
+            //Afficher la checkliste
+            checkliste.style.display = "block";
+            var tabCheck = [];
+            let k = 0;
+
+            //desactivation de tous les inputs
+            submitButton.style.display = "none";
+            submitButton.style.disabled = true;
+            modified = false;
+            formElements.forEach((element) => {
+                element.disabled = true;
+            });
+
+            //Mise à jours de l'entête
+            document.querySelector("#dateAjout").textContent = "Date : " + contrat.getAttribute("data-date_ajout");
+            document.querySelector("#numEspace").textContent = contrat.getAttribute("data-logement");
+            document.querySelector("#nomClient").textContent = "Nom client : " + contrat.getAttribute("data-nom_client");
+            document.querySelector("#numContrat").textContent = contrat.getAttribute("data-num_dossier");
+            document.querySelector("#nomGI").textContent = "Nom gestionnaire : " + contrat.getAttribute("data-nom_Gi");
+            document.querySelector("#nomSite").textContent = contrat.getAttribute("data-site");
+
+            //recuperation des valeurs des inputs radio
+            const choix = JSON.parse(contrat.dataset.choix);        //val_offre,elab_offre,control_final
+
+            //Mise à jours des inputs
+            document.querySelector("#main3 #negoce").checked = (contrat.getAttribute("data-negoce") == 1) ? true : false;
+            document.querySelectorAll('#main3 input[type="radio"][name="val_off"]')[0].checked = (choix["val_offre"] === 1) ? 1 : (choix["val_offre"] === null) ? false : 0;
+            document.querySelectorAll('#main3 input[type="radio"][name="val_off"]')[1].checked = (choix["val_offre"] === 0) ? 1 : (choix["val_offre"] === null) ? false : 0;
+            document.querySelector("#main3 #info_client").checked = (contrat.getAttribute("data-info_client") == 1) ? true : false;
+            document.querySelectorAll('#main3 input[type="radio"][name="elab_contrat"]')[0].checked = (choix["elab_contrat"] === 1) ? 1 : (choix["elab_contrat"] === null) ? false : 0;
+            document.querySelectorAll('#main3 input[type="radio"][name="elab_contrat"]')[1].checked = (choix["elab_contrat"] === 0) ? 1 : (choix["elab_contrat"] === null) ? false : 0;
+            document.querySelector("#main3 #trans_contrat").checked = (contrat.getAttribute("data-transmition_contrat_client") == 1) ? true : false;
+            document.querySelector("#main3 #final_dossier").checked = (contrat.getAttribute("data-finalisation_dossier") == 1) ? true : false;
+            document.querySelectorAll('#main3 input[type="radio"][name="control_final"]')[0].checked = (choix["control_final"] === 1) ? 1 : (choix["control_final"] === null) ? false : 0;
+            document.querySelectorAll('#main3 input[type="radio"][name="control_final"]')[1].checked = (choix["control_final"] === 0) ? 1 : (choix["control_final"] === null) ? false : 0;
+            document.querySelector("#main3 #val_doss").checked = (contrat.getAttribute("data-validation_dossier") == 1) ? true : false;
+            document.querySelector("#main3 #trans_contrat_remise").checked = (contrat.getAttribute("data-trans_contrat_remise") == 1) ? true : false;
+            document.querySelector("#main3 #trans_decharge").checked = (contrat.getAttribute("data-transmition_decharge") == 1) ? true : false;
+            document.querySelector("#main3 #recept_doc").checked = (contrat.getAttribute("data-reception_dossier") == 1) ? true : false;
+            document.querySelector("#main3 #archivage").checked = (contrat.getAttribute("data-archivage") == 1) ? true : false;
+            document.querySelector('#main3 [name="id_operatoire"]').setAttribute("value", contrat.getAttribute("data-id_operatoire"));
+
+            formElements.forEach(element => {
+                element.setAttribute('data-numero', k);
+                if (element.checked) {
+                    tabCheck[k] = 1;
+                } else {
+                    tabCheck[k] = 0;
+                }
+                k++;
+            });
+            console.log(contrat.getAttribute("data-nom_client") + ": " + tabCheck);
+        });
+    });
+} activeCheckliste();
+
+// Contrôle du formulaire
+formElements.forEach((element, index) => {
+    // Ajouter un écouteur d'événement change à chaque input
+    element.addEventListener('change', () => {
+        element.checked = false;
+        const numero = parseInt(element.getAttribute('data-numero'));
+        console.log("Numero " + numero + " cliquée! et c'est un " + element.type);
+        // Vérifier si l'input précédent est déjà coché
+        if (numero > 0) {
+            const previousInput = formElements[index - 1];
+            console.log("Son previous est " + previousInput.getAttribute('data-numero') + " de type " + previousInput.type);
+
+            if (previousInput.type === 'radio') {
+                if (previousInput.name === element.name) {
+                    const previous2 = formElements[index - 2];
+                    if (previous2.checked) {
+                        console.log("Le checkbox avant les radio est coché donc celui-ci aussi")
+                        element.checked = true;
+                        modified = true;
+                        submitButton.style.display = "flex";
+                        submitButton.style.disabled = false;
+                    } else {
+                        console.log("Le checkbox avant les radio n'est pas coché donc celui-ci aussi")
+                        element.checked = false;
+                    }
+                } else {
+                    // Vérifier s'il y a au moins un input radio coché dans le même groupe
+                    const radioGroup = document.querySelectorAll(`input[name='${previousInput.name}']`);
+                    const checkedRadio = Array.from(radioGroup).find(radio => radio.checked);
+                    if (checkedRadio) {
+                        console.log("Au moins un des inputs radio précédents est coché, donc cochez celui-ci aussi");
+                        element.checked = true;
+                        modified = true;
+                        submitButton.style.display = "flex";
+                        submitButton.style.disabled = false;
+                    } else {
+                        console.log("Aucun des inputs radio précédents n'est coché, donc décocher celui-ci");
+                        element.checked = false;
+                    }
+                }
+            } else if (previousInput.checked) {
+                console.log("L'input précédent est déjà coché, donc cocher celui-ci aussi");
+                element.checked = true;
+                modified = true;
+                submitButton.style.display = "flex";
+                submitButton.style.disabled = false;
+            } else {
+                console.log("L'input précédent n'est pas coché, donc celui-ci non plus")
+                element.checked = false;
+            }
+        }
+    });
+});
+
+const croix = document.querySelector('#main3 #checkliste .croix');
+croix.addEventListener('click', () => {
+    if (modified == true) {
         alert("Veuillez enregistrez les modifications!");
-        checkliste.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        console.log("Veuillez enregistrez les modifications!");
+        document.querySelector('#checkliste').scrollIntoView({ behavior: 'smooth', block: 'end' });
+    } else {
+        document.querySelector('#checkliste').style.display = "none";
+        console.log("Fermeture de checkliste");
+    }
+});
+
+const searchContrat = async () => {
+    document.querySelector('#table').innerHTML = "";
+    var villeSearched = document.querySelector('#zone').value;
+    let keyword = document.querySelector('#search').value;
+    if (keyword.length >= 2 || keyword.length == 0) {
+        const req = await fetch(`searchMain3.php?search=${keyword}&ville=${villeSearched}`);
+        const json = await req.json();
+        if (json.length > 0) {
+            json.forEach((post) => {
+                if (post['etat'] != "En-Résiliation" && post['etat'] != "Résilié") {
+                    var percent = 0;
+                    var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
+                    var elab_contrat = (parseInt(post['elaboration_contrat']) === 1 || parseInt(post['elaboration_contrat']) === 0) ? 1 : 0;
+                    var control_final = (parseInt(post['control_final']) === 1 || parseInt(post['control_final']) === 0) ? 1 : 0;
+                    var choix = { "val_offre": parseInt(post['validation_offre']), "elab_contrat": parseInt(post['elaboration_contrat']), "control_final": parseInt(post['control_final']) };
+                    percent = parseInt(post['negoce']) + val_offre + parseInt(post['info_client']) + elab_contrat + parseInt(post['transmition_contrat_client']) + parseInt(post['finalisation_dossier']) + control_final + parseInt(post['validation_dossier']) + parseInt(post['transmition_contrat_remise']) + parseInt(post['transmition_decharge']) + parseInt(post['reception_dossier']) + parseInt(post['archivage']);
+                    percent = parseFloat(percent * 100 / 12).toFixed(2);
+                    var divContrat = document.createElement('div');
+                    divContrat.setAttribute('class', 'contrat');
+                    divContrat.setAttribute('id', 'contrat' + parseInt(post['id_operatoire']));
+                    divContrat.setAttribute('title', 'date fin : ' + post['date_fin_contrat']);
+                    divContrat.setAttribute('data-num_dossier', post['numero_dossier']);
+                    divContrat.setAttribute('data-choix', JSON.stringify(choix));
+                    divContrat.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                    divContrat.setAttribute('data-logement', post['logement']);
+                    divContrat.setAttribute('data-date_ajout', post['date_ajout']);
+                    divContrat.setAttribute('data-date_fin', post['date_fin_contrat']);
+                    divContrat.setAttribute('data-nom_client', post['nom_locataire']);
+                    divContrat.setAttribute('data-site', post['site']);
+                    divContrat.setAttribute('data-nom_Gi', post['nom_GI']);
+                    divContrat.setAttribute('data-negoce', parseInt(post['negoce']));
+                    divContrat.setAttribute('data-validation_offre', parseInt(post['validation_offre']));
+                    divContrat.setAttribute('data-info_client', parseInt(post['info_client']));
+                    divContrat.setAttribute('data-elaboration_contrat', parseInt(post['elaboration_contrat']));
+                    divContrat.setAttribute('data-transmition_contrat_client', parseInt(post['transmition_contrat_client']));
+                    divContrat.setAttribute('data-finalisation_dossier', parseInt(post['finalisation_dossier']));
+                    divContrat.setAttribute('data-control_final', parseInt(post['control_final']));
+                    divContrat.setAttribute('data-validation_dossier', parseInt(post['validation_dossier']));
+                    divContrat.setAttribute('data-trans_contrat_remise', parseInt(post['transmition_contrat_remise']));
+                    divContrat.setAttribute('data-transmition_decharge', parseInt(post['transmition_decharge']));
+                    divContrat.setAttribute('data-reception_dossier', parseInt(post['reception_dossier']));
+                    divContrat.setAttribute('data-archivage', parseInt(post['archivage']));
+                    divContrat.setAttribute('onclick', "activeCheckliste()");
+
+                    if (percent == 100) {   //Contrats actifs
+                        var divEndcontrat = document.createElement('div');
+                        divEndcontrat.classList.add('end_contrat');
+                        icnonJuste = document.createElement('ion-icon');
+                        icnonJuste.setAttribute('name', 'checkmark-circle-outline');
+                        icnonJuste.setAttribute('size', 'small');
+                        icnonResilie = document.createElement('ion-icon');
+                        icnonResilie.setAttribute('name', 'ban-outline');
+                        icnonResilie.setAttribute('size', 'small');
+                        icnonResilie.setAttribute('data-id_operatoire', post['id_operatoire']);
+                        divEndcontrat.appendChild(icnonJuste);
+                        divEndcontrat.appendChild(icnonResilie);
+                        divContrat.appendChild(divEndcontrat);
+                    }
+
+                    iconfolder = document.createElement('ion-icon');
+                    iconfolder.setAttribute('name', 'folder-open');
+                    iconfolder.setAttribute('size', 'large');
+                    iconfolder.setAttribute('font-size', '64px');
+                    divContrat.appendChild(iconfolder);
+                    h5 = document.createElement('h5');
+                    h5.textContent = post['numero_dossier'];
+                    divContrat.appendChild(h5);
+                    h4 = document.createElement('h4');
+                    h4.textContent = post['nom_locataire'];
+                    h4.style.textAlign = "center";
+                    divContrat.appendChild(h4);
+                    p = document.createElement('p');
+                    p.style.fontSize = "12px";
+                    p.style.fontStyle = "italc";
+                    p.textContent = `${percent}%`;
+                    divContrat.appendChild(p);
+                    divProgressBar = document.createElement('div');
+                    divProgressBar.classList.add('progressBar');
+                    divProgression = document.createElement('div');
+                    divProgression.classList.add('progression');
+                    divProgression.style.width = `${percent}%`;
+                    divProgressBar.appendChild(divProgression);
+                    divContrat.appendChild(divProgressBar);
+                    document.querySelector("#table").appendChild(divContrat);
+                }
+            });
+        } else {
+            p = document.createElement('p');
+            p.style.textAlign = "center";
+            p.style.width = "100%";
+            p.textContent = "Aucun résultat!";
+            document.querySelector('#table').appendChild(p);
+        }
+    }
+    activeCheckliste();
+    verifDelai();
+};
+
+function ActualiseNotif() {
+    console.log("Valeur notification: " + compte);
+    compte > 0 ? notification() : null;
+    if (compte > 0) {
+        // Fonction pour rejouer le son
+        function replaySound() {
+            audio.currentTime = 0; // Réinitialiser la lecture au début
+            audio.play(); // Jouer le son à nouveau
+        }
+
+        // Ajouter un événement 'timeupdate' pour détecter le milieu de la lecture
+        audio.addEventListener("timeupdate", function () {
+            // Vérifier si le temps de lecture est à la moitié
+            if (audio.currentTime >= audio.duration / 4) {
+                replaySound(); // Appeler la fonction pour rejouer le son
+            }
+        });
+
+        var spanNotif = document.querySelector(".spanNotif");
+        iconNotif = spanNotif.querySelector('ion-icon');
+        etatIcon = true;
+
+        // Ajouter un événement de clic à l'élément avec la classe spanNotif
+        spanNotif.addEventListener("click", function () {
+            etatIcon = etatIcon ? false : true;
+            if (!etatIcon) {
+                iconNotif.setAttribute('name', "notifications-off-circle-outline");
+                audio.pause(); // Mettre en pause la lecture du son
+            } else {
+                iconNotif.setAttribute('name', "notifications-circle-outline");
+                audio.play(); // Mettre sur play la lecture du son
+            }
+        });
+    }
+    compte = 0;     //on réinitialise le compteur de notification
+} ActualiseNotif();
+
+const selectVille = document.querySelector('#main3 form #zone');
+
+selectVille.addEventListener('change', (event) => {
+    showContrat(event.target.value);
+    verifDelai();
+    activeCheckliste();
+    ActualiseNotif();
+});
+
+function closePopup(popup) {
+    popup.style.display = "none";
+}
+
+/*----------------------------------------------main4-------------------------------------------*/
+const allResilies = document.querySelector('#allResiliations');
+const dataResiliation = JSON.parse(allResilies.getAttribute('data-resultat'));
+
+console.log("Tous les contrats résiliés: " + dataResiliation.length);
+
+function showContratResilies(defaultSelected = "Douala") {
+    document.querySelector("#tableResilie").innerHTML = "";
+    if (dataResiliation.length >= 0) {
+        dataResiliation.forEach((resilie) => {
+            if (resilie['ville'] == defaultSelected) {
+                var percent = 0;
+                var control_val = (parseInt(resilie['controle_validation_dossier']) === 1 || parseInt(resilie['controle_validation_dossier']) === 0) ? 1 : 0;
+                percent = parseInt(resilie['lettre_preavis']) + control_val + parseInt(resilie['transmition_elements']) + parseInt(resilie['prevalidation_dossier']) + parseInt(resilie['validation_provisoire']) + parseInt(resilie['transmition_element_provisoire']) + parseInt(resilie['transmition_reponse']) + parseInt(resilie['etat_lieux']) + parseInt(resilie['transmition_elements_complet']) + parseInt(resilie['approbation_dossier']) + parseInt(resilie['paiement_locataire']) + parseInt(resilie['archivage_resiliation']);
+                percent = parseFloat(percent * 100 / 12).toFixed(2);
+
+                var divResilie = document.createElement('div');
+                divResilie.classList.add('contratResilie');
+                iconDoc = document.createElement('ion-icon');
+                iconDoc.setAttribute('name', 'document-text-outline');
+                pId = document.createElement('p');
+                pId.textContent = resilie['id_resiliation'];
+                pNum = document.createElement('p');
+                pNum.textContent = resilie['numero_dossier'];
+                pNom = document.createElement('p');
+                pNom.textContent = resilie['nom_locataire'];
+                pNomGi = document.createElement('p');
+                pNomGi.textContent = resilie['nom_GI'];
+                pLogement = document.createElement('p');
+                pLogement.textContent = resilie['logement'];
+                pDateResiliation = document.createElement('p');
+                pDateResiliation.textContent = resilie['date_resiliation'];
+                divPercent = document.createElement('div');
+                divPercent.classList.add('percent');
+                p1 = document.createElement('p');
+                p1.style.fontSize = "12px";
+                p1.textContent = `${percent}%`;
+                divProgressDivBar = document.createElement('div');
+                divProgressDivBar.classList.add('progressDivBar');
+                divProgressDiv = document.createElement('div');
+                divProgressDiv.classList.add('progressDiv');
+                divProgressDiv.style.width = `${percent}%`;
+                if(percent == 100){
+                    divProgressDiv.style.backgroundColor = "green";
+                }
+                divResilie.appendChild(iconDoc);
+                divResilie.appendChild(pId);
+                divResilie.appendChild(pNum);
+                divResilie.appendChild(pNom);
+                divResilie.appendChild(pNomGi);
+                divResilie.appendChild(pLogement);
+                divResilie.appendChild(pDateResiliation);
+                divPercent.appendChild(p1);
+                divProgressDivBar.appendChild(divProgressDiv);
+                divPercent.appendChild(divProgressDivBar);
+                divResilie.appendChild(divPercent);
+                //meta-data
+                divResilie.setAttribute('data-logement', resilie['logement']);
+                divResilie.setAttribute('data-nom_client', resilie['nom_locataire']);
+                divResilie.setAttribute('data-numero_dossier', resilie['numero_dossier']);
+                divResilie.setAttribute('data-nom_GI', resilie['nom_GI']);
+                divResilie.setAttribute('data-site', resilie['site']);
+                divResilie.setAttribute('data-id_mode', resilie['id_mode']);
+                divResilie.setAttribute('data-lettre_preavis', resilie['lettre_preavis']);
+                divResilie.setAttribute('data-transmition_elements', resilie['transmition_elements']);
+                divResilie.setAttribute('data-prevalidation_dossier', resilie['prevalidation_dossier']);
+                divResilie.setAttribute('data-validation_provisoire', resilie['validation_provisoire']);
+                divResilie.setAttribute('data-transmition_element_provisoire', resilie['transmition_element_provisoire']);
+                divResilie.setAttribute('data-transmition_reponse', resilie['transmition_reponse']);
+                divResilie.setAttribute('data-etat_lieux', resilie['etat_lieux']);
+                divResilie.setAttribute('data-transmition_elements_complet', resilie['transmition_elements_complet']);
+                divResilie.setAttribute('data-controle_validation_dossier', resilie['controle_validation_dossier']);
+                divResilie.setAttribute('data-approbation_dossier', resilie['approbation_dossier']);
+                divResilie.setAttribute('data-paiement_locataire', resilie['paiement_locataire']);
+                divResilie.setAttribute('data-archivage_resiliation', resilie['archivage_resiliation']);
+                divResilie.setAttribute('data-date_activation_resiliation', resilie['date_activation_resiliation']);
+                divResilie.setAttribute('data-date_resiliation', resilie['date_resiliation']);
+                document.querySelector("#tableResilie").appendChild(divResilie);
+            }
+        });
+    } else {
+        p = document.createElement('p');
+        p.textContent = "Aucun contrat résilié";
+        p.style.textAlign = "center";
+        document.querySelector("#tableResilie").appendChild(p);
+    }
+} showContratResilies();
+
+const choixVille = document.querySelector('#main4 form #zoneR');
+
+choixVille.addEventListener('change', (event) => {
+    showContratResilies(event.target.value);
+    activeChecklisteResiliation();
+});
+
+const iconSearchResilie = document.querySelector('#main4 #formMain4 [name="search-outline"]');
+
+searchMain4 = document.querySelector("#searchResilie");
+
+searchMain4.addEventListener('input', async (event) => {
+    let keyword = document.querySelector('#searchResilie').value;
+    if (keyword.length >= 2 || keyword.length == 0) {
+        if (event.target.value != "") {
+            iconSearchResilie.style.display = "none";
+        } else if (event.target.value == "") {
+            iconSearchResilie.style.display = "block";
+        }
+
+        document.querySelector('#tableResilie').innerHTML = "";
+        var villeSearched = document.querySelector('#zoneR').value;
+        const req = await fetch(`searchMain4.php?search=${keyword}&ville=${villeSearched}`);
+        const json = await req.json();
+        if (json.length > 0) {
+            json.forEach((resilie) => {
+                var percent = 0;
+                var control_val = (parseInt(resilie['controle_validation_dossier']) === 1 || parseInt(resilie['controle_validation_dossier']) === 0) ? 1 : 0;
+                percent = parseInt(resilie['lettre_preavis']) + control_val + parseInt(resilie['transmition_elements']) + parseInt(resilie['prevalidation_dossier']) + parseInt(resilie['validation_provisoire']) + parseInt(resilie['transmition_element_provisoire']) + parseInt(resilie['transmition_reponse']) + parseInt(resilie['etat_lieux']) + parseInt(resilie['transmition_elements_complet']) + parseInt(resilie['approbation_dossier']) + parseInt(resilie['paiement_locataire']) + parseInt(resilie['archivage_resiliation']);
+                percent = parseFloat(percent * 100 / 12).toFixed(2);
+
+                var divResilie = document.createElement('div');
+                divResilie.classList.add('contratResilie');
+                iconDoc = document.createElement('ion-icon');
+                iconDoc.setAttribute('name', 'document-text-outline');
+                pId = document.createElement('p');
+                pId.textContent = resilie['id_resiliation'];
+                pNumero = document.createElement('p');
+                pNumero.textContent = resilie['numero_dossier'];
+                pNom = document.createElement('p');
+                pNom.textContent = resilie['nom_locataire'];
+                pNomGi = document.createElement('p');
+                pNomGi.textContent = resilie['nom_GI'];
+                pLogement = document.createElement('p');
+                pLogement.textContent = resilie['logement'];
+                pDateResiliation = document.createElement('p');
+                pDateResiliation.textContent = resilie['date_resiliation'];
+                divPercent = document.createElement('div');
+                divPercent.classList.add('percent');
+                p1 = document.createElement('p');
+                p1.style.fontSize = "12px";
+                p1.textContent = `${percent}%`;
+                divProgressDivBar = document.createElement('div');
+                divProgressDivBar.classList.add('progressDivBar');
+                divProgressDiv = document.createElement('div');
+                divProgressDiv.classList.add('progressDiv');
+                divProgressDiv.style.width = `${percent}%`;
+                if(percent == 100){
+                    divProgressDiv.style.backgroundColor = "green";
+                }
+                divResilie.appendChild(iconDoc);
+                divResilie.appendChild(pId);
+                divResilie.appendChild(pNumero);
+                divResilie.appendChild(pNom);
+                divResilie.appendChild(pNomGi);
+                divResilie.appendChild(pLogement);
+                divResilie.appendChild(pDateResiliation);
+                divPercent.appendChild(p1);
+                divProgressDivBar.appendChild(divProgressDiv);
+                divPercent.appendChild(divProgressDivBar);
+                divResilie.appendChild(divPercent);
+                //meta-data
+                divResilie.setAttribute('data-logement', resilie['logement']);
+                divResilie.setAttribute('data-nom_client', resilie['nom_locataire']);
+                divResilie.setAttribute('data-numero_dossier', resilie['numero_dossier']);
+                divResilie.setAttribute('data-nom_GI', resilie['nom_GI']);
+                divResilie.setAttribute('data-site', resilie['site']);
+                divResilie.setAttribute('data-id_mode', resilie['id_mode']);
+                divResilie.setAttribute('data-lettre_preavis', resilie['lettre_preavis']);
+                divResilie.setAttribute('data-transmition_elements', resilie['transmition_elements']);
+                divResilie.setAttribute('data-prevalidation_dossier', resilie['prevalidation_dossier']);
+                divResilie.setAttribute('data-validation_provisoire', resilie['validation_provisoire']);
+                divResilie.setAttribute('data-transmition_element_provisoire', resilie['transmition_element_provisoire']);
+                divResilie.setAttribute('data-transmition_reponse', resilie['transmition_reponse']);
+                divResilie.setAttribute('data-etat_lieux', resilie['etat_lieux']);
+                divResilie.setAttribute('data-transmition_elements_complet', resilie['transmition_elements_complet']);
+                divResilie.setAttribute('data-controle_validation_dossier', resilie['controle_validation_dossier']);
+                divResilie.setAttribute('data-approbation_dossier', resilie['approbation_dossier']);
+                divResilie.setAttribute('data-paiement_locataire', resilie['paiement_locataire']);
+                divResilie.setAttribute('data-archivage_resiliation', resilie['archivage_resiliation']);
+                divResilie.setAttribute('data-date_activation_resiliation', resilie['date_activation_resiliation']);
+                divResilie.setAttribute('data-date_resiliation', resilie['date_resiliation']);
+                document.querySelector("#tableResilie").appendChild(divResilie);
+            });
+            activeChecklisteResiliation();
+        } else {
+            p = document.createElement('p');
+            p.textContent = "Aucun contrat résilié ne porte ce nom dans cette ville";
+            p.style.textAlign = "center";
+            document.querySelector("#tableResilie").appendChild(p);
+        }
+    }
+});
+
+var modifiedR;
+const modifyR = document.querySelector('#main4 [name="pencil"]'); //bouton modifiier checkliste
+const formElementsR = document.querySelectorAll('#main4 #checklisteResiliation #table2R input');
+const submitButtonR = document.querySelector('#main4 button[type="submit"]');
+
+//activation de la modification de la checkliste
+modifyR.addEventListener("click", () => {
+    formElementsR.forEach((element) => {
+        element.disabled = (element.disabled) ? false : true;
+        console.log("etat inputs form: " + element.disabled);
+    });
+});
+
+function activeChecklisteResiliation() {
+    const contratResilies = document.querySelectorAll('#main4 .contratResilie');
+    const checklisteResiliation = document.querySelector('#main4 #checklisteResiliation');
+
+    contratResilies.forEach((contratResilie) => {
+        contratResilie.addEventListener('click', () => {
+            //Afficher la checkliste de résiliation
+            checklisteResiliation.style.display = "block";
+            var tabCheck = [];
+            let k = 0;
+
+            //desactivez tous les inputs
+            submitButtonR.style.display = "none";
+            submitButtonR.style.disabled = true;
+            modifiedR = false;
+            formElementsR.forEach((input) => {
+                input.disabled = true;
+            });
+
+            //Remplissage des champs d'en-tête
+            document.querySelector("#dateAjoutR").textContent = "Date : " + contratResilie.getAttribute('data-date_activation_resiliation'); //date_ajout_resiliation
+            document.querySelector("#numEspaceR").textContent = contratResilie.getAttribute("data-logement");
+            document.querySelector("#nomClientR").textContent = "Nom client : " + contratResilie.getAttribute("data-nom_client");
+            document.querySelector("#numContratR").textContent = contratResilie.getAttribute("data-numero_dossier");
+            document.querySelector("#nomGIR").textContent = "Nom gestionaire : " + contratResilie.getAttribute("data-nom_Gi");
+            document.querySelector("#nomSiteR").textContent = contratResilie.getAttribute("data-site");
+            // val_date_activation_resiliation = contratResilie.getAttribute('data-date_activation_resiliation');
+            // val_date_resiliation = contratResilie.getAttribute('data-date_resiliation');
+
+            //Mis à jour des inputs
+            document.querySelector("#main4 #preavis").checked = (contratResilie.getAttribute('data-lettre_preavis') == 1) ? true : false;
+            document.querySelector("#main4 #const_trans_elem_repert").checked = (contratResilie.getAttribute('data-transmition_elements') == 1) ? true : false;
+            document.querySelector('#main4 #preval_dossier').checked = (contratResilie.getAttribute('data-prevalidation_dossier') == 1) ? true : false;
+            document.querySelector("#main4 #val_dos_res").checked = (contratResilie.getAttribute('data-validation_provisoire') == 1) ? true : false;
+            document.querySelector("#main4 #trans_elem_res").checked = (contratResilie.getAttribute('data-transmition_element_provisoire') == 1) ? true : false;
+            document.querySelector('#main4 #trans_rep_client').checked = (contratResilie.getAttribute('data-transmition_reponse') == 1) ? true : false;
+            document.querySelector("#main4 #etat_lieux").checked = (contratResilie.getAttribute('data-etat_lieux') == 1) ? true : false;
+            document.querySelector("#main4 #const_trans_elem_res").checked = (contratResilie.getAttribute('data-transmition_elements_complet') == 1) ? true : false;
+            document.querySelectorAll('#main4 [type="radio"][name="control_val"]')[0].checked = (contratResilie.getAttribute('data-controle_validation_dossier') == 1) ? 1 : (contratResilie.getAttribute('data-controle_validation_dossier') == null) ? false : 0;
+            document.querySelectorAll('#main4 [type="radio"][name="control_val"]')[1].checked = (contratResilie.getAttribute('data-controle_validation_dossier') == 0) ? 1 : (contratResilie.getAttribute('data-controle_validation_dossier') == null) ? false : 0;
+            document.querySelector("#main4 #approb_doc_final").checked = (contratResilie.getAttribute('data-approbation_dossier') == 1) ? true : false;
+            document.querySelector('#main4 #paiement').checked = (contratResilie.getAttribute('data-paiement_locataire') == 1) ? true : false;
+            document.querySelector("#main4 #archivage_doc").checked = (contratResilie.getAttribute('data-archivage_resiliation') == 1) ? true : false;
+            document.querySelector('#main4 [name="id_mode"]').setAttribute("value", contratResilie.getAttribute("data-id_mode"));
+
+            formElementsR.forEach(element => {
+                element.setAttribute('data-numero', k);
+                if (element.checked) {
+                    tabCheck[k] = 1;
+                } else {
+                    tabCheck[k] = 0;
+                }
+                k++;
+            });
+            console.log(contratResilie.getAttribute("data-nom_client") + ": " + tabCheck);
+        });
+    });
+} activeChecklisteResiliation();
+
+// Contrôle du formulaire
+formElementsR.forEach((element, index) => {
+    // Ajouter un écouteur d'événement change à chaque input
+    element.addEventListener('change', () => {
+        element.checked = false;
+        const numeroR = parseInt(element.getAttribute('data-numero'));
+        console.log("Numero " + numeroR + " cliquée! et c'est un " + element.type);
+        // Vérifier si l'input précédent est déjà coché
+        if (numeroR > 0) {
+            const previousInput = formElementsR[index - 1];
+            console.log("Son previous est " + previousInput.getAttribute('data-numero') + " de type " + previousInput.type);
+
+            if (previousInput.type === 'radio') {
+                if (previousInput.name === element.name) {
+                    const previous2 = formElementsR[index - 2];
+                    if (previous2.checked) {
+                        console.log("Le checkbox avant les radio est coché donc celui-ci aussi")
+                        element.checked = true;
+                        modifiedR = true;
+                        submitButtonR.style.display = "flex";
+                        submitButtonR.style.disabled = false;
+                    } else {
+                        console.log("Le checkbox avant les radio n'est pas coché donc celui-ci aussi")
+                        element.checked = false;
+                    }
+                } else {
+                    // Vérifier s'il y a au moins un input radio coché dans le même groupe
+                    const radioGroup = document.querySelectorAll(`input[name='${previousInput.name}']`);
+                    const checkedRadio = Array.from(radioGroup).find(radio => radio.checked);
+                    if (checkedRadio) {
+                        console.log("Au moins un des inputs radio précédents est coché, donc cochez celui-ci aussi");
+                        element.checked = true;
+                        modifiedR = true;
+                        submitButtonR.style.display = "flex";
+                        submitButtonR.style.disabled = false;
+                    } else {
+                        console.log("Aucun des inputs radio précédents n'est coché, donc décocher celui-ci");
+                        element.checked = false;
+                    }
+                }
+            } else if (previousInput.checked) {
+                console.log("L'input précédent est déjà coché, donc cochez celui-ci aussi");
+                element.checked = true;
+                modifiedR = true;
+                submitButtonR.style.display = "flex";
+                submitButtonR.style.disabled = false;
+            } else {
+                console.log("L'input précédent n'est pas coché, donc celui-ci non plus")
+                element.checked = false;
+            }
+        }
+    });
+});
+
+const close = document.querySelector('#main4 #checklisteResiliation .croix');
+close.addEventListener('click', () => {
+    if (modifiedR == true) {
+        alert("Veuillez enregistrez les modifications!");
+        console.log("Veuillez enregistrez les modifications!");
+        document.querySelector('#checklisteResiliation').scrollIntoView({ behavior: 'smooth', block: 'end' });
+    } else {
+        document.querySelector('#checklisteResiliation').style.display = "none";
     }
 });
