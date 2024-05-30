@@ -1,11 +1,11 @@
 /*-------------------------------------------navbar----------------------------------------*/
 document.addEventListener("DOMContentLoaded", onPageLoad);
-var audio = document.querySelector("#notificationSound");
+const audio = document.querySelector("#notificationSound");
 
 function onPageLoad() {
     var url = window.location.href;
-    lien = url.slice(-6);
-    lien = 'a[href="' + lien + '"]';
+    main = url.split("#")[1];
+    lien = `a[href="#${main}"]`;
     // activeLi(document.querySelector(lien).parentElement);
     document.querySelector(lien).parentElement.click();
 }
@@ -41,6 +41,7 @@ function activeLi(li) {
     console.log("Menu: " + lien.textContent);
     activeIcon(li.querySelector('ion-icon'));
     document.querySelector('#checkliste').style.display = "none";
+    document.querySelector('#checklisteResiliation').style.display = "none";
     document.querySelector('#customConfirm').style.display = "none";
 }
 
@@ -74,6 +75,21 @@ function notification() {
     // Ajouter le span à la suite du texte du lien
     linkElement.innerHTML = linkText + spanElement.outerHTML;
 
+    const selectElement = document.getElementById('zone');
+
+    // Parcourir les options du select
+    for (let i = 0; i < selectElement.options.length; i++) {
+        const option = selectElement.options[i];
+
+        // Si l'option se trouve dans le tableau tabVille
+        if (tabVille.includes(option.value)) {
+            // Ajouter un "•" devant le texte de l'option si ce n'est pas déjà fait
+            if (!option.text.startsWith("*")) {
+                option.text = "*" + option.text;
+            }
+        }
+    }
+
     // Lancer la lecture du son
     // audio.play();
 }
@@ -89,15 +105,23 @@ const listemenu = document.querySelectorAll('nav ul li');
 
 var date = new Date();  // objet Date représentant la date et l'heure actuelles
 var compte = 0;     //nombre de contrat à surveiller
+var tabVille;       //Villes à vérifier
 
 // Récupère la date d'aujourd'hui au format AAAA-MM-JJ
 var annee = date.getFullYear();
 var mois = (date.getMonth() + 1).toString().padStart(2, '0'); // Le mois commence à 0, donc on ajoute 1
 var jour = date.getDate().toString().padStart(2, '0');
 
+const currentMonth = `${annee}-${mois}`;
+
+// Set the value of the input element
+document.getElementById('month').value = currentMonth;
+document.getElementById('monthR').value = currentMonth;
+
 /*-------------------------------------------main1----------------------------------------*/
 function surligne(champ, erreur) {
     champ.style.borderColor = erreur ? "red" : "";
+    return erreur;
 }
 
 function verifEntite(entite, idChampErreur) {
@@ -105,54 +129,62 @@ function verifEntite(entite, idChampErreur) {
     if (entite.value == "") {
         surligne(entite, true);
         champErreur.innerHTML = "Veuillez choisir une entité valide!";
+        console.log("Veuillez choisir une entité valide!");
         return false;
     } else {
         surligne(entite, false);
         champErreur.innerHTML = "";
+        console.log("Entite correcte");
         return true;
     }
 }
 
 function verifNom(nom, idChampErreur) {
-    var regex = /^[a-zA-Zéèêâôï -]{0,25}$/;
+    var regex = /^[a-zA-Zéèêâôï -]{3,25}$/;
     const champErreur = document.querySelector(idChampErreur);
 
     if (nom.value == "") {
         surligne(nom, true);
         champErreur.innerHTML = "Veuillez entrez un nom valide!";
+        console.log("Veuillez entrez un nom valide!");
         return false;
     }
     else {
         if (!regex.test(nom.value)) {
             surligne(nom, true);
-            champErreur.innerHTML = "nom invalide!";
+            champErreur.innerHTML = "Nom invalide!";
+            console.log("Nom invalide!");
             return false;
         }
         else {
             surligne(nom, false);
             champErreur.innerHTML = "";
+            console.log("Nom correcte");
             return true;
         }
     }
 }
 
 function verifContact(contact, idChampErreur) {
-    var regex = /^(\+237)?[- ]?6([-. ]?[0-9]{2}){4}$/;
+    var regex = /^(\+237[- ]?)?6([-. ]?[0-9]{2}){4}$/;
     const champErreur = document.querySelector(idChampErreur);
 
     if (contact.value == "") {
         surligne(contact, true);
         champErreur.innerHTML = "Veuillez entrez un numéro";
+        console.log("Veuillez entrez un numéro");
         return false;
     }
     else {
         if (!regex.test(contact.value)) {
             champErreur.innerHTML = "Le numéro de téléphone est invalide!";
+            console.log("Le numéro de téléphone est invalide!");
             surligne(contact, true);
             return true;
         }
         else {
             champErreur.innerHTML = "";
+            console.log("contact corrcte");
             surligne(contact, false);
             return false;
         }
@@ -164,15 +196,40 @@ function verifChampVide(champ, idChampErreur) {
     if (champ.value == "") {
         surligne(champ, true);
         champErreur.innerHTML = "Veuillez remplir ce champ";
+        console.log("Veuillez remplir ce champ");
         return false;
     } else {
         surligne(champ, false);
         champErreur.innerHTML = "";
+        console.log("Le champ est correcte!");
         return true;
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+const site = document.querySelector('#site');
+site.addEventListener('change', async (event) => {
+    try {
+        const req = await fetch(`entite.php?site=${event.target.value}`);
+        const json = await req.json();
+
+        document.querySelector('#entite').value = json[0].entite;
+        document.querySelector('#ville').value = json[0].ville;
+    } catch (error) {
+        console.log('Erreur lors de la mise à jour des entités : ' + error.message);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        const req = await fetch(`entite.php?site=Ancienne Usine Colpast`);
+        const json = await req.json();
+
+        document.querySelector('#entite').value = json[0].entite;
+        document.querySelector('#ville').value = json[0].ville;
+    } catch (error) {
+        console.log('Erreur lors de la mise à jour des entités : ' + error.message);
+    }
+
     const loyerInput = document.querySelector('#loy_mens');
     loyerInput.addEventListener('input', function () {
         const cautionInput = document.querySelector('#caution');
@@ -233,11 +290,76 @@ let formStepsNum = 0;
 
 nextBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-        translate -= 376;
-        translate = (translate < -1504) ? -1504 : translate;
-        wrapperList.style.transform = `translateX(${translate}px)`;
-        formStepsNum++;
-        updateProgressbar();
+        var verif = false;
+        console.log(btn.id);
+        if (btn.id == "next1") {
+            wrapper1 = document.querySelector("#main1 form #wrapper1");
+            inputsWrapp = wrapper1.querySelectorAll('input, select');
+            inputsWrapp.forEach((element) => {
+                if (element.value == "") {
+                    verif = surligne(element, true);
+                    console.log('Remplissez le champ');
+                }
+            });
+            if (verif == false) {
+                translate -= 376;
+                translate = (translate < -1504) ? -1504 : translate;
+                wrapperList.style.transform = `translateX(${translate}px)`;
+                formStepsNum++;
+                updateProgressbar();
+            }
+        }
+        if (btn.id == "next2") {
+            wrapper2 = document.querySelector("#main1 form #wrapper2");
+            inputsWrapp = wrapper2.querySelectorAll('input, select');
+            inputsWrapp.forEach((element) => {
+                if (element.value == "") {
+                    verif = surligne(element, true);
+                    console.log('Remplissez le champ');
+                }
+            });
+            if (verif == false) {
+                translate -= 376;
+                translate = (translate < -1504) ? -1504 : translate;
+                wrapperList.style.transform = `translateX(${translate}px)`;
+                formStepsNum++;
+                updateProgressbar();
+            }
+        }
+        if (btn.id == "next3") {
+            wrapper3 = document.querySelector("#main1 form #wrapper3");
+            inputsWrapp = wrapper3.querySelectorAll('input, select');
+            inputsWrapp.forEach((element) => {
+                if (element.value == "") {
+                    verif = surligne(element, true);
+                    console.log('Remplissez le champ');
+                }
+            });
+            if (verif == false) {
+                translate -= 376;
+                translate = (translate < -1504) ? -1504 : translate;
+                wrapperList.style.transform = `translateX(${translate}px)`;
+                formStepsNum++;
+                updateProgressbar();
+            }
+        }
+        if (btn.id == "next4") {
+            wrapper4 = document.querySelector("#main1 form #wrapper4");
+            inputsWrapp = wrapper4.querySelectorAll('input, select');
+            inputsWrapp.forEach((element) => {
+                if (element.value == "") {
+                    verif = surligne(element, true);
+                    console.log('Remplissez le champ');
+                }
+            });
+            if (verif == false) {
+                translate -= 376;
+                translate = (translate < -1504) ? -1504 : translate;
+                wrapperList.style.transform = `translateX(${translate}px)`;
+                formStepsNum++;
+                updateProgressbar();
+            }
+        }
     });
 });
 
@@ -280,12 +402,12 @@ searchMain2.addEventListener('input', (event) => {
     } else if (event.target.value == "") {
         buttonSearch.style.display = "block";
     }
-})
+});
 
 const searchKeyword = async () => {
-    document.querySelector('#synthese tbody').innerHTML = "";
     let keyword = document.querySelector('#searchMain2').value;
     if (keyword.length >= 2 || keyword.length == 0) {
+        document.querySelector('#synthese tbody').innerHTML = "";
         const req = await fetch(`search.php?searchMain2=${keyword}`);
         const json = await req.json();
         if (json.length > 0) {
@@ -358,11 +480,12 @@ const searchKeyword = async () => {
                 td.textContent = post['numero_dossier'];
                 tr.appendChild(td);
                 td = document.createElement('td');
-                td.classList.add(post['etat']);
                 td.classList.add('ft-w');
+                td.classList.add(post['etat']);
                 td.setAttribute('data-idClient', post['id_operatoire']);
+                td.setAttribute('data-ville', post['ville']);
                 a = document.createElement('a');
-                a.href = "#main3";
+                a.href = (post['etat'] == "En-cours" || post['etat'] == "Actif") ? "#main3" : "#main4";
                 var percent = 0;
                 if (post['etat'] == "En-cours" || post['etat'] == "Actif") {
                     var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
@@ -397,36 +520,48 @@ const searchKeyword = async () => {
                 icon1.setAttribute('title', 'Modifiez');
                 icon1.setAttribute('data-numDoc', 'numDoc' + post['id']);
                 icon1.setAttribute('data-etat', 'false');
-                form = document.createElement('form');
-                form.classList.add('favoris');
-                form.setAttribute('method', 'get');
-                form.setAttribute('action', '');
-                button = document.createElement('button');
-                button.setAttribute('type', 'button');
-                button.setAttribute('name', 'favori');
-                button.setAttribute('data-id', post['id']);
-                button.setAttribute('value', post['favori']);
-                icon2 = document.createElement('ion-icon');
-                icon2.setAttribute('size', 'small');
-                icon2.setAttribute('title', 'Marquez comme important');
-                var name = (post['favori'] == 0) ? "bookmark-outline" : "bookmark";
-                icon2.setAttribute('name', name);
-                button.appendChild(icon2);
-                form.appendChild(button);
-                icon3 = document.createElement('ion-icon');
-                icon3.setAttribute('name', 'trash-outline');
-                icon3.setAttribute('size', 'small');
-                icon3.setAttribute('title', 'supprimez');
                 td.appendChild(icon1);
-                td.appendChild(form);
+                icon3 = document.createElement('ion-icon');
+                icon3.setAttribute('name', 'remove-circle-outline');
+                icon3.setAttribute('size', 'small');
+                icon3.setAttribute('title', 'Résilié ce dossier');
+                icon3.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
                 td.appendChild(icon3);
+                if (sessionType == "super admin" || sessionType == "admin") {
+                    form = document.createElement('form');
+                    form.classList.add('favoris');
+                    form.setAttribute('method', 'get');
+                    form.setAttribute('action', '');
+                    button = document.createElement('button');
+                    button.setAttribute('type', 'button');
+                    button.setAttribute('name', 'favori');
+                    button.setAttribute('data-id', post['id']);
+                    button.setAttribute('value', post['favori']);
+                    icon2 = document.createElement('ion-icon');
+                    icon2.setAttribute('size', 'small');
+                    icon2.setAttribute('title', 'Marquez comme important');
+                    var name = (post['favori'] == 0) ? "bookmark-outline" : "bookmark";
+                    icon2.setAttribute('name', name);
+                    button.appendChild(icon2);
+                    form.appendChild(button);
+                    td.appendChild(form);
+                    icon4 = document.createElement('ion-icon');
+                    icon4.setAttribute('name', 'trash-outline');
+                    icon4.setAttribute('size', 'small');
+                    icon4.setAttribute('title', 'supprimez');
+                    icon4.setAttribute('data-id_contrat', parseInt(post['id_operatoire']));
+                    icon4.setAttribute('data-type', post['etat']);
+                    td.appendChild(icon4);
+                }
                 tr.appendChild(td);
                 document.querySelector('#synthese tbody').appendChild(tr);
             });
             showContratSelect();
             attacherEcouteursEdition();
+            resiliation();
             activeEtat();
             gestionnaireFavori();
+            deleteContrat();
         } else {        //aucun resultat correspndant
             document.querySelector("#synthese tbody").innerHTML = "";
             tr = document.createElement('tr');
@@ -440,123 +575,386 @@ const searchKeyword = async () => {
             document.querySelector("#synthese tbody").appendChild(tr);
         }
     }
-}
+};
 
 const selectTrie = document.querySelector('#main2 #actionMain2 #tri');
 
-selectTrie.addEventListener('change', (event) => {
+selectTrie.addEventListener('change', async () => {
     const synthese = document.querySelector('#main2 #synthese');
     const tbody = synthese.querySelector('tbody');
-    var selectValue = event.target.value;
-    // Convertir les lignes du tableau en un tableau d'objets pour faciliter le tri
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    const rowData = rows.map(row => {
-        const cellsData = Array.from(row.cells).map(cell => ({
-            classes: Array.from(cell.classList),
-            attributes: Array.from(cell.attributes),
-            content: cell.innerHTML, // Ajout du contenu HTML de la cellule
-        }));
-
-        return {
-            id: parseInt(row.cells[0].textContent),
-            site: row.cells[1].textContent,
-            entite: row.cells[2].textContent,
-            ville: row.cells[3].textContent,
-            natureBail: row.cells[4].textContent,
-            nomLocataire: row.cells[5].textContent,
-            contactClient: parseInt(row.cells[6].textContent),
-            logement: row.cells[7].textContent,
-            dureeContrat: parseInt(row.cells[8].textContent),
-            loyerMensuel: parseInt(row.cells[9].textContent),
-            frequencePaiement: row.cells[10].textContent,
-            modePaiement: row.cells[11].textContent,
-            montantLoyerPayer: parseInt(row.cells[12].textContent),
-            montantCaution: parseInt(row.cells[13].textContent),
-            revisionLoyer: row.cells[14].textContent,
-            penaliteRetard: parseInt(row.cells[15].textContent),
-            dateDebut: row.cells[16].textContent,
-            dateFin: row.cells[17].textContent,
-            dateAjout: cell[18].textContent,
-            droitEnregistrement: row.cells[19].textContent,
-            nomGi: row.cells[20].textContent,
-            numeroDossier: row.cells[21].textContent,
-            etat: row.cells[22].innerHTML,
-            edify: row.cells[23].innerHTML,
-            cells: cellsData,
-        };
-    });
-
-    // Trie selon le choix
-    switch (selectValue) {
-        case "id":
-        case "dureeContrat":
-        case "loyerMensuel":
-        case "montantLoyerPayer":
-        case "montantCaution":
-        case "droitEnregistrement":
-        case "etat":
-            rowData.sort((a, b) => a[selectValue] - b[selectValue]);
-            console.log("Tri par " + selectValue + " choisie");
-            break;
-        case "site":
-        case "entite":
-        case "ville":
-        case "natureBail":
-        case "nomLocataire":
-        case "logement":
-        case "frequencePaiement":
-        case "modePaiement":
-        case "revisionLoyer":
-        case "nomGi":
-        case "numeroDossier":
-            rowData.sort((a, b) => {
-                const nomA = a[selectValue].toUpperCase(); // Convertir les noms en majuscules pour la comparaison
-                const nomB = b[selectValue].toUpperCase();
-
-                if (nomA < nomB) {
-                    return -1; // Le nom de a vient avant le nom de b
-                } else if (nomA > nomB) {
-                    return 1; // Le nom de b vient avant le nom de a
-                } else {
-                    return 0; // Les noms sont identiques
-                }
-            });
-            console.log("tri par " + selectValue + " choisie");
-            break;
-        // case "dateDebut":
-        // case "dateFin":
-        //     donnee = selectValue;
-        //     rowData.sort((a, b) => {
-        //         const dateA = new Date(a[donnee]); // Convertir la date de la chaîne en objet Date
-        //         const dateB = new Date(b[donnee]);
-        //         return dateA - dateB; // Tri chronologique des dates
-        //     });
-        //     break;
-        default:
-            rowData.sort((a, b) => a[id] - b[id]);
-            console.log("Tri par défaut sur " + selectValue);
-            break;
-    }
-
-    // Remplacer les lignes du tableau d'origine par les lignes triées
+    console.log("tri par: " + selectTrie.value);
     tbody.innerHTML = "";
-    rowData.forEach(data => {
-        const row = document.createElement('tr');
-        data.cells.forEach(cell => {
-            const td = document.createElement('td');
-            cell.classes.forEach(className => td.classList.add(className));
-            cell.attributes.forEach(attribute => td.setAttribute(attribute.nodeName, attribute.nodeValue));
-            td.innerHTML = cell.content; // Ajout du contenu HTML
-            row.appendChild(td);
-        });
-        tbody.appendChild(row);
-        exit;
-    });
-    attacherEcouteursEdition();
-    showContratSelect();
-    activeEtat();
-    gestionnaireFavori();
+
+    try {
+        const req = await fetch(`tri.php?tri=${selectTrie.value}`);
+        const json = await req.json();
+        if (json.length > 0) {
+            json.forEach((post) => {
+                tr = document.createElement('tr');
+                td = document.createElement('td');
+                td.textContent = post['id'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['site'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['entite'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['ville'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nature_bail'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nom_locataire'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['contact'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['logement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['duree_contrat'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['loyer_mensuel'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['frequence_paiement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['mode_paiement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nombre_mois'] * post['loyer_mensuel'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['montant_caution'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['revision_loyer'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['pénalites_retard'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['date_debut_contrat'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['date_fin_contrat'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['date_ajout'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['droit_enregistrement'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['nom_GI'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.textContent = post['numero_dossier'];
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.classList.add('ft-w');
+                td.classList.add(post['etat']);
+                td.setAttribute('data-idClient', post['id_operatoire']);
+                td.setAttribute('data-ville', post['ville']);
+                a = document.createElement('a');
+                a.href = (post['etat'] == "En-cours" || post['etat'] == "Actif") ? "#main3" : "#main4";
+                var percent = 0;
+                if (post['etat'] == "En-cours" || post['etat'] == "Actif") {
+                    var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
+                    var elab_contrat = (parseInt(post['elaboration_contrat']) === 1 || parseInt(post['elaboration_contrat']) === 0) ? 1 : 0;
+                    var control_final = (parseInt(post['control_final']) === 1 || parseInt(post['control_final']) === 0) ? 1 : 0;
+                    percent = parseInt(post['negoce']) + val_offre + parseInt(post['info_client']) + elab_contrat + parseInt(post['transmition_contrat_client']) + parseInt(post['finalisation_dossier']) + control_final + parseInt(post['validation_dossier']) + parseInt(post['transmition_contrat_remise']) + parseInt(post['transmition_decharge']) + parseInt(post['reception_dossier']) + parseInt(post['archivage']);
+                } else {
+                    var control_val = (parseInt(post['controle_validation_dossier']) === 1 || parseInt(post['controle_validation_dossier']) === 0) ? 1 : 0;
+                    percent = parseInt(post['lettre_preavis']) + control_val + parseInt(post['transmition_elements']) + parseInt(post['prevalidation_dossier']) + parseInt(post['validation_provisoire']) + parseInt(post['transmition_element_provisoire']) + parseInt(post['transmition_reponse']) + parseInt(post['etat_lieux']) + parseInt(post['transmition_elements_complet']) + parseInt(post['approbation_dossier']) + parseInt(post['paiement_locataire']) + parseInt(post['archivage_resiliation']);
+                }
+                percent = parseFloat(percent * 100 / 12).toFixed(2);
+                h5 = document.createElement('h5');
+                h5.textContent = percent + '%';
+                span = document.createElement('span');
+                span.textContent = post['etat'];
+                div1 = document.createElement('div');
+                div1.classList.add('evolutionBar');
+                div2 = document.createElement('div');
+                div2.classList.add('evolution');
+                div2.style.width = percent + '%';
+                div1.appendChild(div2);
+                a.appendChild(h5);
+                a.appendChild(div1);
+                a.appendChild(span);
+                td.appendChild(a);
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.classList.add('edition');
+                icon1 = document.createElement('ion-icon');
+                icon1.setAttribute('name', 'create-outline');
+                icon1.setAttribute('size', 'small');
+                icon1.setAttribute('title', 'Modifiez');
+                icon1.setAttribute('data-numDoc', 'numDoc' + post['id']);
+                icon1.setAttribute('data-etat', 'false');
+                td.appendChild(icon1);
+                icon3 = document.createElement('ion-icon');
+                icon3.setAttribute('name', 'remove-circle-outline');
+                icon3.setAttribute('size', 'small');
+                icon3.setAttribute('title', 'Résilié ce dossier');
+                icon3.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                td.appendChild(icon3);
+                if (sessionType == "super admin" || sessionType == "admin") {
+                    form = document.createElement('form');
+                    form.classList.add('favoris');
+                    form.setAttribute('method', 'get');
+                    form.setAttribute('action', '');
+                    button = document.createElement('button');
+                    button.setAttribute('type', 'button');
+                    button.setAttribute('name', 'favori');
+                    button.setAttribute('data-id', post['id']);
+                    button.setAttribute('value', post['favori']);
+                    icon2 = document.createElement('ion-icon');
+                    icon2.setAttribute('size', 'small');
+                    icon2.setAttribute('title', 'Marquez comme important');
+                    var name = (post['favori'] == 0) ? "bookmark-outline" : "bookmark";
+                    icon2.setAttribute('name', name);
+                    button.appendChild(icon2);
+                    form.appendChild(button);
+                    td.appendChild(form);
+                    icon4 = document.createElement('ion-icon');
+                    icon4.setAttribute('name', 'trash-outline');
+                    icon4.setAttribute('size', 'small');
+                    icon4.setAttribute('title', 'supprimez');
+                    icon4.setAttribute('data-id_contrat', parseInt(post['id_operatoire']));
+                    icon4.setAttribute('data-type', post['etat']);
+                    td.appendChild(icon4);
+                }
+                tr.appendChild(td);
+                document.querySelector('#synthese tbody').appendChild(tr);
+            });
+            showContratSelect();
+            attacherEcouteursEdition();
+            resiliation();
+            activeEtat();
+            gestionnaireFavori();
+            deleteContrat();
+        } else {        //aucun resultat correspndant
+            document.querySelector("#synthese tbody").innerHTML = "";
+            tr = document.createElement('tr');
+            td = document.createElement('td');
+            td.style.backgroundColor = "orange";
+            td.style.color = "white";
+            td.setAttribute('align', 'center');
+            td.setAttribute('colspan', 24);
+            td.textContent = 'Aucun résultat';
+            console.log("Aucun résultat");
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        }
+    } catch (e) {
+        console.log("Erreur lors de l'affichage du tri");
+    }
 });
+
+if (sessionType == "admin" || sessionType == "super admin") {
+    const btnFav = document.querySelector('#main2 form #btnfav');
+
+    btnFav.addEventListener('click', async () => {
+
+        var etat = btnFav.getAttribute('data-etat');
+
+        if (etat == "off") {
+            console.log('Affichage des favoris');
+            btnFav.setAttribute('data-etat', 'actif');
+            btnFav.title = "Afficher tous les contrats";
+            activeIcon(document.querySelector('#main2 form #btnfav ion-icon'));
+        } else {
+            console.log('Désactivation de l\'affichage des favoris');
+            btnFav.title = "Afficher les favoris";
+            btnFav.setAttribute('data-etat', 'off');
+            desactiveIcon(document.querySelector('#main2 form #btnfav ion-icon'));
+        }
+
+        try {
+            const req = await fetch(`allfavori.php?etat=${etat}`);
+            const json = await req.json();
+            if (json.error) {
+                console.log('Erreur lors de l\'affichage des favoris: ' + json.error);
+            } else {
+                console.log(json.length);
+                if (json.length > 0) {
+                    document.querySelector('#main2 #synthese tbody').innerHTML = "";
+                    json.forEach((post) => {
+                        tr = document.createElement('tr');
+                        td = document.createElement('td');
+                        td.textContent = post['id'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['site'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['entite'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['ville'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['nature_bail'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['nom_locataire'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['contact'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['logement'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['duree_contrat'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['loyer_mensuel'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['frequence_paiement'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['mode_paiement'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['nombre_mois'] * post['loyer_mensuel'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['montant_caution'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['revision_loyer'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['pénalites_retard'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['date_debut_contrat'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['date_fin_contrat'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['date_ajout'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['droit_enregistrement'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['nom_GI'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.textContent = post['numero_dossier'];
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.classList.add('ft-w');
+                        td.classList.add(post['etat']);
+                        td.setAttribute('data-idClient', post['id_operatoire']);
+                        td.setAttribute('data-ville', post['ville']);
+                        a = document.createElement('a');
+                        a.href = (post['etat'] == "En-cours" || post['etat'] == "Actif") ? "#main3" : "#main4";
+                        var percent = 0;
+                        if (post['etat'] == "En-cours" || post['etat'] == "Actif") {
+                            var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
+                            var elab_contrat = (parseInt(post['elaboration_contrat']) === 1 || parseInt(post['elaboration_contrat']) === 0) ? 1 : 0;
+                            var control_final = (parseInt(post['control_final']) === 1 || parseInt(post['control_final']) === 0) ? 1 : 0;
+                            percent = parseInt(post['negoce']) + val_offre + parseInt(post['info_client']) + elab_contrat + parseInt(post['transmition_contrat_client']) + parseInt(post['finalisation_dossier']) + control_final + parseInt(post['validation_dossier']) + parseInt(post['transmition_contrat_remise']) + parseInt(post['transmition_decharge']) + parseInt(post['reception_dossier']) + parseInt(post['archivage']);
+                        } else {
+                            var control_val = (parseInt(post['controle_validation_dossier']) === 1 || parseInt(post['controle_validation_dossier']) === 0) ? 1 : 0;
+                            percent = parseInt(post['lettre_preavis']) + control_val + parseInt(post['transmition_elements']) + parseInt(post['prevalidation_dossier']) + parseInt(post['validation_provisoire']) + parseInt(post['transmition_element_provisoire']) + parseInt(post['transmition_reponse']) + parseInt(post['etat_lieux']) + parseInt(post['transmition_elements_complet']) + parseInt(post['approbation_dossier']) + parseInt(post['paiement_locataire']) + parseInt(post['archivage_resiliation']);
+                        }
+                        percent = parseFloat(percent * 100 / 12).toFixed(2);
+                        h5 = document.createElement('h5');
+                        h5.textContent = percent + '%';
+                        span = document.createElement('span');
+                        span.textContent = post['etat'];
+                        div1 = document.createElement('div');
+                        div1.classList.add('evolutionBar');
+                        div2 = document.createElement('div');
+                        div2.classList.add('evolution');
+                        div2.style.width = percent + '%';
+                        div1.appendChild(div2);
+                        a.appendChild(h5);
+                        a.appendChild(div1);
+                        a.appendChild(span);
+                        td.appendChild(a);
+                        tr.appendChild(td);
+                        td = document.createElement('td');
+                        td.classList.add('edition');
+                        icon1 = document.createElement('ion-icon');
+                        icon1.setAttribute('name', 'create-outline');
+                        icon1.setAttribute('size', 'small');
+                        icon1.setAttribute('title', 'Modifiez');
+                        icon1.setAttribute('data-numDoc', 'numDoc' + post['id']);
+                        icon1.setAttribute('data-etat', 'false');
+                        td.appendChild(icon1);
+                        icon3 = document.createElement('ion-icon');
+                        icon3.setAttribute('name', 'remove-circle-outline');
+                        icon3.setAttribute('size', 'small');
+                        icon3.setAttribute('title', 'Résilié ce dossier');
+                        icon3.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                        td.appendChild(icon3);
+                        if (sessionType == "super admin" || sessionType == "admin") {
+                            form = document.createElement('form');
+                            form.classList.add('favoris');
+                            form.setAttribute('method', 'get');
+                            form.setAttribute('action', '');
+                            button = document.createElement('button');
+                            button.setAttribute('type', 'button');
+                            button.setAttribute('name', 'favori');
+                            button.setAttribute('data-id', post['id']);
+                            button.setAttribute('value', post['favori']);
+                            icon2 = document.createElement('ion-icon');
+                            icon2.setAttribute('size', 'small');
+                            icon2.setAttribute('title', 'Marquez comme important');
+                            var name = (post['favori'] == 0) ? "bookmark-outline" : "bookmark";
+                            icon2.setAttribute('name', name);
+                            button.appendChild(icon2);
+                            form.appendChild(button);
+                            td.appendChild(form);
+                            icon4 = document.createElement('ion-icon');
+                            icon4.setAttribute('name', 'trash-outline');
+                            icon4.setAttribute('size', 'small');
+                            icon4.setAttribute('title', 'supprimez');
+                            icon4.setAttribute('data-id_contrat', parseInt(post['id_operatoire']));
+                            icon4.setAttribute('data-type', post['etat']);
+                            td.appendChild(icon4);
+                        }
+                        tr.appendChild(td);
+                        document.querySelector('#synthese tbody').appendChild(tr);
+                    });
+                    showContratSelect();
+                    activeEtat();
+                    attacherEcouteursEdition();
+                    resiliation();
+                    gestionnaireFavori();
+                    deleteContrat();
+                } else {        //aucun resultat correspndant
+                    document.querySelector("#synthese tbody").innerHTML = "";
+                    tr = document.createElement('tr');
+                    td = document.createElement('td');
+                    td.style.backgroundColor = "orange";
+                    td.style.color = "white";
+                    td.setAttribute('align', 'center');
+                    td.setAttribute('colspan', 24);
+                    td.textContent = 'Aucun Favori';
+                    tr.appendChild(td);
+                    document.querySelector("#synthese tbody").appendChild(tr);
+                }
+            }
+        } catch (error) {
+            console.log("Erreur lors de l'affichage des favoris. " + error);
+        }
+    });
+}
 
 function exportToExcel(tableId, filename) {
     var table = document.querySelector(tableId);
@@ -603,36 +1001,36 @@ document.querySelector('.close').addEventListener('click', () => {
 
 document.querySelector('#synthese').addEventListener('click', () => {
     document.querySelector('#customConfirm').style.display = "none";
-})
+});
 
 function showContratSelect() {
     const etats = document.querySelectorAll('.ft-w');
     etats.forEach((etat) => {
+        etat.title = "Cliquez pour voir le dossier";
         etat.addEventListener('click', () => {
-            activeLi(document.querySelector('a[href="#main3"]').parentElement);
-            contratSelected = etat.getAttribute("data-idClient");
-            contratSelected = "#contrat" + contratSelected;
+            var lien = etat.querySelector('a').href.split("#")[1];
+            console.log(lien);
+            activeLi(document.querySelector(`a[href="#${lien}"]`).parentElement);
+            const contratSelected = "#contrat" + etat.getAttribute("data-idClient");
+            let villeSelected = etat.getAttribute("data-ville");
+            console.log(villeSelected);
+            if (lien == "main3") {
+                document.querySelector('#zone').value = villeSelected;
+                var event = new Event('change');
+                selectVille.dispatchEvent(event);
+            } else if (lien == "main4") {
+                document.querySelector('#zoneR').value = villeSelected;
+                var event = new Event('change');
+                choixVille.dispatchEvent(event);
+            }
             document.querySelector(contratSelected).click();
-        })
+        });
     });
 }
 
 function activeEtat() {
-    var actifs = document.querySelectorAll('.Actif a');
-    actifs.forEach(function (element) {
-        evolution = element.querySelector('.evolution');
-        evolution.style.backgroundColor = "green";
-        var icon = document.createElement('ion-icon');
-        icon.setAttribute('name', 'checkmark-circle');
-        icon.setAttribute('size', 'small');
-        icon.style.position = 'relative';
-        icon.style.top = '5px';
-        icon.style.left = 0;
-        element.appendChild(icon);
-    });
-
-    var encours = document.querySelectorAll('.En-cours a');
-    encours.forEach(function (element) {
+    var encours = document.querySelectorAll('#main2 .En-cours a');
+    encours.forEach((element) => {
         var icon = document.createElement('ion-icon');
         icon.setAttribute('name', 'ellipsis-horizontal-outline');
         icon.setAttribute('size', 'small');
@@ -642,29 +1040,29 @@ function activeEtat() {
         element.appendChild(icon);
     });
 
-    var en_resilieation = document.querySelectorAll('.En-Résiliation a');
-    en_resilieation.forEach(function (element) {
-        evolution = element.querySelector('.evolution');
-        evolution.style.backgroundColor = "black";
-        // var icon = document.createElement('ion-icon');
-        // icon.setAttribute('name', 'close');
-        // icon.style.position = 'relative';
-        // icon.style.top = '5px';
-        // icon.style.left = '5px';
-        // element.appendChild(icon);
-    });
-
-    var resilies = document.querySelectorAll('.Résilié a');
-    resilies.forEach(function (element) {
-        evolution = element.querySelector('.evolution');
-        evolution.style.backgroundColor = "red";
+    var actifs = document.querySelectorAll('#main2 .Actif a');
+    actifs.forEach((element) => {
         var icon = document.createElement('ion-icon');
-        icon.setAttribute('name', 'remove-circle');
+        icon.setAttribute('name', 'checkmark-circle');
         icon.setAttribute('size', 'small');
         icon.style.position = 'relative';
         icon.style.top = '5px';
-        icon.style.left = '5px';
+        icon.style.left = 0;
         element.appendChild(icon);
+        evolution = element.querySelector('.evolution');
+        evolution.style.backgroundColor = "green";
+    });
+
+    var en_resilieation = document.querySelectorAll('#main2 .En-Résiliation a');
+    en_resilieation.forEach(function (element) {
+        evolution = element.querySelector('.evolution');
+        evolution.style.backgroundColor = "black";
+    });
+
+    var resilies = document.querySelectorAll('#main2 .Résilié a');
+    resilies.forEach(function (element) {
+        evolution = element.querySelector('.evolution');
+        evolution.style.backgroundColor = "red";
     });
 }
 
@@ -719,7 +1117,7 @@ function attacherEcouteursEdition() {
                     try {
                         const req = await fetch(`getDonnee.php?id=${numero}`);
                         const json = await req.json();
-                        console.log("Nom GI à modifier " + json[0].nom_GI);
+                        console.log("Nom entité à modifier: " + json[0].entite);
 
                         document.querySelector('#siteM').value = json[0].site;
                         document.querySelector('#entiteM').value = json[0].entite;
@@ -758,51 +1156,63 @@ function attacherEcouteursEdition() {
 }
 
 function gestionnaireFavori() {
-    const favoris = document.querySelectorAll('[name="favori"]');
-    favoris.forEach(async function (button) {
-        button.addEventListener('click', async function () {
-            var id = this.getAttribute('data-id');
-            var valeur = this.value;
-            try {
-                const req = await fetch(`favori.php?favori=${valeur}&id=${id}`);
-                const json = await req.json();
+    if (sessionType == "admin" || sessionType == "super admin") {
+        const favoris = document.querySelectorAll('#main2 #synthese [name="favori"]');
+        favoris.forEach(async function (button) {
+            button.addEventListener('click', async function () {
+                var id = this.getAttribute('data-id');
+                var valeur = this.value;
+                try {
+                    const req = await fetch(`favori.php?favori=${valeur}&id=${id}`);
+                    const json = await req.json();
 
-                newValue = (json[0].favori == 0) ? 1 : 0;
-                console.log("newValue Favori = " + newValue);
-                document.querySelector(`.edition form button[data-id="${id}"]`).value = newValue;
+                    newValue = (json[0].favori == 0) ? 1 : 0;
+                    console.log("newValue Favori = " + newValue);
+                    document.querySelector(`.edition form button[data-id="${id}"]`).value = newValue;
 
-                if (newValue == 1) {
-                    desactiveIcon(this.querySelector('ion-icon'));
-                } else {
-                    activeIcon(this.querySelector('ion-icon'));
+                    if (newValue == 1) {
+                        desactiveIcon(this.querySelector('ion-icon'));
+                    } else {
+                        activeIcon(this.querySelector('ion-icon'));
+                    }
+                } catch (error) {
+                    console.log('Erreur lors de la mise à jour des favoris : ' + error.message);
                 }
-            } catch (error) {
-                console.log('Erreur lors de la mise à jour des favoris : ' + error.message);
+            });
+        });
+    }
+}
+
+function deleteContrat() {
+    const deleteIcons = document.querySelectorAll('#main2 [name="trash-outline"]');
+    deleteIcons.forEach(deleteIcon => {
+        deleteIcon.addEventListener('click', async () => {
+            var confirmationDelete = confirm("Voulez-vous vraiment supprimez ce dossier?");
+            if (confirmationDelete) {
+                const idContrat = deleteIcon.getAttribute('data-id_contrat');
+                const type = deleteIcon.getAttribute('data-type');
+                console.log("Suppression du contrat " + idContrat);
+                activeIcon(deleteIcon);
+                window.location = `deleteContrat.php?id=${idContrat}&type=${type}`;
             }
         });
     });
-}
+} deleteContrat();
 
 /*-------------------------------------------main3----------------------------------------*/
-const iconSearch = document.querySelector('#main3 #form_search [name="search-outline"]');
-
 searchMain3 = document.querySelector("#search");
-searchMain3.addEventListener('input', (event) => {
-    if (event.target.value.length > 0) {
-        iconSearch.style.display = "none";
-    } else if (event.target.value == "") {
-        iconSearch.style.display = "block";
-    }
-});
 
 const allContrats = document.querySelector('#allContrats');
 const dataContrat = JSON.parse(allContrats.getAttribute('data-resultat'));
 console.log("Tous les contrats en-cours: " + dataContrat.length);
 
-function showContrat(defaultSelected = "Douala") {
+function showContrat(defaultSelected, month = currentMonth) {
     document.querySelector('#table').innerHTML = "";
+    defaultSelected = (defaultSelected == null) ? "Douala" : defaultSelected;
     if (dataContrat.length >= 0) {
         dataContrat.forEach((post) => {
+            let parts = post['date_debut_contrat'].split('-');
+            let yearMonth = parts[0] + '-' + parts[1];
             if (post['ville'] == defaultSelected) {
                 var percent = 0;
                 var val_offre = (parseInt(post['validation_offre']) === 1 || parseInt(post['validation_offre']) === 0) ? 1 : 0;
@@ -837,22 +1247,18 @@ function showContrat(defaultSelected = "Douala") {
                 divContrat.setAttribute('data-reception_dossier', parseInt(post['reception_dossier']));
                 divContrat.setAttribute('data-archivage', parseInt(post['archivage']));
                 divContrat.setAttribute('onclick', "activeCheckliste()");
-
-                if (percent == 100) {       //Contrats actifs
-                    var divEndcontrat = document.createElement('div');
-                    divEndcontrat.classList.add('end_contrat');
-                    icnonJuste = document.createElement('ion-icon');
-                    icnonJuste.setAttribute('name', 'checkmark-circle-outline');
-                    icnonJuste.setAttribute('size', 'small');
-                    icnonResilie = document.createElement('ion-icon');
-                    icnonResilie.setAttribute('name', 'ban-outline');
-                    icnonResilie.setAttribute('size', 'small');
-                    icnonResilie.setAttribute('data-id_operatoire', post['id_operatoire']);
-                    divEndcontrat.appendChild(icnonJuste);
-                    divEndcontrat.appendChild(icnonResilie);
-                    divContrat.appendChild(divEndcontrat);
-                }
-
+                var divEndcontrat = document.createElement('div');
+                divEndcontrat.classList.add('end_contrat');
+                icnonJuste = document.createElement('ion-icon');
+                icnonJuste.setAttribute('name', 'checkmark-circle-outline');
+                icnonJuste.setAttribute('size', 'small');
+                icnonResilie = document.createElement('ion-icon');
+                icnonResilie.setAttribute('name', 'remove-circle-outline');
+                icnonResilie.setAttribute('size', 'small');
+                icnonResilie.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                divEndcontrat.appendChild(icnonJuste);
+                divEndcontrat.appendChild(icnonResilie);
+                divContrat.appendChild(divEndcontrat);
                 iconfolder = document.createElement('ion-icon');
                 iconfolder.setAttribute('name', 'folder-open');
                 iconfolder.setAttribute('size', 'large');
@@ -886,27 +1292,6 @@ function showContrat(defaultSelected = "Douala") {
         p.style.textAlign = "center";
         document.querySelector("#table").appendChild(p);
     }
-
-    const iconsResiliation = document.querySelectorAll('#main3 [name="ban-outline"]');
-    iconsResiliation.forEach((iconResiliation) => {
-        iconResiliation.addEventListener('click', (e) => {
-            activeResilition = confirm("Activez la résiliation de ce dossier?");
-            if (activeResilition) {
-                regex = /^([0-9]{2}[-/]){2}[0-9]{4}$/;
-                dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
-
-                while (!regex.test(dateResiliation)) {
-                    alert("Etrez la date dans le bon format ex: 01/01/2024");
-                    dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
-                }
-
-                let idResiliation = iconResiliation.getAttribute('data-id_operatoire');
-                console.log(dateResiliation);
-                window.location = `activeResiliation.php?id=${idResiliation}&dateResiliation=${dateResiliation}`;
-            }
-            e.stopPropagation();
-        });
-    });
 } showContrat();
 
 function differenceEnJours(date1, date2) {
@@ -931,6 +1316,7 @@ function comparerJourMoisAnnee(date1, date2) {
         date1.getFullYear() === date2.getFullYear();
 }
 
+//transforme le texte en date
 function substringDate(parts) {
     var parts = parts.split("-");
     var jour = parseInt(parts[2], 10); // parseInt pour convertir en nombre entier
@@ -940,6 +1326,29 @@ function substringDate(parts) {
 }
 
 function verifDelai() {
+    compte = 0;
+    tabVille = [];
+    dataContrat.forEach(contrat => {
+        var DateFin = substringDate(contrat['date_fin_contrat']);
+        DateFin = normaliserDate(DateFin);
+
+        if (comparerJourMoisAnnee(date, DateFin)) {
+            compte++;
+            tabVille.push(contrat['ville']);
+        } else if (date < DateFin) {
+            var Difference = differenceEnJours(DateFin, date);
+            if (Difference <= 30) {
+                compte++;
+                tabVille.push(contrat['ville']);
+            }
+        } else if (date > DateFin) {
+            compte++;
+            tabVille.push(contrat['ville']);
+        }
+    });
+    console.log(compte + " Contrat à surveiller en tout");
+    console.log(tabVille);
+
     const contrats = document.querySelectorAll(".contrat");
     contrats.forEach((contrat) => {
         var date_fin_string = contrat.getAttribute("data-date_fin");
@@ -952,22 +1361,18 @@ function verifDelai() {
         if (comparerJourMoisAnnee(date, date_fin)) {    //La date d'expiration est aujourd'hui
             contrat.style.backgroundColor = "rgba(255, 165, 0, 0.5)";       //orange
             contrat.style.animation = 'pulse 0.5s linear infinite';
-            compte++;
         } else if (date < date_fin) {
             var difference = differenceEnJours(date_fin, date);
-            if (difference > 7) {       // date d'expiration encore loin
-
+            if (difference > 30) {       // date d'expiration encore loin
+                //on ne fait rien
             } else {        // Date d'expiration en approche (-7jours)
                 contrat.style.backgroundColor = "rgba(0, 128, 0, 0.5)";     //green
                 contrat.style.animation = 'pulse 0.5s linear infinite';
-                compte++;
             }
         } else if (date > date_fin) {       // Date d'expiration passée
             contrat.style.backgroundColor = "rgba(255, 0, 0, 0.5)";     //red
             contrat.style.animation = 'pulse 0.5s linear infinite';
-            compte++;
         }
-        console.log(compte + " Contrat à surveiller dans cette ville");
     });
 } verifDelai();
 
@@ -978,6 +1383,10 @@ const submitButton = document.querySelector('#main3 button[type="submit"]');
 
 //activation de la modification de la checkliste
 modify.addEventListener("click", () => {
+    document.querySelector('#main3 #numContrat input').disabled = (document.querySelector('#main3 #numContrat input').disabled) ? false : true;
+    if (document.querySelector('#main3 #numContrat input').disabled == false) {
+        document.querySelector('#main3 #numContrat input').focus();
+    }
     formElements.forEach((element) => {
         element.disabled = (element.disabled) ? false : true;
         console.log("etat inputs form: " + element.disabled);
@@ -997,9 +1406,10 @@ function activeCheckliste() {
             let k = 0;
 
             //desactivation de tous les inputs
+            modified = false;
             submitButton.style.display = "none";
             submitButton.style.disabled = true;
-            modified = false;
+            document.querySelector('#main3 #numContrat input').disabled = true;
             formElements.forEach((element) => {
                 element.disabled = true;
             });
@@ -1008,7 +1418,7 @@ function activeCheckliste() {
             document.querySelector("#dateAjout").textContent = "Date : " + contrat.getAttribute("data-date_ajout");
             document.querySelector("#numEspace").textContent = contrat.getAttribute("data-logement");
             document.querySelector("#nomClient").textContent = "Nom client : " + contrat.getAttribute("data-nom_client");
-            document.querySelector("#numContrat").textContent = contrat.getAttribute("data-num_dossier");
+            document.querySelector("#numContrat").querySelector('input').value = contrat.getAttribute("data-num_dossier");
             document.querySelector("#nomGI").textContent = "Nom gestionnaire : " + contrat.getAttribute("data-nom_Gi");
             document.querySelector("#nomSite").textContent = contrat.getAttribute("data-site");
 
@@ -1048,6 +1458,18 @@ function activeCheckliste() {
 } activeCheckliste();
 
 // Contrôle du formulaire
+document.querySelector('#main3 #numContrat input').addEventListener('blur', (event) => {
+    if(event.target.value != ""){
+        modified = true;
+        submitButton.style.display = "flex";
+        submitButton.style.disabled = false;
+    }else{
+        modified = false;
+        submitButton.style.display = "none";
+        submitButton.style.disabled = true;
+    }
+});
+
 formElements.forEach((element, index) => {
     // Ajouter un écouteur d'événement change à chaque input
     element.addEventListener('change', () => {
@@ -1106,7 +1528,7 @@ croix.addEventListener('click', () => {
     if (modified == true) {
         alert("Veuillez enregistrez les modifications!");
         console.log("Veuillez enregistrez les modifications!");
-        document.querySelector('#checkliste').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        document.querySelector('#submit').scrollIntoView({ behavior: 'auto', block: 'nearest' });
     } else {
         document.querySelector('#checkliste').style.display = "none";
         console.log("Fermeture de checkliste");
@@ -1114,10 +1536,10 @@ croix.addEventListener('click', () => {
 });
 
 const searchContrat = async () => {
-    document.querySelector('#table').innerHTML = "";
     var villeSearched = document.querySelector('#zone').value;
     let keyword = document.querySelector('#search').value;
     if (keyword.length >= 2 || keyword.length == 0) {
+        document.querySelector('#table').innerHTML = "";
         const req = await fetch(`searchMain3.php?search=${keyword}&ville=${villeSearched}`);
         const json = await req.json();
         if (json.length > 0) {
@@ -1156,22 +1578,18 @@ const searchContrat = async () => {
                     divContrat.setAttribute('data-reception_dossier', parseInt(post['reception_dossier']));
                     divContrat.setAttribute('data-archivage', parseInt(post['archivage']));
                     divContrat.setAttribute('onclick', "activeCheckliste()");
-
-                    if (percent == 100) {   //Contrats actifs
-                        var divEndcontrat = document.createElement('div');
-                        divEndcontrat.classList.add('end_contrat');
-                        icnonJuste = document.createElement('ion-icon');
-                        icnonJuste.setAttribute('name', 'checkmark-circle-outline');
-                        icnonJuste.setAttribute('size', 'small');
-                        icnonResilie = document.createElement('ion-icon');
-                        icnonResilie.setAttribute('name', 'ban-outline');
-                        icnonResilie.setAttribute('size', 'small');
-                        icnonResilie.setAttribute('data-id_operatoire', post['id_operatoire']);
-                        divEndcontrat.appendChild(icnonJuste);
-                        divEndcontrat.appendChild(icnonResilie);
-                        divContrat.appendChild(divEndcontrat);
-                    }
-
+                    var divEndcontrat = document.createElement('div');
+                    divEndcontrat.classList.add('end_contrat');
+                    icnonJuste = document.createElement('ion-icon');
+                    icnonJuste.setAttribute('name', 'checkmark-circle-outline');
+                    icnonJuste.setAttribute('size', 'small');
+                    icnonResilie = document.createElement('ion-icon');
+                    icnonResilie.setAttribute('name', 'remove-circle-outline');
+                    icnonResilie.setAttribute('size', 'small');
+                    icnonResilie.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                    divEndcontrat.appendChild(icnonJuste);
+                    divEndcontrat.appendChild(icnonResilie);
+                    divContrat.appendChild(divEndcontrat);
                     iconfolder = document.createElement('ion-icon');
                     iconfolder.setAttribute('name', 'folder-open');
                     iconfolder.setAttribute('size', 'large');
@@ -1209,6 +1627,7 @@ const searchContrat = async () => {
     }
     activeCheckliste();
     verifDelai();
+    resiliation();
 };
 
 function ActualiseNotif() {
@@ -1245,44 +1664,79 @@ function ActualiseNotif() {
             }
         });
     }
-    compte = 0;     //on réinitialise le compteur de notification
 } ActualiseNotif();
 
 const selectVille = document.querySelector('#main3 form #zone');
 
 selectVille.addEventListener('change', (event) => {
     showContrat(event.target.value);
+    resiliation();
     verifDelai();
     activeCheckliste();
-    ActualiseNotif();
 });
 
+function resiliation() {
+    const iconsResiliation = document.querySelectorAll('#main3 [name="remove-circle-outline"], #main2 #synthese [name="remove-circle-outline"]');
+    iconsResiliation.forEach((iconResiliation) => {
+        iconResiliation.addEventListener('click', (e) => {
+            activeResilition = confirm("Activez la résiliation de ce dossier?");
+            if (activeResilition) {
+                regex = /^([0-9]{2}[-/]){2}[0-9]{4}$/;
+                dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
+
+                while (!regex.test(dateResiliation)) {
+                    alert("Etrez la date dans le bon format ex: 01/01/2024");
+                    dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
+                }
+
+                let idResiliation = iconResiliation.getAttribute('data-id_operatoire');
+                console.log(dateResiliation);
+                window.location = `activeResiliation.php?id=${idResiliation}&dateResiliation=${dateResiliation}`;
+            }
+            e.stopPropagation();
+        });
+    });
+} resiliation();
+
 function closePopup(popup) {
+    // Récupérer les paramètres de l'URL actuelle
+    var urlParams = new URLSearchParams(window.location.search);
+    // Supprimer tous les paramètres
+    urlParams = new URLSearchParams();
+    // Construire la nouvelle URL sans les paramètres
+    var newUrl = window.location.pathname + window.location.hash + "?" + urlParams.toString();
+    // Modifier l'URL de la page
+    history.replaceState(null, null, newUrl);
+
     popup.style.display = "none";
 }
 
 /*----------------------------------------------main4-------------------------------------------*/
 const allResilies = document.querySelector('#allResiliations');
 const dataResiliation = JSON.parse(allResilies.getAttribute('data-resultat'));
+const selectMonthR = document.querySelector('#main4 #formMain4 #monthR');
 
 console.log("Tous les contrats résiliés: " + dataResiliation.length);
 
-function showContratResilies(defaultSelected = "Douala") {
+function showContratResilies(defaultSelected = "Douala", month = currentMonth) {
     document.querySelector("#tableResilie").innerHTML = "";
     if (dataResiliation.length >= 0) {
         dataResiliation.forEach((resilie) => {
-            if (resilie['ville'] == defaultSelected) {
+            let parts = resilie['date_resiliation'].split('-');
+            let yearMonth = parts[0] + '-' + parts[1];
+            if (resilie['ville'] == defaultSelected && yearMonth == month) {
                 var percent = 0;
                 var control_val = (parseInt(resilie['controle_validation_dossier']) === 1 || parseInt(resilie['controle_validation_dossier']) === 0) ? 1 : 0;
                 percent = parseInt(resilie['lettre_preavis']) + control_val + parseInt(resilie['transmition_elements']) + parseInt(resilie['prevalidation_dossier']) + parseInt(resilie['validation_provisoire']) + parseInt(resilie['transmition_element_provisoire']) + parseInt(resilie['transmition_reponse']) + parseInt(resilie['etat_lieux']) + parseInt(resilie['transmition_elements_complet']) + parseInt(resilie['approbation_dossier']) + parseInt(resilie['paiement_locataire']) + parseInt(resilie['archivage_resiliation']);
                 percent = parseFloat(percent * 100 / 12).toFixed(2);
 
                 var divResilie = document.createElement('div');
+                divResilie.title = "Cliquez pour voir la checkliste";
                 divResilie.classList.add('contratResilie');
                 iconDoc = document.createElement('ion-icon');
                 iconDoc.setAttribute('name', 'document-text-outline');
                 pId = document.createElement('p');
-                pId.textContent = resilie['id_resiliation'];
+                pId.textContent = resilie['id_mode'];
                 pNum = document.createElement('p');
                 pNum.textContent = resilie['numero_dossier'];
                 pNom = document.createElement('p');
@@ -1303,7 +1757,7 @@ function showContratResilies(defaultSelected = "Douala") {
                 divProgressDiv = document.createElement('div');
                 divProgressDiv.classList.add('progressDiv');
                 divProgressDiv.style.width = `${percent}%`;
-                if(percent == 100){
+                if (percent == 100) {
                     divProgressDiv.style.backgroundColor = "green";
                 }
                 divResilie.appendChild(iconDoc);
@@ -1318,6 +1772,7 @@ function showContratResilies(defaultSelected = "Douala") {
                 divPercent.appendChild(divProgressDivBar);
                 divResilie.appendChild(divPercent);
                 //meta-data
+                divResilie.setAttribute('id', 'contrat' + parseInt(resilie['id_mode']));
                 divResilie.setAttribute('data-logement', resilie['logement']);
                 divResilie.setAttribute('data-nom_client', resilie['nom_locataire']);
                 divResilie.setAttribute('data-numero_dossier', resilie['numero_dossier']);
@@ -1352,96 +1807,101 @@ function showContratResilies(defaultSelected = "Douala") {
 const choixVille = document.querySelector('#main4 form #zoneR');
 
 choixVille.addEventListener('change', (event) => {
-    showContratResilies(event.target.value);
+    console.log("Ville: " + event.target.value, "Mois: " + selectMonthR.value);
+    showContratResilies(event.target.value, selectMonthR.value);
     activeChecklisteResiliation();
 });
 
-const iconSearchResilie = document.querySelector('#main4 #formMain4 [name="search-outline"]');
+selectMonthR.addEventListener('change', (event) => {
+    console.log("Ville: " + choixVille.value, "Mois: " + event.target.value);
+    showContratResilies(choixVille.value, event.target.value);
+    activeChecklisteResiliation();
+});
 
 searchMain4 = document.querySelector("#searchResilie");
 
 searchMain4.addEventListener('input', async (event) => {
     let keyword = document.querySelector('#searchResilie').value;
     if (keyword.length >= 2 || keyword.length == 0) {
-        if (event.target.value != "") {
-            iconSearchResilie.style.display = "none";
-        } else if (event.target.value == "") {
-            iconSearchResilie.style.display = "block";
-        }
-
         document.querySelector('#tableResilie').innerHTML = "";
         var villeSearched = document.querySelector('#zoneR').value;
         const req = await fetch(`searchMain4.php?search=${keyword}&ville=${villeSearched}`);
         const json = await req.json();
         if (json.length > 0) {
             json.forEach((resilie) => {
-                var percent = 0;
-                var control_val = (parseInt(resilie['controle_validation_dossier']) === 1 || parseInt(resilie['controle_validation_dossier']) === 0) ? 1 : 0;
-                percent = parseInt(resilie['lettre_preavis']) + control_val + parseInt(resilie['transmition_elements']) + parseInt(resilie['prevalidation_dossier']) + parseInt(resilie['validation_provisoire']) + parseInt(resilie['transmition_element_provisoire']) + parseInt(resilie['transmition_reponse']) + parseInt(resilie['etat_lieux']) + parseInt(resilie['transmition_elements_complet']) + parseInt(resilie['approbation_dossier']) + parseInt(resilie['paiement_locataire']) + parseInt(resilie['archivage_resiliation']);
-                percent = parseFloat(percent * 100 / 12).toFixed(2);
+                let parts = resilie['date_resiliation'].split('-');
+                let yearMonth = parts[0] + '-' + parts[1];
+                if (yearMonth == selectMonthR.value) {
+                    var percent = 0;
+                    var control_val = (parseInt(resilie['controle_validation_dossier']) === 1 || parseInt(resilie['controle_validation_dossier']) === 0) ? 1 : 0;
+                    percent = parseInt(resilie['lettre_preavis']) + control_val + parseInt(resilie['transmition_elements']) + parseInt(resilie['prevalidation_dossier']) + parseInt(resilie['validation_provisoire']) + parseInt(resilie['transmition_element_provisoire']) + parseInt(resilie['transmition_reponse']) + parseInt(resilie['etat_lieux']) + parseInt(resilie['transmition_elements_complet']) + parseInt(resilie['approbation_dossier']) + parseInt(resilie['paiement_locataire']) + parseInt(resilie['archivage_resiliation']);
+                    percent = parseFloat(percent * 100 / 12).toFixed(2);
 
-                var divResilie = document.createElement('div');
-                divResilie.classList.add('contratResilie');
-                iconDoc = document.createElement('ion-icon');
-                iconDoc.setAttribute('name', 'document-text-outline');
-                pId = document.createElement('p');
-                pId.textContent = resilie['id_resiliation'];
-                pNumero = document.createElement('p');
-                pNumero.textContent = resilie['numero_dossier'];
-                pNom = document.createElement('p');
-                pNom.textContent = resilie['nom_locataire'];
-                pNomGi = document.createElement('p');
-                pNomGi.textContent = resilie['nom_GI'];
-                pLogement = document.createElement('p');
-                pLogement.textContent = resilie['logement'];
-                pDateResiliation = document.createElement('p');
-                pDateResiliation.textContent = resilie['date_resiliation'];
-                divPercent = document.createElement('div');
-                divPercent.classList.add('percent');
-                p1 = document.createElement('p');
-                p1.style.fontSize = "12px";
-                p1.textContent = `${percent}%`;
-                divProgressDivBar = document.createElement('div');
-                divProgressDivBar.classList.add('progressDivBar');
-                divProgressDiv = document.createElement('div');
-                divProgressDiv.classList.add('progressDiv');
-                divProgressDiv.style.width = `${percent}%`;
-                if(percent == 100){
-                    divProgressDiv.style.backgroundColor = "green";
+                    var divResilie = document.createElement('div');
+                    divResilie.title = "Cliquez pour voir la checkliste";
+                    divResilie.classList.add('contratResilie');
+                    iconDoc = document.createElement('ion-icon');
+                    iconDoc.setAttribute('name', 'document-text-outline');
+                    pId = document.createElement('p');
+                    pId.textContent = resilie['id_mode'];
+                    pNumero = document.createElement('p');
+                    pNumero.textContent = resilie['numero_dossier'];
+                    pNom = document.createElement('p');
+                    pNom.textContent = resilie['nom_locataire'];
+                    pNomGi = document.createElement('p');
+                    pNomGi.textContent = resilie['nom_GI'];
+                    pLogement = document.createElement('p');
+                    pLogement.textContent = resilie['logement'];
+                    pDateResiliation = document.createElement('p');
+                    pDateResiliation.textContent = resilie['date_resiliation'];
+                    divPercent = document.createElement('div');
+                    divPercent.classList.add('percent');
+                    p1 = document.createElement('p');
+                    p1.style.fontSize = "12px";
+                    p1.textContent = `${percent}%`;
+                    divProgressDivBar = document.createElement('div');
+                    divProgressDivBar.classList.add('progressDivBar');
+                    divProgressDiv = document.createElement('div');
+                    divProgressDiv.classList.add('progressDiv');
+                    divProgressDiv.style.width = `${percent}%`;
+                    if (percent == 100) {
+                        divProgressDiv.style.backgroundColor = "green";
+                    }
+                    divResilie.appendChild(iconDoc);
+                    divResilie.appendChild(pId);
+                    divResilie.appendChild(pNumero);
+                    divResilie.appendChild(pNom);
+                    divResilie.appendChild(pNomGi);
+                    divResilie.appendChild(pLogement);
+                    divResilie.appendChild(pDateResiliation);
+                    divPercent.appendChild(p1);
+                    divProgressDivBar.appendChild(divProgressDiv);
+                    divPercent.appendChild(divProgressDivBar);
+                    divResilie.appendChild(divPercent);
+                    //meta-data
+                    divResilie.setAttribute('id', 'contrat' + parseInt(resilie['id_mode']));
+                    divResilie.setAttribute('data-logement', resilie['logement']);
+                    divResilie.setAttribute('data-nom_client', resilie['nom_locataire']);
+                    divResilie.setAttribute('data-numero_dossier', resilie['numero_dossier']);
+                    divResilie.setAttribute('data-nom_GI', resilie['nom_GI']);
+                    divResilie.setAttribute('data-site', resilie['site']);
+                    divResilie.setAttribute('data-id_mode', resilie['id_mode']);
+                    divResilie.setAttribute('data-lettre_preavis', resilie['lettre_preavis']);
+                    divResilie.setAttribute('data-transmition_elements', resilie['transmition_elements']);
+                    divResilie.setAttribute('data-prevalidation_dossier', resilie['prevalidation_dossier']);
+                    divResilie.setAttribute('data-validation_provisoire', resilie['validation_provisoire']);
+                    divResilie.setAttribute('data-transmition_element_provisoire', resilie['transmition_element_provisoire']);
+                    divResilie.setAttribute('data-transmition_reponse', resilie['transmition_reponse']);
+                    divResilie.setAttribute('data-etat_lieux', resilie['etat_lieux']);
+                    divResilie.setAttribute('data-transmition_elements_complet', resilie['transmition_elements_complet']);
+                    divResilie.setAttribute('data-controle_validation_dossier', resilie['controle_validation_dossier']);
+                    divResilie.setAttribute('data-approbation_dossier', resilie['approbation_dossier']);
+                    divResilie.setAttribute('data-paiement_locataire', resilie['paiement_locataire']);
+                    divResilie.setAttribute('data-archivage_resiliation', resilie['archivage_resiliation']);
+                    divResilie.setAttribute('data-date_activation_resiliation', resilie['date_activation_resiliation']);
+                    divResilie.setAttribute('data-date_resiliation', resilie['date_resiliation']);
+                    document.querySelector("#tableResilie").appendChild(divResilie);
                 }
-                divResilie.appendChild(iconDoc);
-                divResilie.appendChild(pId);
-                divResilie.appendChild(pNumero);
-                divResilie.appendChild(pNom);
-                divResilie.appendChild(pNomGi);
-                divResilie.appendChild(pLogement);
-                divResilie.appendChild(pDateResiliation);
-                divPercent.appendChild(p1);
-                divProgressDivBar.appendChild(divProgressDiv);
-                divPercent.appendChild(divProgressDivBar);
-                divResilie.appendChild(divPercent);
-                //meta-data
-                divResilie.setAttribute('data-logement', resilie['logement']);
-                divResilie.setAttribute('data-nom_client', resilie['nom_locataire']);
-                divResilie.setAttribute('data-numero_dossier', resilie['numero_dossier']);
-                divResilie.setAttribute('data-nom_GI', resilie['nom_GI']);
-                divResilie.setAttribute('data-site', resilie['site']);
-                divResilie.setAttribute('data-id_mode', resilie['id_mode']);
-                divResilie.setAttribute('data-lettre_preavis', resilie['lettre_preavis']);
-                divResilie.setAttribute('data-transmition_elements', resilie['transmition_elements']);
-                divResilie.setAttribute('data-prevalidation_dossier', resilie['prevalidation_dossier']);
-                divResilie.setAttribute('data-validation_provisoire', resilie['validation_provisoire']);
-                divResilie.setAttribute('data-transmition_element_provisoire', resilie['transmition_element_provisoire']);
-                divResilie.setAttribute('data-transmition_reponse', resilie['transmition_reponse']);
-                divResilie.setAttribute('data-etat_lieux', resilie['etat_lieux']);
-                divResilie.setAttribute('data-transmition_elements_complet', resilie['transmition_elements_complet']);
-                divResilie.setAttribute('data-controle_validation_dossier', resilie['controle_validation_dossier']);
-                divResilie.setAttribute('data-approbation_dossier', resilie['approbation_dossier']);
-                divResilie.setAttribute('data-paiement_locataire', resilie['paiement_locataire']);
-                divResilie.setAttribute('data-archivage_resiliation', resilie['archivage_resiliation']);
-                divResilie.setAttribute('data-date_activation_resiliation', resilie['date_activation_resiliation']);
-                divResilie.setAttribute('data-date_resiliation', resilie['date_resiliation']);
-                document.querySelector("#tableResilie").appendChild(divResilie);
             });
             activeChecklisteResiliation();
         } else {
@@ -1460,6 +1920,10 @@ const submitButtonR = document.querySelector('#main4 button[type="submit"]');
 
 //activation de la modification de la checkliste
 modifyR.addEventListener("click", () => {
+    document.querySelector('#main4 #numContratR input').disabled = (document.querySelector('#main4 #numContratR input').disabled) ? false : true;
+    if (document.querySelector('#main4 #numContratR input').disabled == false) {
+        document.querySelector('#main4 #numContratR input').focus();
+    }
     formElementsR.forEach((element) => {
         element.disabled = (element.disabled) ? false : true;
         console.log("etat inputs form: " + element.disabled);
@@ -1478,9 +1942,10 @@ function activeChecklisteResiliation() {
             let k = 0;
 
             //desactivez tous les inputs
+            modifiedR = false;
             submitButtonR.style.display = "none";
             submitButtonR.style.disabled = true;
-            modifiedR = false;
+            document.querySelector('#main4 #numContratR input').disabled = true;
             formElementsR.forEach((input) => {
                 input.disabled = true;
             });
@@ -1489,7 +1954,7 @@ function activeChecklisteResiliation() {
             document.querySelector("#dateAjoutR").textContent = "Date : " + contratResilie.getAttribute('data-date_activation_resiliation'); //date_ajout_resiliation
             document.querySelector("#numEspaceR").textContent = contratResilie.getAttribute("data-logement");
             document.querySelector("#nomClientR").textContent = "Nom client : " + contratResilie.getAttribute("data-nom_client");
-            document.querySelector("#numContratR").textContent = contratResilie.getAttribute("data-numero_dossier");
+            document.querySelector("#numContratR").querySelector('input').value = contratResilie.getAttribute("data-numero_dossier");
             document.querySelector("#nomGIR").textContent = "Nom gestionaire : " + contratResilie.getAttribute("data-nom_Gi");
             document.querySelector("#nomSiteR").textContent = contratResilie.getAttribute("data-site");
             // val_date_activation_resiliation = contratResilie.getAttribute('data-date_activation_resiliation');
@@ -1526,6 +1991,18 @@ function activeChecklisteResiliation() {
 } activeChecklisteResiliation();
 
 // Contrôle du formulaire
+document.querySelector('#main4 #numContratR input').addEventListener('blur', (event) => {
+    if(event.target.value != ""){
+        modifiedR = true;
+        submitButtonR.style.display = "flex";
+        submitButtonR.style.disabled = false;
+    }else{
+        modifiedR = false;
+        submitButtonR.style.display = "none";
+        submitButtonR.style.disabled = true;
+    }
+});
+
 formElementsR.forEach((element, index) => {
     // Ajouter un écouteur d'événement change à chaque input
     element.addEventListener('change', () => {
@@ -1584,8 +2061,106 @@ close.addEventListener('click', () => {
     if (modifiedR == true) {
         alert("Veuillez enregistrez les modifications!");
         console.log("Veuillez enregistrez les modifications!");
-        document.querySelector('#checklisteResiliation').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        document.querySelector('#submitR').scrollIntoView({ behavior: 'auto', block: 'nearest' });
     } else {
         document.querySelector('#checklisteResiliation').style.display = "none";
     }
 });
+
+/*----------------------------------------------main6-------------------------------------------*/
+if (sessionType == "super admin") {
+    const btnexportLog = document.querySelector('#main6 #exportLog');
+    const allLog = document.querySelector('#main6 #allLog');
+}
+
+/*----------------------------------------------main7-------------------------------------------*/
+function verifPassword(password, idChampErreur) {
+    var regex = /^[a-zA-Z0-9éèêâôï$#* -]{3,9}$/;
+    const champErreur = document.querySelector(idChampErreur);
+
+    if (password.value == "") {
+        surligne(password, true);
+        champErreur.innerHTML = "Veuillez entrez un password";
+        return false;
+    }
+    else {
+        if (!regex.test(password.value)) {
+            surligne(password, true);
+            champErreur.innerHTML = "Password invalide!";
+            return false;
+        }
+        else {
+            surligne(password, false);
+            champErreur.innerHTML = "";
+            return true;
+        }
+    }
+}
+
+function verifCpassword(cpassword, idChampErreur) {
+    var regex = /^[a-zA-Z0-9éèêâôï$#* -]{3,9}$/;
+    const champErreur = document.querySelector(idChampErreur);
+
+    if (cpassword.value == "") {
+        surligne(cpassword, true);
+        champErreur.innerHTML = "Veuillez entrez un password";
+        return false;
+    }
+    else {
+        if (!regex.test(cpassword.value)) {
+            surligne(cpassword, true);
+            champErreur.innerHTML = "Password invalide!";
+            return false;
+        }
+        else if (cpassword.value != document.querySelector('#newPassword').value) {
+            surligne(cpassword, true);
+            champErreur.innerHTML = "Les mots de passe ne sont pas identiques";
+            return false;
+        } else {
+            surligne(cpassword, false);
+            champErreur.innerHTML = "";
+            return true;
+        }
+    }
+}
+
+function verifFormNew(form) {
+    nomOk = verifNom(form.newName, "#erreurNomNew");
+    loginOk = verifNom(form.newLogin, "#erreurLoginnNew");
+    passwordOk = verifPassword(form.newPassword, "#erreurPasswordNew");
+    cpasswordOk = verifCpassword(form.newCPassword, "#erreurCpasswordNew");
+    return (nomOk && loginOk && passwordOk && cpasswordOk) ? true : false;
+}
+
+if (sessionType == "super admin" || sessionType == "admin") {
+    const btncreatCompte = document.querySelector("#main7 #creatCompte");
+    const btndeleteCompte = document.querySelector("#main7 #deleteCompte");
+    const formNewUser = document.querySelector("#main7 #newUser");
+    const formDelUser = document.querySelector("#main7 #delUser");
+    const fermer1 = document.querySelector('#main7 form#newUser h2 span');
+    const fermer2 = document.querySelector('#main7 form#delUser h2 span');
+
+
+    btncreatCompte.addEventListener('click', () => {
+        formNewUser.style.display = "flex";
+        formDelUser.style.display = "none";
+    })
+
+    fermer1.addEventListener('click', () => {
+        formNewUser.style.display = "none";
+    });
+
+    btndeleteCompte.addEventListener('click', () => {
+        formDelUser.style.display = "flex";
+        formNewUser.style.display = "none";
+    });
+
+    fermer2.addEventListener('click', () => {
+        formDelUser.style.display = "none";
+    });
+}
+
+function verifDelete() {
+    var confirmDeleteCompte = confirm("Voulez-vous vraiment supprimer ce compte ?");
+    return confirmDeleteCompte;
+}

@@ -1,0 +1,244 @@
+{"id_log":"244","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-17 08:02:37"}
+{"id_log":"243","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-17 08:01:51"}
+{"id_log":"242","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-17 07:56:05"}
+{"id_log":"241","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 21","date_logs":"2024-05-17 01:58:12"}
+{"id_log":"240","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 22","date_logs":"2024-05-17 01:58:11"}
+{"id_log":"239","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 22","date_logs":"2024-05-17 01:58:10"}
+{"id_log":"238","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 21","date_logs":"2024-05-17 01:57:37"}
+{"id_log":"237","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 21","date_logs":"2024-05-17 01:57:36"}
+{"id_log":"236","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 21","date_logs":"2024-05-17 01:57:05"}
+{"id_log":"235","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 21","date_logs":"2024-05-17 01:57:03"}
+{"id_log":"234","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 1","date_logs":"2024-05-17 01:56:39"}
+{"id_log":"233","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 1","date_logs":"2024-05-17 01:55:45"}
+{"id_log":"232","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 1","date_logs":"2024-05-17 01:54:15"}
+{"id_log":"231","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-17 01:53:30"}
+{"id_log":"230","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 21","date_logs":"2024-05-17 01:52:54"}
+{"id_log":"229","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 21","date_logs":"2024-05-17 01:51:40"}
+{"id_log":"228","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 21","date_logs":"2024-05-17 01:49:52"}
+{"id_log":"227","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 21","date_logs":"2024-05-17 01:47:45"}
+{"id_log":"226","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 21","date_logs":"2024-05-17 01:47:43"}
+{"id_log":"225","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 3","date_logs":"2024-05-17 01:46:37"}
+{"id_log":"224","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-17 01:42:44"}
+{"id_log":"223","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-17 01:30:37"}
+{"id_log":"222","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 17:50:12"}
+{"id_log":"221","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 17:22:51"}
+{"id_log":"220","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-16 17:22:44"}
+{"id_log":"219","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 17:22:21"}
+{"id_log":"218","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-16 17:22:08"}
+{"id_log":"217","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 17:05:14"}
+{"id_log":"216","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-16 17:05:08"}
+{"id_log":"215","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 18","date_logs":"2024-05-16 16:13:16"}
+{"id_log":"214","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 18","date_logs":"2024-05-16 16:12:22"}
+{"id_log":"213","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 11","date_logs":"2024-05-16 16:08:22"}
+{"id_log":"212","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 7","date_logs":"2024-05-16 16:04:28"}
+{"id_log":"211","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 16:02:53"}
+{"id_log":"210","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 15:52:13"}
+{"id_log":"209","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-16 15:52:08"}
+{"id_log":"208","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 7","date_logs":"2024-05-16 15:48:05"}
+{"id_log":"207","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 7","date_logs":"2024-05-16 15:46:38"}
+{"id_log":"206","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 8","date_logs":"2024-05-16 15:46:00"}
+{"id_log":"205","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 2","date_logs":"2024-05-16 15:45:35"}
+{"id_log":"204","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 15:43:32"}
+{"id_log":"203","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-16 15:43:25"}
+{"id_log":"202","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 19","date_logs":"2024-05-16 15:34:19"}
+{"id_log":"201","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 13","date_logs":"2024-05-16 15:32:39"}
+{"id_log":"200","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 10","date_logs":"2024-05-16 15:31:28"}
+{"id_log":"199","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 22","date_logs":"2024-05-16 15:29:23"}
+{"id_log":"198","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 18","date_logs":"2024-05-16 15:29:07"}
+{"id_log":"197","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 15:07:49"}
+{"id_log":"196","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 11:15:23"}
+{"id_log":"195","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 11:11:09"}
+{"id_log":"194","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-16 11:11:05"}
+{"id_log":"193","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 2","date_logs":"2024-05-16 10:25:47"}
+{"id_log":"192","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 8","date_logs":"2024-05-16 10:25:32"}
+{"id_log":"191","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 5","date_logs":"2024-05-16 10:25:06"}
+{"id_log":"190","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 21","date_logs":"2024-05-16 10:24:45"}
+{"id_log":"189","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 12 en r\u00e9siliation","date_logs":"2024-05-16 10:23:28"}
+{"id_log":"188","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 10:22:29"}
+{"id_log":"187","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 15 en r\u00e9siliation","date_logs":"2024-05-16 10:20:49"}
+{"id_log":"186","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 15","date_logs":"2024-05-16 10:20:36"}
+{"id_log":"185","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 10 en r\u00e9siliation","date_logs":"2024-05-16 10:19:56"}
+{"id_log":"184","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-5","message_log":"Mise \u00e0 jour de la checkliste de r\u00e9siliation \u2116 16","date_logs":"2024-05-16 10:18:12"}
+{"id_log":"183","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 16 en r\u00e9siliation","date_logs":"2024-05-16 10:17:49"}
+{"id_log":"182","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 16","date_logs":"2024-05-16 10:17:27"}
+{"id_log":"181","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 10","date_logs":"2024-05-16 10:17:09"}
+{"id_log":"180","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 22","date_logs":"2024-05-16 10:15:40"}
+{"id_log":"179","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 10:14:38"}
+{"id_log":"178","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 21 en r\u00e9siliation","date_logs":"2024-05-16 10:14:01"}
+{"id_log":"177","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 21","date_logs":"2024-05-16 10:13:34"}
+{"id_log":"176","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 21","date_logs":"2024-05-16 10:13:13"}
+{"id_log":"175","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 5 en r\u00e9siliation","date_logs":"2024-05-16 10:11:14"}
+{"id_log":"174","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 5","date_logs":"2024-05-16 10:10:51"}
+{"id_log":"173","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-5","message_log":"Mise \u00e0 jour de la checkliste de r\u00e9siliation \u2116 11","date_logs":"2024-05-16 10:08:14"}
+{"id_log":"172","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 11 en r\u00e9siliation","date_logs":"2024-05-16 10:07:55"}
+{"id_log":"171","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-5","message_log":"Mise \u00e0 jour de la checkliste de r\u00e9siliation \u2116 1","date_logs":"2024-05-16 10:06:54"}
+{"id_log":"170","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 17 en r\u00e9siliation","date_logs":"2024-05-16 10:06:34"}
+{"id_log":"169","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 13","date_logs":"2024-05-16 09:54:14"}
+{"id_log":"168","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 20","date_logs":"2024-05-16 09:46:03"}
+{"id_log":"167","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 20","date_logs":"2024-05-16 09:45:30"}
+{"id_log":"166","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 20","date_logs":"2024-05-16 09:35:29"}
+{"id_log":"165","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 09:31:47"}
+{"id_log":"164","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-16 09:31:39"}
+{"id_log":"163","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-16 09:28:42"}
+{"id_log":"162","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 14","date_logs":"2024-05-15 18:17:31"}
+{"id_log":"161","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 14","date_logs":"2024-05-15 18:17:30"}
+{"id_log":"160","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 2","date_logs":"2024-05-15 18:17:26"}
+{"id_log":"159","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 7","date_logs":"2024-05-15 18:17:11"}
+{"id_log":"158","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 7","date_logs":"2024-05-15 18:17:10"}
+{"id_log":"157","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 8","date_logs":"2024-05-15 18:17:07"}
+{"id_log":"156","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 8","date_logs":"2024-05-15 18:17:05"}
+{"id_log":"155","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 6","date_logs":"2024-05-15 18:16:41"}
+{"id_log":"154","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 6","date_logs":"2024-05-15 18:16:32"}
+{"id_log":"153","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 5","date_logs":"2024-05-15 18:16:17"}
+{"id_log":"152","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 5","date_logs":"2024-05-15 18:16:16"}
+{"id_log":"151","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 8","date_logs":"2024-05-15 18:14:34"}
+{"id_log":"150","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 8","date_logs":"2024-05-15 18:14:31"}
+{"id_log":"149","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 8","date_logs":"2024-05-15 18:14:03"}
+{"id_log":"148","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 8","date_logs":"2024-05-15 18:11:06"}
+{"id_log":"147","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 2","date_logs":"2024-05-15 18:10:46"}
+{"id_log":"146","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 2","date_logs":"2024-05-15 18:10:44"}
+{"id_log":"145","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 17:58:50"}
+{"id_log":"144","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-15 17:54:31"}
+{"id_log":"143","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 5","date_logs":"2024-05-15 17:52:47"}
+{"id_log":"142","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 5","date_logs":"2024-05-15 17:52:46"}
+{"id_log":"141","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 2","date_logs":"2024-05-15 17:52:44"}
+{"id_log":"140","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 2","date_logs":"2024-05-15 17:52:41"}
+{"id_log":"139","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 2","date_logs":"2024-05-15 17:52:40"}
+{"id_log":"138","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 19","date_logs":"2024-05-15 17:51:24"}
+{"id_log":"137","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 19","date_logs":"2024-05-15 17:50:57"}
+{"id_log":"136","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 19","date_logs":"2024-05-15 17:50:12"}
+{"id_log":"135","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 17:48:56"}
+{"id_log":"134","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-15 17:47:06"}
+{"id_log":"133","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 17:41:40"}
+{"id_log":"132","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-15 17:41:35"}
+{"id_log":"131","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-5","message_log":"Mise \u00e0 jour de la checkliste de r\u00e9siliation \u2116 3","date_logs":"2024-05-15 17:41:26"}
+{"id_log":"130","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 16:35:32"}
+{"id_log":"129","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-15 16:32:45"}
+{"id_log":"128","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 08:05:50"}
+{"id_log":"127","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 01:19:36"}
+{"id_log":"126","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-15 01:19:28"}
+{"id_log":"125","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 01:16:44"}
+{"id_log":"124","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-15 00:15:40"}
+{"id_log":"123","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-15 00:01:40"}
+{"id_log":"122","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 18","date_logs":"2024-05-14 23:32:31"}
+{"id_log":"121","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 22:51:55"}
+{"id_log":"120","id_user":"2","name_user":"Mme Gadeu","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 15:58:38"}
+{"id_log":"119","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 15:54:15"}
+{"id_log":"118","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 15:53:46"}
+{"id_log":"117","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-14 15:53:40"}
+{"id_log":"116","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 12:23:16"}
+{"id_log":"115","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 12:09:26"}
+{"id_log":"114","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:36:40"}
+{"id_log":"113","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 6","date_logs":"2024-05-14 10:30:29"}
+{"id_log":"112","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 6","date_logs":"2024-05-14 10:30:28"}
+{"id_log":"111","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 5","date_logs":"2024-05-14 10:30:26"}
+{"id_log":"109","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 5","date_logs":"2024-05-14 10:30:19"}
+{"id_log":"110","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 5","date_logs":"2024-05-14 10:30:19"}
+{"id_log":"108","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 5","date_logs":"2024-05-14 10:30:18"}
+{"id_log":"107","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 5","date_logs":"2024-05-14 10:30:17"}
+{"id_log":"106","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 5","date_logs":"2024-05-14 10:30:10"}
+{"id_log":"105","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:29:23"}
+{"id_log":"104","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:29:22"}
+{"id_log":"102","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:29:21"}
+{"id_log":"103","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:29:21"}
+{"id_log":"101","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:28:52"}
+{"id_log":"100","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:28:37"}
+{"id_log":"99","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:28:36"}
+{"id_log":"98","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:28:35"}
+{"id_log":"97","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:27:18"}
+{"id_log":"96","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:27:16"}
+{"id_log":"95","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:26:10"}
+{"id_log":"94","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:26:08"}
+{"id_log":"93","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:26:06"}
+{"id_log":"92","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:15:24"}
+{"id_log":"91","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 null","date_logs":"2024-05-14 10:14:43"}
+{"id_log":"90","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 09:57:45"}
+{"id_log":"89","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 09:56:25"}
+{"id_log":"88","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-14 09:25:06"}
+{"id_log":"87","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 11","date_logs":"2024-05-13 23:59:22"}
+{"id_log":"86","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 8","date_logs":"2024-05-13 23:59:18"}
+{"id_log":"85","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 23:40:52"}
+{"id_log":"84","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 22:13:21"}
+{"id_log":"83","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 17:41:49"}
+{"id_log":"82","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 17:33:37"}
+{"id_log":"81","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 17:12:15"}
+{"id_log":"80","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 17:09:57"}
+{"id_log":"79","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 17:05:41"}
+{"id_log":"78","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 16:58:08"}
+{"id_log":"77","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 16:55:34"}
+{"id_log":"76","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 17","date_logs":"2024-05-13 16:54:04"}
+{"id_log":"75","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 3","date_logs":"2024-05-13 16:18:42"}
+{"id_log":"74","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 2","date_logs":"2024-05-13 16:18:15"}
+{"id_log":"73","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 1","date_logs":"2024-05-13 16:17:40"}
+{"id_log":"72","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 17","date_logs":"2024-05-13 15:47:38"}
+{"id_log":"71","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 17","date_logs":"2024-05-13 15:45:57"}
+{"id_log":"70","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 16","date_logs":"2024-05-13 12:59:17"}
+{"id_log":"69","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 11:13:50"}
+{"id_log":"68","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 09:46:43"}
+{"id_log":"67","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-13 08:53:13"}
+{"id_log":"66","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 3","date_logs":"2024-05-11 14:07:41"}
+{"id_log":"65","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 2","date_logs":"2024-05-11 14:07:40"}
+{"id_log":"64","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 1","date_logs":"2024-05-11 14:07:38"}
+{"id_log":"63","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 1","date_logs":"2024-05-11 14:03:18"}
+{"id_log":"62","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 1","date_logs":"2024-05-11 14:03:14"}
+{"id_log":"61","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-4","message_log":"Suppression en favori du contrat \u2116 1","date_logs":"2024-05-11 14:03:13"}
+{"id_log":"60","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"4","message_log":"Mise en favori du contrat \u2116 1","date_logs":"2024-05-11 14:03:12"}
+{"id_log":"59","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-5","message_log":"Mise \u00e0 jour de la checkliste de r\u00e9siliation \u2116 1","date_logs":"2024-05-11 14:00:54"}
+{"id_log":"58","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 7","date_logs":"2024-05-11 13:47:44"}
+{"id_log":"57","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 13:46:02"}
+{"id_log":"56","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 13:45:45"}
+{"id_log":"55","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 12","date_logs":"2024-05-11 13:43:31"}
+{"id_log":"54","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 15","date_logs":"2024-05-11 13:43:16"}
+{"id_log":"53","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 13:42:55"}
+{"id_log":"52","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 13:42:50"}
+{"id_log":"51","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 10","date_logs":"2024-05-11 13:42:45"}
+{"id_log":"50","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 8","date_logs":"2024-05-11 13:42:30"}
+{"id_log":"49","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 5","date_logs":"2024-05-11 13:42:12"}
+{"id_log":"48","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 2","date_logs":"2024-05-11 13:42:04"}
+{"id_log":"47","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 15","date_logs":"2024-05-11 13:41:12"}
+{"id_log":"46","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 6","date_logs":"2024-05-11 13:39:14"}
+{"id_log":"45","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 11","date_logs":"2024-05-11 13:38:51"}
+{"id_log":"44","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 3","date_logs":"2024-05-11 13:38:34"}
+{"id_log":"43","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 14","date_logs":"2024-05-11 13:38:16"}
+{"id_log":"42","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"-5","message_log":"Mise \u00e0 jour de la checkliste de r\u00e9siliation \u2116 14","date_logs":"2024-05-11 13:37:48"}
+{"id_log":"41","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 3 en r\u00e9siliation","date_logs":"2024-05-11 13:37:27"}
+{"id_log":"40","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 6 en r\u00e9siliation","date_logs":"2024-05-11 13:36:56"}
+{"id_log":"39","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 6","date_logs":"2024-05-11 13:36:29"}
+{"id_log":"38","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 3","date_logs":"2024-05-11 13:35:44"}
+{"id_log":"37","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 14 en r\u00e9siliation","date_logs":"2024-05-11 13:35:09"}
+{"id_log":"36","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 9 en r\u00e9siliation","date_logs":"2024-05-11 13:34:42"}
+{"id_log":"35","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 14","date_logs":"2024-05-11 13:34:11"}
+{"id_log":"34","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 13","date_logs":"2024-05-11 13:16:39"}
+{"id_log":"33","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 13:13:15"}
+{"id_log":"32","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 13:13:02"}
+{"id_log":"31","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 12","date_logs":"2024-05-11 13:12:43"}
+{"id_log":"30","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 9","date_logs":"2024-05-11 12:54:53"}
+{"id_log":"29","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 11","date_logs":"2024-05-11 12:53:56"}
+{"id_log":"28","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 11","date_logs":"2024-05-11 12:47:00"}
+{"id_log":"27","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 10","date_logs":"2024-05-11 12:42:26"}
+{"id_log":"26","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 12:38:53"}
+{"id_log":"25","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 12:38:09"}
+{"id_log":"24","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 12:33:36"}
+{"id_log":"23","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 12:33:29"}
+{"id_log":"22","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"-5","message_log":"Mise \u00e0 jour de la checkliste de r\u00e9siliation \u2116 1","date_logs":"2024-05-11 12:33:22"}
+{"id_log":"21","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 9","date_logs":"2024-05-11 12:31:49"}
+{"id_log":"20","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 9","date_logs":"2024-05-11 12:30:54"}
+{"id_log":"19","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 8","date_logs":"2024-05-11 12:26:42"}
+{"id_log":"18","id_user":"3","name_user":"Mr Thierry","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 12:20:42"}
+{"id_log":"17","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 12:20:26"}
+{"id_log":"16","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 7","date_logs":"2024-05-11 12:20:09"}
+{"id_log":"15","id_user":"1","name_user":"Ntep","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 12:05:10"}
+{"id_log":"14","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 1","date_logs":"2024-05-11 11:11:23"}
+{"id_log":"13","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"6","message_log":"Ajout du dossier \u2116 1 en r\u00e9siliation","date_logs":"2024-05-11 11:10:39"}
+{"id_log":"12","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 1","date_logs":"2024-05-11 11:03:11"}
+{"id_log":"11","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"5","message_log":"Mise \u00e0 jour de la checkliste d'adh\u00e9sion \u2116 6","date_logs":"2024-05-11 10:49:47"}
+{"id_log":"10","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 6","date_logs":"2024-05-11 10:42:38"}
+{"id_log":"9","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 5","date_logs":"2024-05-11 10:16:16"}
+{"id_log":"8","id_user":"6","name_user":"Mme Kapche","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 10:09:50"}
+{"id_log":"7","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 10:07:14"}
+{"id_log":"6","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 4","date_logs":"2024-05-11 10:07:03"}
+{"id_log":"5","id_user":"5","name_user":"Mr Yannick","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 09:42:51"}
+{"id_log":"4","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"-1","message_log":"D\u00e9connexion de la plateforme!","date_logs":"2024-05-11 09:41:57"}
+{"id_log":"3","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"3","message_log":"Modification du contrat \u2116 3","date_logs":"2024-05-11 09:39:47"}
+{"id_log":"2","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"2","message_log":"Ajout du nouveau contrat \u2116 3","date_logs":"2024-05-11 09:39:23"}
+{"id_log":"1","id_user":"4","name_user":"Mr Tsafack","adresse_ip":"::1","level_log":"1","message_log":"Connexion sur la plateforme!","date_logs":"2024-05-11 09:34:07"}

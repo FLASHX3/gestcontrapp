@@ -16,8 +16,8 @@
 }
 
 ::selection {
-    background-color: var(--secondary-color);
     color: #000000;
+    background-color: var(--secondary-color);
 }
 
 /*-webkit-box-refleckt: below 1px solid linear-gradient (transparent,#0004);*/
@@ -51,18 +51,22 @@ nav img {
 nav h1 {
     display: flex;
     height: 180px;
-    padding: 10px;
-    font-size: 25px;
-    cursor: pointer;
-    text-align: center;
     align-items: center;
     justify-content: center;
-    border-bottom: 2px solid white;
+    border-bottom: 1px solid white;
 }
 
 nav h1 a {
     color: white;
+    height: min-content;
+    display: inline-block;
     text-decoration: none;
+}
+
+nav h1 a ion-icon {
+    position: relative;
+    top: 4px;
+    left: -5px;
 }
 
 ion-icon {
@@ -88,7 +92,7 @@ ion-icon {
     width: 85%;
     height: 40px;
     list-style: none;
-    transition: all 0.4s ease-in;
+    transition: all 0.2s ease-in;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
@@ -97,7 +101,10 @@ ion-icon {
     counter-increment: liste;
 }
 
-#nav ul li:hover,
+#nav ul li:hover {
+    background-color: var(--thirty-color);
+}
+
 #nav ul li.actif {
     color: black;
     background-color: var(--secondary-color);
@@ -257,7 +264,14 @@ aside::-webkit-scrollbar {
 }
 
 #main1 form h2 {
-    margin: 1.5rem;
+    margin: 0.75rem;
+    text-align: center;
+}
+
+#main1 form span.message {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px;
     text-align: center;
 }
 
@@ -407,18 +421,18 @@ select {
     flex-direction: column;
 }
 
-#main2::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
-}
+/* #main2::-webkit-scrollbar {
+     width: 10px;
+    height: 10px; 
+} */
 
-#main2::-webkit-scrollbar-track {
+/* #main2::-webkit-scrollbar-track {
     background-color: var(--primary-color);
 }
 
 #main2::-webkit-scrollbar-thumb {
     background-color: var(--thirty-color);
-}
+} */
 
 #main2 h1 {
     width: 100%;
@@ -446,7 +460,7 @@ select {
     font-weight: bold;
     position: relative;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 #main2 #actionMain2 form input {
@@ -456,6 +470,11 @@ select {
     padding: 0.75rem;
     border-radius: 1.5rem;
     border: 1px solid #ccc;
+}
+
+#main2 #actionMain2 form #btnfav {
+    cursor: pointer;
+    color: var(--primary-color);
 }
 
 #main2 #actionMain2 form button {
@@ -468,13 +487,13 @@ select {
 }
 
 #main2 #actionMain2 form [name="search-outline"] {
-    left: -35px;
+    left: -40px;
     position: relative;
     background-color: transparent;
 }
 
 #main2 #actionMain2 form select {
-    width: 20%;
+    width: 150px;
     outline: none;
     display: block;
     font-size: 17px;
@@ -506,30 +525,30 @@ select {
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
-#main2 #actionMain2 form .message{
+#main2 #actionMain2 form .message {
     position: relative;
     text-align: center;
 }
 
-#main2 #actionMain2 form .message ion-icon{
+#main2 #actionMain2 form .message ion-icon {
     position: relative;
     top: 7px;
     right: 5px;
 }
 
-#main2 #actionMain2 form .close{
+#main2 #actionMain2 form .close {
     top: 10px;
     right: 10px;
     cursor: pointer;
     position: absolute;
 }
 
-#main2 #actionMain2 form .custom-confirm #buttonconfirm{
+#main2 #actionMain2 form .custom-confirm #buttonconfirm {
     display: flex;
     justify-content: space-between;
 }
 
-#main2 #actionMain2 form .custom-confirm #buttonconfirm button{
+#main2 #actionMain2 form .custom-confirm #buttonconfirm button {
     width: 75px;
     display: flex;
     border-radius: 0;
@@ -538,19 +557,19 @@ select {
     transition: all 0.5s ease;
 }
 
-#main2 #actionMain2 form .custom-confirm #buttonconfirm button#excel:hover{
+#main2 #actionMain2 form .custom-confirm #buttonconfirm button#excel:hover {
     transform: scale(1.05);
     color: rgb(9, 153, 21);
     box-shadow: inset 4px 4px 4px rgba(9, 153, 21, 0.4);
 }
 
-#main2 #actionMain2 form .custom-confirm #buttonconfirm button#pdf:hover{
+#main2 #actionMain2 form .custom-confirm #buttonconfirm button#pdf:hover {
     transform: scale(1.05);
     color: rgb(250, 0, 0);
     box-shadow: inset 4px 4px 4px rgba(250, 0, 0, 0.4);
 }
 
-#main2 #actionMain2 form .custom-confirm #buttonconfirm button img{
+#main2 #actionMain2 form .custom-confirm #buttonconfirm button img {
     width: 20px;
     height: 20px;
 }
@@ -598,7 +617,14 @@ td {
 #main2 .ft-w {
     padding: 0 5px;
     font-weight: bold;
+    transition: all 0.1s;
     background-color: #ffffff;
+}
+
+#main2 .ft-w:hover {
+    cursor: pointer;
+    transform: scale(1.06);
+    background-color: var(--thirty-color);
 }
 
 #main2 td a {
@@ -644,7 +670,7 @@ td {
     background-color: transparent;
 }
 
-#main2 #modification{
+#main2 #modification {
     /* top: 50px; */
     z-index: 2;
     width: 75vw;
@@ -659,7 +685,7 @@ td {
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
-#main2 #modification form{
+#main2 #modification form {
     width: 100%;
     height: 100%;
     padding: 10px;
@@ -670,17 +696,18 @@ td {
     background-color: white;
 }
 
-#main2 #modification form h2{
+#main2 #modification form h2 {
     padding: 5px;
     margin: 10px;
     color: var(--primary-color);
 }
-#main2 #modification form hr{
+
+#main2 #modification form hr {
     width: 100%;
     color: var(--primary-color);
 }
 
-#main2 #modification form .champs{
+#main2 #modification form .champs {
     width: 100%;
     margin: 10px;
     height: 80%;
@@ -691,7 +718,7 @@ td {
     justify-content: space-around;
 }
 
-#main2 #modification form #Modif{
+#main2 #modification form #Modif {
     margin: auto;
     color: green;
     cursor: pointer;
@@ -706,12 +733,12 @@ td {
     border: 1px solid var(--primary-color);
 }
 
-#main2 #modification form #Modif:hover{
+#main2 #modification form #Modif:hover {
     border: 2px solid var(--primary-color);
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
-#main2 #modification form .champs .input-group{
+#main2 #modification form .champs .input-group {
     height: 80px;
     display: flex;
     flex-direction: column;
@@ -719,12 +746,13 @@ td {
     width: calc((100% / 5) - 5px);
 }
 
-#main2 #modification form .champs .input-group label{
+#main2 #modification form .champs .input-group label {
     font-size: 14px;
     color: var(--primary-color);
 }
 
-#main2 #modification form .champs .input-group input, #main2 #modification form .champs .input-group select{
+#main2 #modification form .champs .input-group input,
+#main2 #modification form .champs .input-group select {
     width: 100%;
     height: 40px;
     padding: 5px;
@@ -734,7 +762,12 @@ td {
     border: 1px solid black;
 }
 
-#main2 #modifBull, #main2 #erreurUpdatecontrat, #main2 #erreurFav, #main3 #maj, #main4 #majR{
+#main2 #modifBull,
+#main2 #delete,
+#main3 #maj,
+#main4 #majR,
+#main4 #resilie,
+#main7 #compte {
     top: 200px;
     z-index: 4;
     left: 300px;
@@ -755,6 +788,7 @@ td {
     border: 1px solid var(--primary-color);
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
+
 /*----------------------------------------main3---------------------------------------*/
 
 #main3 {
@@ -778,35 +812,42 @@ td {
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
-#main3 #form_search, #main4 #formMain4 {
+#main3 #form_search,
+#main4 #formMain4 {
+    height: 50px;
     display: flex;
+    border: none;
     position: relative;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
-#main3 #form_search select, #main4 #formMain4 select{
-    width: 20%;
+#main3 #form_search select,
+#main4 #formMain4 select {
+    width: 15%;
     color: white;
     background-color: var(--primary-color);
 }
 
-#main3 input#search, #main4 #formMain4 #searchResilie{
-    width: 70%;
+#main3 #form_search #month,
+#main4 #formMain4 #monthR {
+    width: 15%;
+    border: none;
+    padding: 5px;
     outline: none;
-    margin: 0 auto;
+    font-size: 18px;
+    border-radius: 0.25rem;
+}
+
+#main3 input#search,
+#main4 #formMain4 #searchResilie {
+    margin: 0;
+    width: 60%;
+    outline: none;
     display: block;
     font-size: 17px;
     padding: 0.75rem;
     border-radius: 1.5rem;
     border: 1px solid #ccc;
-}
-
-#main3 [name="search-outline"], #main4 [name="search-outline"] {
-    top: 25%;
-    left: -75px;
-    display: block;
-    cursor: pointer;
-    position: relative;
 }
 
 #main3 #table {
@@ -882,7 +923,7 @@ td {
     }
 }
 
-#main3 .contrat .end_contrat{
+#main3 .contrat .end_contrat {
     width: 100%;
     display: flex;
     color: black;
@@ -903,7 +944,8 @@ td {
     background-color: var(--primary-color);
 }
 
-#main3 #checkliste, #main4 #checklisteResiliation {
+#main3 #checkliste,
+#main4 #checklisteResiliation {
     top: 65px;
     left: 25%;
     z-index: 2;
@@ -933,14 +975,16 @@ td {
     }
 }
 
-#main3 #checkliste form, #main4 #checklisteResiliation form {
+#main3 #checkliste form,
+#main4 #checklisteResiliation form {
     height: 100%;
     overflow: auto;
     border-radius: 1.5rem;
     background-color: white;
 }
 
-#main3 #checkliste form [type="submit"], #main4 #checklisteResiliation form [type="submit"] {
+#main3 #checkliste form [type="submit"],
+#main4 #checklisteResiliation form [type="submit"] {
     width: 25%;
     margin: auto;
     border: none;
@@ -955,41 +999,49 @@ td {
     background-color: transparent;
 }
 
-#main3 form [type="submit"]:hover, #main4 form [type="submit"]:hover {
+#main3 form [type="submit"]:hover,
+#main4 form [type="submit"]:hover {
     border-radius: 1.5rem;
     border: 1px solid springgreen;
     box-shadow: 2px 2px 2px 5px rgba(0, 255, 127, 0.1);
 }
 
-#main3 #checkliste [name="pencil"], #main4 #checklisteResiliation [name="pencil"] {
+#main3 #checkliste [name="pencil"],
+#main4 #checklisteResiliation [name="pencil"] {
     cursor: pointer;
     transition: 0.5s ease-in;
 }
 
-#main3 #checkliste [name="pencil"]:hover, #main4 #checklisteResiliation [name="pencil"]:hover {
+#main3 #checkliste [name="pencil"]:hover,
+#main4 #checklisteResiliation [name="pencil"]:hover {
     color: green;
     transform: scale(1.3);
 }
 
-#main3 #checkliste form::-webkit-scrollbar, #main4 #checklisteResiliation form::-webkit-scrollbar {
+#main3 #checkliste form::-webkit-scrollbar,
+#main4 #checklisteResiliation form::-webkit-scrollbar {
     width: 0px;
 }
 
-#main3 #checkliste form::-webkit-scrollbar-thumb, #main4 #checklisteResiliation form::-webkit-scrollbar-thumb {
+#main3 #checkliste form::-webkit-scrollbar-thumb,
+#main4 #checklisteResiliation form::-webkit-scrollbar-thumb {
     background-color: var(--secondary-color);
 }
 
-#main3 #checkliste form::-webkit-scrollbar-track, #main4 #checklisteResiliation form::-webkit-scrollbar-track {
+#main3 #checkliste form::-webkit-scrollbar-track,
+#main4 #checklisteResiliation form::-webkit-scrollbar-track {
     background-color: var(--primary-color);
 }
 
-#main3 #checkliste form h2, #main4 #checklisteResiliation form h2 {
+#main3 #checkliste form h2,
+#main4 #checklisteResiliation form h2 {
     margin-top: 10px;
     text-align: center;
     color: var(--primary-color);
 }
 
-#main3 #checkliste form .croix, #main4 #checklisteResiliation form .croix {
+#main3 #checkliste form .croix,
+#main4 #checklisteResiliation form .croix {
     top: -30px;
     width: 30px;
     right: -20px;
@@ -1011,43 +1063,63 @@ td {
     animation: scale 1s infinite;
 }
 
-#main3 span.mini-title, #main4 span.mini-title {
+#main3 span.mini-title,
+#main4 span.mini-title {
     font-size: 10px;
     text-align: center;
 }
 
-#main3 #checkliste #table1, #main4 #checklisteResiliation #table1R {
+#main3 #checkliste #table1,
+#main4 #checklisteResiliation #table1R {
     width: 100%;
     height: 30px;
     font-size: 12px;
 }
 
-#main3 #checkliste #table1 td, #main4 #checklisteResiliation #table1R td {
+#main3 #checkliste #table1 td,
+#main4 #checklisteResiliation #table1R td {
     border: none;
     text-align: left;
     font-weight: bold;
 }
 
-#main3 #checkliste #table1 tr td:last-child, #main4 #checklisteResiliation #table1R tr td:last-child {
+#main3 #checkliste #table1 td input,
+#main4 #checklisteResiliation #table1R td input{
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    text-align: center;
+    background-color: transparent;
+}
+
+#main3 #checkliste #table1 tr td:last-child,
+#main4 #checklisteResiliation #table1R tr td:last-child {
     text-align: center;
     border: 1px solid black;
 }
 
-#main3 #checkliste #table2, #main4 #checklisteResiliation #table2R {
+#main3 #checkliste #table2,
+#main4 #checklisteResiliation #table2R {
     width: 100%;
     margin-bottom: 15px;
 }
 
-#main3 #checkliste #table2 tr th, #main4 #checklisteResiliation #table2R tr th {
+#main3 #checkliste #table2 tr th,
+#main4 #checklisteResiliation #table2R tr th {
     color: white;
     background-color: var(--primary-color);
 }
 
-#main3 #checkliste #table2 tr, #main4 #checklisteResiliation #table2R tr {
+#main3 #checkliste #table2 tr,
+#main4 #checklisteResiliation #table2R tr {
     font-size: 12px;
 }
 
-#main3 #checkliste #table2 td, #main4 #checklisteResiliation #table2R td {
+#main3 #checkliste #table2 td,
+#main4 #checklisteResiliation #table2R td {
     text-align: left;
     border: 1px solid black;
 }
@@ -1056,13 +1128,15 @@ td {
     display: none;
 }
 
-#main4{
+/*-----------------------------------------main4----------------------------------------*/
+
+#main4 {
     display: flex;
     position: relative;
     flex-direction: column;
 }
 
-#main4 h1{
+#main4 h1 {
     width: 100%;
     height: 70px;
     display: flex;
@@ -1075,8 +1149,7 @@ td {
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
-#main4 #th{
-    margin: 5px;
+#main4 #th {
     height: 35px;
     padding: 5px;
     display: flex;
@@ -1086,9 +1159,9 @@ td {
     background-color: white;
     color: var(--primary-color);
     justify-content: space-around;
-} 
+}
 
-#main4 #tableResilie{
+#main4 #tableResilie {
     width: 100%;
     padding: 5px;
     display: flex;
@@ -1097,7 +1170,7 @@ td {
     background-color: var(--thirty-color);
 }
 
-#main4 #tableResilie .contratResilie{
+#main4 #tableResilie .contratResilie {
     margin: 5px;
     height: 40px;
     padding: 5px;
@@ -1111,12 +1184,12 @@ td {
     background-color: var(--primary-color);
 }
 
-#main4 #tableResilie .contratResilie:hover{
+#main4 #tableResilie .contratResilie:hover {
     transform: scale(1.02);
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
-#main4 #tableResilie .contratResilie .percent{
+#main4 #tableResilie .contratResilie .percent {
     height: 100%;
     display: flex;
     width: calc(100%/8);
@@ -1125,20 +1198,20 @@ td {
     justify-content: start;
 }
 
-#main4 #tableResilie .contratResilie .progressDivBar{
+#main4 #tableResilie .contratResilie .progressDivBar {
     height: 5px;
     width: 100%;
     border-radius: 10px;
     background-color: white;
 }
 
-#main4 #tableResilie .contratResilie .progressDivBar .progressDiv{
+#main4 #tableResilie .contratResilie .progressDivBar .progressDiv {
     height: 100%;
     border-radius: 10px;
     background-color: var(--secondary-color);
 }
 
-#main4 #checklisteResiliation{
+#main4 #checklisteResiliation {
     top: 50px;
     left: 20%;
     z-index: 2;
@@ -1154,17 +1227,312 @@ td {
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
-
-
-
-/* #main5{
-    background-color: rgb(81, 3, 92);
-} */
-
-/* .main-active{
-    height: 100vh;
-    opacity: 1;
+/*-----------------------------------------main5----------------------------------------*/
+#main5 {
     display: flex;
-    z-index: -1;
-    transition: all 0.5s ease;
-} */
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+#main5 h1 {
+    width: 100%;
+    height: 70px;
+    padding: 20px;
+    display: flex;
+    color: white;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: center;
+    border: 1px solid black;
+    background-color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main5 #dashboard {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+}
+
+#main5 #dashboard #statistique{
+    width: 100%;
+    display: flex;
+    margin: 10px 0;
+    justify-content: space-around;
+}
+
+#main5 #dashboard #statistique .stats{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#main5 #dashboard #statistique .stats div{
+    width: 25px;
+    height: 25px;
+    display: flex;
+    border: 1px solid;
+    border-radius: 50%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#main5 .iframe-container {
+    width: 50%;
+    padding: 5px;
+    height: 500px;
+    box-sizing: border-box;
+}
+
+#main5 iframe {
+    width: 100%;
+    height: 100%;
+}
+
+/*-----------------------------------------main6----------------------------------------*/
+#main6 {
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+#main6 h1 {
+    width: 100%;
+    height: 70px;
+    padding: 18px;
+    display: flex;
+    color: white;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: center;
+    border: 1px solid black;
+    background-color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main6 #exportLog {
+    padding: 5px;
+    display: flex;
+    outline: none;
+    cursor: pointer;
+    margin: 10px 0px;
+    align-items: center;
+    border-radius: 10px;
+    justify-content: center;
+    border: 4px double var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main6 #allLog {
+    padding: 5px;
+    margin: 20px 0;
+    border-collapse: collapse;
+    border: 1px solid rgb(240, 240, 240);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main6 #allLog th {
+    color: white;
+    background-color: var(--primary-color);
+}
+
+#main6 #allLog th,
+td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #dddddd;
+}
+
+#main6 #allLog tr:hover {
+    background-color: var(--thirty-color);
+}
+
+#main6 #allLog tr:nth-child(even) {
+    background-color: var(--thirty-color);
+}
+
+/*-----------------------------------------main7----------------------------------------*/
+#main7 {
+    padding: 5px;
+    display: flex;
+    overflow-y: auto;
+    position: relative;
+    flex-direction: column;
+}
+
+#main7 h1 {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    padding: 15px;
+    color: white;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: center;
+    border: 1px solid black;
+    background-color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main7 #user {
+    align-self: flex-end;
+}
+
+#main7 #user .info {
+    width: 50px;
+    height: 50px;
+    margin: auto;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
+#main7 #user .info ion-icon {
+    font-size: 64px;
+    color: var(--primary-color);
+}
+
+#main7 #user p {
+    font-weight: bold;
+    text-align: center;
+}
+
+#main7 #user p #logout {
+    text-decoration: none;
+    transition: all ease-out 1s;
+    color: var(--primary-color);
+}
+
+#main7 #user p #logout:hover {
+    text-decoration: underline;
+}
+
+#main7 #creatCompte,
+#main7 #deleteCompte {
+    width: 250px;
+    height: 50px;
+    margin: 15px;
+    border: none;
+    display: flex;
+    color: white;
+    cursor: pointer;
+    align-items: center;
+    border-radius: 10px;
+    transition: all 0.2s;
+    justify-content: center;
+    background-color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main7 #creatCompte:hover,
+#main7 #deleteCompte:hover {
+    transform: scale(0.95);
+}
+
+#main7 form#newUser,
+#main7 #delUser {
+    top: 110px;
+    width: 400px;
+    height: 500px;
+    padding: 10px;
+    display: none;
+    color: white;
+    align-self: center;
+    position: absolute;
+    border-radius: 10px;
+    flex-direction: column;
+    border: 1px solid black;
+    border: 1px solid white;
+    justify-content: space-around;
+    background-color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main7 #delUser {
+    top: 250px;
+    height: 300px;
+}
+
+#main7 form#newUser h2,
+#main7 form#delUser h2 {
+    text-align: center;
+}
+
+#main7 form#newUser h2 span,
+#main7 form#delUser h2 span {
+    float: right;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#main7 form#newUser h2 span:hover,
+#main7 form#delUser h2 span:hover {
+    color: var(--secondary-color);
+}
+
+#main7 form#newUser input,
+#main7 form#delUser input {
+    width: 100%;
+    outline: none;
+    display: block;
+    font-size: 17px;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ccc;
+}
+
+#main7 form#newUser input[type="submit"],
+#main7 form#delUser input[type="submit"] {
+    color: green;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.5;
+    background-color: white;
+}
+
+#main7 form#delUser input[type="submit"] {
+    color: red;
+}
+
+#main7 form#newUser input[type="submit"]:hover {
+    color: white;
+    background-color: green;
+}
+
+#main7 form#delUser input[type="submit"]:hover {
+    color: white;
+    background-color: red;
+}
+
+#main7 table#allusers {
+    height: 100px;
+    padding: 10px;
+    margin: 20px 5px;
+    border-collapse: collapse;
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main7 table#allusers th {
+    color: white;
+    background-color: var(--primary-color);
+}
+
+#main7 table#allusers th,
+td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #dddddd;
+}
+
+#main7 table#allusers tr:hover {
+    background-color: var(--thirty-color);
+}
+
+#main7 table#allusers tr:nth-child(even) {
+    background-color: var(--thirty-color);
+}

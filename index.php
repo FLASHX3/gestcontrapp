@@ -10,15 +10,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
     <link rel="shortcut icon" href="images/logo_sci_sotradic.png" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="javascript/index.js"></script>
     <title>GestContrApp</title>
 </head>
 <body>
     <div id="container">
-        <div style="width: 9%; height: 120px; position: absolute; left: 80px; top: 10px;">
-            <img src="images/logo_sci_sotradic_2.png" alt="logo_sci_scotradic" class="img-fluid">
+        <div id="logo" style="width: 100px; top: 10px; left: 80px; height: 120px; display: flex;  position: absolute;">
+            <img src="images/logo_sci_sotradic_2.png" alt="logo_sci_scotradic">
         </div>
         <form action="index.php" method="post" onsubmit="return verifForm(this);">
             <h2>GestContrApp</h2>
@@ -45,6 +42,7 @@
 
 <?php
     }else if(isset($_POST['login']) AND isset($_POST['password'])){
+        require_once('dashboard/log.php');
 
         $login=strip_tags(htmlspecialchars($_POST['login']));
         $password=strip_tags(htmlspecialchars($_POST['password']));
@@ -57,11 +55,11 @@
         }
 
         try {
-            $connexion=new PDO("mysql:host=localhost;dbname=gestcontrapp;charset=utf8",'root','');
-            $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $bdd=new PDO("mysql:host=localhost;dbname=gestcontrapp;charset=utf8",'root','');
+            $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-            $requete=$connexion->prepare('SELECT * FROM users WHERE login=? AND password=?');
+            $requete=$bdd->prepare('SELECT * FROM users WHERE login=? AND password=?');
             $requete->execute(array($login,$password));
             $userexist=$requete->rowCount();
 
@@ -70,14 +68,16 @@
                 $userinfo=$requete->fetch();
                 
                 session_start(); 
-
+                
                 $_SESSION['id']=$userinfo['id'];
                 $_SESSION['nom']=$userinfo['nom'];
                 $_SESSION['login']=$userinfo['login'];
                 $_SESSION['password']=$userinfo['password'];
                 $_SESSION['type']=$userinfo['type'];
-
+                
                 $requete->closeCursor();
+
+                setlog($_SESSION['id'], 1, "Connexion sur la plateforme!");
                 header('location: dashboard/index.php#main2');
             }else{
                 $requete->closeCursor();
