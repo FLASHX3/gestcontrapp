@@ -18,7 +18,7 @@
             <img src="images/logo_sci_sotradic_2.png" alt="logo_sci_scotradic">
         </div>
         <form action="index.php" method="post" onsubmit="return verifForm(this);">
-            <h2>GestContrApp</h2>
+            <h2>SmartContrApp</h2>
             <span class="mdi-light--account"></span>
             <input type="text" name="login" placeholder="login" required onblur="verifLogin(this);">
             <span class="formkit--password"></span>

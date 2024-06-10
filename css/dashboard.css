@@ -92,7 +92,7 @@ ion-icon {
     width: 85%;
     height: 40px;
     list-style: none;
-    transition: all 0.2s ease-in;
+    transition: all 0.01s ease-in;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
@@ -472,6 +472,12 @@ select {
     border: 1px solid #ccc;
 }
 
+#main2 #actionMain2 form input:focus,
+#main3 #form_search input#search:focus,
+#main4 #formMain4 #searchResilie:focus {
+    border: 1px solid var(--primary-color);
+}
+
 #main2 #actionMain2 form #btnfav {
     cursor: pointer;
     color: var(--primary-color);
@@ -671,14 +677,14 @@ td {
 }
 
 #main2 #modification {
-    /* top: 50px; */
-    z-index: 2;
+    top: 50px;
+    z-index: 4;
+    right: 50px;
     width: 75vw;
     padding: 8px;
     display: none;
     height: 600px;
-    /* right: -1250px; */
-    position: absolute;
+    position: fixed;
     border-radius: 10px;
     border: 1px solid white;
     background-color: var(--primary-color);
@@ -700,6 +706,21 @@ td {
     padding: 5px;
     margin: 10px;
     color: var(--primary-color);
+}
+
+#main2 #modification form h2 span {
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 15px;
+    top: 10px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: red;
 }
 
 #main2 #modification form hr {
@@ -802,6 +823,7 @@ td {
 #main3 h1 {
     width: 100%;
     height: 70px;
+    padding: 20px;
     display: flex;
     color: white;
     align-items: center;
@@ -815,15 +837,17 @@ td {
 #main3 #form_search,
 #main4 #formMain4 {
     height: 50px;
-    display: flex;
     border: none;
+    display: flex;
     position: relative;
+    align-items: center;
     justify-content: space-between;
 }
 
 #main3 #form_search select,
 #main4 #formMain4 select {
     width: 15%;
+    height: 100%;
     color: white;
     background-color: var(--primary-color);
 }
@@ -831,6 +855,7 @@ td {
 #main3 #form_search #month,
 #main4 #formMain4 #monthR {
     width: 15%;
+    height: 100%;
     border: none;
     padding: 5px;
     outline: none;
@@ -838,7 +863,73 @@ td {
     border-radius: 0.25rem;
 }
 
-#main3 input#search,
+#main3 #form_search #revision {
+    width: 50px;
+    display: flex;
+    color: white;
+    cursor: pointer;
+    align-items: center;
+    height: calc(100% - 15px);
+    transition: all 0.2s ease;
+    justify-content: space-evenly;
+    background-color: var(--primary-color);
+}
+
+#main3 #form_search #revision:hover {
+    height: 100%;
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main3 #revise {
+    z-index: 2;
+    top: 150px;
+    left: 340px;
+    display: none;
+    max-width: 300px;
+    min-width: 150px;
+    max-height: 400px;
+    overflow: auto;
+    position: absolute;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main3 #revise::-webkit-scrollbar{
+    width: 5px;
+}
+
+#main3 #revise::-webkit-scrollbar-track{
+    background-color: var(--primary-color);
+}
+
+#main3 #revise::-webkit-scrollbar-thumb{
+    background-color: var(--secondary-color);
+}
+
+#main3 #revise div {
+    display: flex;
+    padding: 10px;
+    cursor: pointer;
+    justify-content: space-around;
+    border-bottom: 1px solid #eee;
+}
+
+#main3 #revise div:hover {
+    font-weight: bold;
+    background-color: #f1f1f1;
+}
+
+#main3 #revise div ion-icon {
+    color: var(--primary-color);
+    --ionicon-stroke-width: 36px;
+}
+
+#main3 #revise div p {
+    border: 1ps solid black;
+}
+
+#main3 #form_search input#search,
 #main4 #formMain4 #searchResilie {
     margin: 0;
     width: 60%;
@@ -946,19 +1037,87 @@ td {
 
 #main3 #checkliste,
 #main4 #checklisteResiliation {
-    top: 65px;
-    left: 25%;
+    top: 70px;
+    left: 50%;
     z-index: 2;
     width: 500px;
     padding: 5px;
     height: 600px;
     display: none;
-    position: absolute;
+    position: fixed;
     border-radius: 10px;
     transition: 1s ease-in;
     border: 1px solid white;
     background-color: var(--primary-color);
     box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#main3 #modeOperatoire {
+    left: 40%;
+    top: 70px;
+    padding: 5px;
+    width: 500px;
+    display: none;
+    height: 600px;
+    overflow: auto;
+    position: fixed;
+    border-radius: 10px;
+    flex-direction: column;
+    border: 1px solid black;
+    background-color: white;
+}
+
+#main3 #modeOperatoire::-webkit-scrollbar {
+    width: 0;
+}
+
+#main3 #modeOperatoire h2 {
+    padding: 5px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+#main3 #modeOperatoire h2 span{
+    top: 5px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    cursor: pointer;
+    border-radius: 50%;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+#main3 #modeOperatoire table {
+    border: none;
+    text-align: left;
+}
+
+#main3 #modeOperatoire button {
+    height: 30px;
+    padding: 8px;
+    display: flex;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    transition: all 0.2s ease-in;
+    border: 1px solid var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+#main3 #modeOperatoire button:hover,
+#main3 #modeOperatoire button:active {
+    color: white;
+    background-color: var(--primary-color);
 }
 
 @keyframes scale {
@@ -1058,11 +1217,6 @@ td {
     color: var(--primary-color);
 }
 
-#main3 #checkliste form .croix:hover {
-    color: red;
-    animation: scale 1s infinite;
-}
-
 #main3 span.mini-title,
 #main4 span.mini-title {
     font-size: 10px;
@@ -1084,7 +1238,7 @@ td {
 }
 
 #main3 #checkliste #table1 td input,
-#main4 #checklisteResiliation #table1R td input{
+#main4 #checklisteResiliation #table1R td input {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -1132,6 +1286,7 @@ td {
 
 #main4 {
     display: flex;
+    overflow: auto;
     position: relative;
     flex-direction: column;
 }
@@ -1140,6 +1295,7 @@ td {
     width: 100%;
     height: 70px;
     display: flex;
+    padding: 20px;
     color: white;
     align-items: center;
     margin-bottom: 20px;
@@ -1256,24 +1412,25 @@ td {
     background-color: white;
 }
 
-#main5 #dashboard #statistique{
+#main5 #dashboard #statistique {
     width: 100%;
     display: flex;
     margin: 10px 0;
     justify-content: space-around;
 }
 
-#main5 #dashboard #statistique .stats{
+#main5 #dashboard #statistique .stats {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-#main5 #dashboard #statistique .stats div{
+#main5 #dashboard #statistique .stats div {
     width: 25px;
     height: 25px;
     display: flex;
     border: 1px solid;
+    margin-right: 5px;
     border-radius: 50%;
     text-align: center;
     align-items: center;
@@ -1290,6 +1447,98 @@ td {
 #main5 iframe {
     width: 100%;
     height: 100%;
+}
+
+.chat-icon {
+    right: 20px;
+    width: 50px;
+    bottom: 20px;
+    height: 50px;
+    display: flex;
+    color: white;
+    position: fixed;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+}
+
+.chat-box {
+    right: 20px;
+    width: 300px;
+    display: none;
+    bottom: 120px;
+    position: fixed;
+    overflow-y: auto;
+    max-height: 250px;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-box::-webkit-scrollbar{
+    width: 0;
+}
+
+.chat-box:hover {
+    z-index: 2;
+}
+
+.chat-question {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-question:hover {
+    background-color: #f1f1f1;
+}
+
+#reponse {
+    right: 80px;
+    width: 350px;
+    bottom: 20px;
+    height: 150px;
+    display: none;
+    overflow: auto;
+    position: fixed;
+    max-height: 300px;
+    border-radius: 10px;
+    flex-direction: column;
+    background-color: white;
+    padding: 0px, 5px, 5px, 0px;
+    border: 2px solid var(--primary-color);
+}
+
+#reponse:hover {
+    z-index: 2;
+}
+
+#reponse::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+
+.user-message,
+.bot-message {
+    margin: 5px;
+    padding: 5px;
+    color: white;
+    width: max-content;
+    border-radius: 10px;
+    align-self: flex-end;
+    display: inline-block;
+    max-width: calc(100% - 15px);
+    background-color: var(--primary-color);
+}
+
+.bot-message {
+    color: black;
+    align-self: flex-start;
+    background-color: var(--secondary-color);
 }
 
 /*-----------------------------------------main6----------------------------------------*/

@@ -38,28 +38,28 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
         $dataResiliation = $resiliation->fetchAll(PDO::FETCH_ASSOC);
 
         //main5
-        $reqactif = $bdd->prepare("SELECT COUNT(*) as nbactif FROM mode_operatoire WHERE etat = 'Actif'");
-        $reqactif->execute();
-        $actif = $reqactif->fetchAll(PDO::FETCH_ASSOC);
-
-        $reqresilie = $bdd->prepare("SELECT COUNT(*) as nbresilie FROM mode_operatoire WHERE etat = 'Résilié'");
-        $reqresilie->execute();
-        $resilie = $reqresilie->fetchAll(PDO::FETCH_ASSOC);
-
-        $reqadhesion = $bdd->prepare("SELECT COUNT(*) as nbadhesion FROM mode_operatoire WHERE etat = 'En-cours'");
-        $reqadhesion->execute();
-        $adhesion = $reqadhesion->fetchAll(PDO::FETCH_ASSOC);
-
-        $reqresiliation = $bdd->prepare("SELECT COUNT(*) as nbresiliation FROM mode_operatoire WHERE etat = 'En-Résiliation'");
-        $reqresiliation->execute();
-        $resiliation = $reqresiliation->fetchAll(PDO::FETCH_ASSOC);
-
-        $reqfavori = $bdd->prepare("SELECT COUNT(*) as nbfavori FROM mode_operatoire WHERE favori = 1");
-        $reqfavori->execute();
-        $favori = $reqfavori->fetchAll(PDO::FETCH_ASSOC);
-
-        //main7
         if ($_SESSION['type'] == 'admin' || $_SESSION['type'] == 'super admin') {
+            $reqactif = $bdd->prepare("SELECT COUNT(*) as nbactif FROM mode_operatoire WHERE etat = 'Actif'");
+            $reqactif->execute();
+            $actif = $reqactif->fetchAll(PDO::FETCH_ASSOC);
+
+            $reqresilie = $bdd->prepare("SELECT COUNT(*) as nbresilie FROM mode_operatoire WHERE etat = 'Résilié'");
+            $reqresilie->execute();
+            $resilie = $reqresilie->fetchAll(PDO::FETCH_ASSOC);
+
+            $reqadhesion = $bdd->prepare("SELECT COUNT(*) as nbadhesion FROM mode_operatoire WHERE etat = 'En-cours'");
+            $reqadhesion->execute();
+            $adhesion = $reqadhesion->fetchAll(PDO::FETCH_ASSOC);
+
+            $reqresiliation = $bdd->prepare("SELECT COUNT(*) as nbresiliation FROM mode_operatoire WHERE etat = 'En-Résiliation'");
+            $reqresiliation->execute();
+            $resiliation = $reqresiliation->fetchAll(PDO::FETCH_ASSOC);
+
+            $reqfavori = $bdd->prepare("SELECT COUNT(*) as nbfavori FROM mode_operatoire WHERE favori = 1");
+            $reqfavori->execute();
+            $favori = $reqfavori->fetchAll(PDO::FETCH_ASSOC);
+
+            //main7
             $requeteUser = $bdd->prepare("SELECT users.*, COUNT(mode_operatoire.id) AS nombre_contrats FROM users LEFT JOIN mode_operatoire ON users.nom = mode_operatoire.nom_GI GROUP BY users.id");
             $requeteUser->execute();
             $users = $requeteUser->fetchAll(PDO::FETCH_ASSOC);
@@ -86,7 +86,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
         <body>
             <div id="container">
                 <nav>
-                    <h1><a href="index.php#main2"><ion-icon name="grid-outline"></ion-icon>GestContrApp</a></h1>
+                    <h1><a href="index.php#main2"><ion-icon name="grid-outline"></ion-icon>SmartContrApp</a></h1>
                     <img src="../images/logo_sci_sotradic_2.png" alt="logosotradic" srcset="">
                     <div id="nav">
                         <ul>
@@ -94,8 +94,12 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             <li onclick="activeLi(this);"><a href="#main2" class="on"> <ion-icon name="clipboard-outline"></ion-icon> Synthèse des contrats</a></li>
                             <li onclick="activeLi(this);"><a href="#main3"> <ion-icon name="bar-chart-outline"></ion-icon> Evolution des contrats </a></li>
                             <li onclick="activeLi(this);"><a href="#main4"> <ion-icon name="document-text-outline"></ion-icon> Contrats Résiliés </a></li>
-                            <li onclick="activeLi(this);"><a href="#main5"> <ion-icon name="podium-outline"></ion-icon> Statistiques </a></li>
                             <?php
+                            if ($_SESSION['type'] == "super admin" || $_SESSION['type'] == "admin") {
+                            ?>
+                                <li onclick="activeLi(this);"><a href="#main5"> <ion-icon name="podium-outline"></ion-icon> Statistiques </a></li>
+                            <?php
+                            }
                             if ($_SESSION['type'] == "super admin") {
                             ?>
                                 <li onclick="activeLi(this);"><a href="#main6"> <ion-icon name="desktop-outline"></ion-icon> Audits du système</a></li>
@@ -129,6 +133,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <div class="input-group">
                                         <label for="site">Site <span class="obligatoire">*</span></label>
                                         <select name="site" id="site" required>
+                                            <option disabled>Choisissez un site</option>
                                             <?php foreach ($sites as $site) {
                                             ?>
                                                 <option value="<?= $site['site'] ?>"><?= $site['site'] ?></option>
@@ -140,6 +145,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <div class="input-group">
                                         <label for="entite">Entité <span class="obligatoire">*</span></label>
                                         <select name="entite" id="entite" required onchange="verifEntite(this, '#erreurEntite')" onblur="verifEntite(this, '#erreurEntite')">
+                                            <option disabled>Choisissez une entité</option>
                                             <?php foreach ($entites as $entite) {
                                             ?>
                                                 <option value="<?= $entite['entite'] ?>"><?= $entite['entite'] ?></option>
@@ -152,6 +158,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <div class="input-group">
                                         <label for="ville">Ville <span class="obligatoire">*</span></label>
                                         <select name="ville" id="ville" required>
+                                            <option disabled>Choisissez une ville</option>
                                             <?php foreach ($villes as $ville) {
                                             ?>
                                                 <option value="<?= $ville['ville'] ?>"><?= $ville['ville'] ?></option>
@@ -163,8 +170,10 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <div class="input-group">
                                         <label for="natbail">Nature du bail <span class="obligatoire">*</span></label>
                                         <select name="natbail" id="natbail" required>
+                                            <option disabled>Choisissez la nature du bail</option>
+                                            <option value="Commercial">Commercial</option>
                                             <option value="Habitation">Habitation</option>
-                                            <option value="Commerciale">Commerciale</option>
+                                            <option value="Professionnel">Professionnel</option>
                                         </select>
                                     </div>
                                     <div class="">
@@ -182,14 +191,17 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                         <input type="tel" name="contact" id="contact" placeholder="Téléphone du client ex: 699887766" required onblur="verifContact(this,'#erreurContact')">
                                         <span id="erreurContact" style="color: red; font-size: 14px;"></span>
                                     </div>
-                                    <div class="input-group">
+                                    <div class="input-group" id="logement-container">
                                         <label for="logement">Logement / Boutique / Référence du lieu <span class="obligatoire">*</span></label>
-                                        <input type="text" name="logement" id="logement" placeholder="Entrez le nom de l'espace" required onblur="verifChampVide(this, '#erreurLogement');">
+                                        <select name="logement" id="logement" required onblur="verifChampVide(this,'#erreurLogement')">
+                                            <option disabled>Choisissez un logement</option>
+                                            <option value="autres">Autres</option>
+                                        </select>
                                         <span id="erreurLogement" style="color:red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="time_c">Durée contrat (en mois) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="time_c" id="time_c" placeholder="Durée du contrat ex : 12" required onblur="verifChampVide(this, '#erreurDuree');">
+                                        <input type="number" min="0" name="time_c" id="time_c" placeholder="Durée du contrat ex : 12" required onblur="verifChampVide(this, '#erreurDuree');">
                                         <span id="erreurDuree" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="btns-group">
@@ -200,12 +212,13 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <div class="wrapper" id="wrapper3">
                                     <div class="input-group">
                                         <label for="loy_mens">Loyer mensuel (en fcfa) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="loy_mens" id="loy_mens" placeholder="Entrez le montant du loyer mensuel" required onblur="verifChampVide(this, '#erreurLoyer');">
+                                        <input type="number" min="0" name="loy_mens" id="loy_mens" placeholder="Entrez le montant du loyer mensuel" required onblur="verifChampVide(this, '#erreurLoyer');">
                                         <span id="erreurLoyer" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="freq_paie">Fréquence de paiement <span class="obligatoire">*</span></label>
                                         <select name="freq_paie" id="freq_paie" required>
+                                            <option disabled>Choisissez une fréquence</option>
                                             <option value="Annuelle">Annuelle</option>
                                             <option value="Semestrielle">Semestrielle</option>
                                             <option value="Trimestrielle">Trimestrielle</option>
@@ -215,17 +228,19 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <div class="input-group">
                                         <label for="mode_paie">Mode de paiement <span class="obligatoire">*</span></label>
                                         <select name="mode_paie" id="mode_paie" required>
+                                            <option disabled>Choisissez un mode de paiement</option>
                                             <option value="Chèque">Chèque</option>
                                             <option value="Carte">Carte</option>
                                             <option value="Espèces">Espèces</option>
                                             <option value="Momo">MoMo</option>
                                             <option value="OM">OM</option>
                                             <option value="Virement">Virement</option>
+                                            <option value="Tous les modes" selected>Tous les modes</option>
                                         </select>
                                     </div>
                                     <div class="input-group">
                                         <label for="nb_mois_paye">Nombre de mois payé <span class="obligatoire">*</span></label>
-                                        <input type="number" name="nb_mois_paye" id="nb_mois_paye" placeholder="Entrez le nombre de mois payé" required onblur="verifChampVide(this, '#erreurNbMois');">
+                                        <input type="number" min="0" name="nb_mois_paye" id="nb_mois_paye" placeholder="Entrez le nombre de mois payé" required onblur="verifChampVide(this, '#erreurNbMois');">
                                         <span id="erreurNbMois" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="btns-group">
@@ -236,12 +251,13 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <div class="wrapper" id="wrapper4">
                                     <div class="input-group">
                                         <label for="caution">Montant caution (en fcfa) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="caution" id="caution" placeholder="Entrez le montant de la caution" required onblur="verifChampVide(this, '#erreurCaution');">
+                                        <input type="number" min="0" name="caution" id="caution" placeholder="Entrez le montant de la caution" required onblur="verifChampVide(this, '#erreurCaution');">
                                         <span id="erreurCaution" style="color: red; font-size: 14px"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="rev_loyer">Révision loyer <span class="obligatoire">*</span></label>
                                         <select name="rev_loyer" id="rev_loyer" required>
+                                            <option disabled>Choisissez un fréquence de révision</option>
                                             <option value="Annuelle">Annuelle</option>
                                             <option value="Biennale">Biennale</option>
                                             <option value="Triennale">Triennale</option>
@@ -249,21 +265,27 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                         </select>
                                     </div>
                                     <div class="input-group">
+                                        <label for="taux">Taux de révision (en %) <span class="obligatoire">*</span></label>
+                                        <input type="number" name="taux_revision" id="taux_revision" value="10" placeholder="Entrez le taux de révision" required onblur="verifChampVide(this, '#erreurRevision');">
+                                        <span id="erreurRevision" style="color: red; font-size: 14px;"></span>
+                                    </div>
+                                    <div class="input-group">
                                         <label for="pen_retard">Pénalités de retard (en %) <span class="obligatoire">*</span></label>
                                         <input type="number" name="pen_retard" id="pen_retard" value="7" placeholder="Entrez le pourcentage des pénalités" required onblur="verifChampVide(this, '#erreurPenalite');">
                                         <span id="erreurPenalite" style="color: red; font-size: 14px;"></span>
                                     </div>
-                                    <div class="input-group">
-                                        <label for="droit_reg">Droit d'enregistrement (en fcfa) <span class="obligatoire">*</span></label>
-                                        <input type="number" name="droit_reg" id="droit_reg" placeholder="Entrez le montant des droits d'enregistrement" required onblur="verifChampVide(this, '#erreurSave');">
-                                        <span id="erreurSave" style="color: red; font-size: 14px;"></span>
-                                    </div>
+
                                     <div class="btns-group">
                                         <a href="#" class="btn btn-prev" id="prev3"><ion-icon name="chevron-back" size="large"></ion-icon>Previous</a>
                                         <a href="#" class="btn btn-next" id="next4">Next<ion-icon name="chevron-forward" size="large"></ion-icon></a>
                                     </div>
                                 </div>
                                 <div class="wrapper" id="wrapper5">
+                                    <div class="input-group">
+                                        <label for="droit_reg">Droit d'enregistrement (en fcfa) <span class="obligatoire">*</span></label>
+                                        <input type="number" min="0" name="droit_reg" id="droit_reg" placeholder="Entrez le montant des droits d'enregistrement" required onblur="verifChampVide(this, '#erreurSave');">
+                                        <span id="erreurSave" style="color: red; font-size: 14px;"></span>
+                                    </div>
                                     <div class="input-group">
                                         <label for="date_start">Date début de contrat <span class="obligatoire">*</span></label>
                                         <input type="date" name="date_start" id="date_start" required onblur="verifChampVide(this, '#erreurDatestart');">
@@ -277,6 +299,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <div class="input-group">
                                         <label for="gi">Nom du GI <span class="obligatoire">*</span></label>
                                         <select name="gi" id="gi" required>
+                                            <option disabled>Choisissez un GI</option>
                                             <?php
                                             foreach ($Gis as $Gi) {
                                             ?>
@@ -285,10 +308,6 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                             }
                                             ?>
                                         </select>
-                                    </div>
-                                    <div class="input-group" style="visibility: hidden;">
-                                        <label for="num_doc">Numéro du dossier</label>
-                                        <input type="text" name="num_doc" id="num_doc" disabled>
                                     </div>
                                     <div class="btns-group">
                                         <a href="#" class="btn btn-prev" id="prev4"><ion-icon name="chevron-back" size="large"></ion-icon>Previous</a>
@@ -328,7 +347,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <option value="nom_GI">Nom GI</option>
                                     <option value="numero_dossier">Numéro Dossier</option>
                                 </select>
-                                <?php if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin") { ?><button id="btnfav" type="button" data-etat="off" title="Afficher les favoris"><ion-icon name="bookmark-outline"></ion-icon></button><?php } ?>
+                                <button id="btnfav" type="button" data-etat="off" title="Afficher les favoris"><ion-icon name="bookmark-outline"></ion-icon></button>
                                 <label for="export">Exporter</label>
                                 <button type="button" id="export" onclick='confirmExport();' title="Exporter le tableau"><ion-icon name="download-outline"></ion-icon></button>
                                 <div id="customConfirm" class="custom-confirm">
@@ -358,6 +377,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <th>Montant_loyer payé (en fcfa)</th>
                                     <th>Montant caution (en fcfa)</th>
                                     <th>Revision loyer</th>
+                                    <th>Taux révision (en %)</th>
                                     <th>Pénalités de retard (en %)</th>
                                     <th>Date_debut contrat</th>
                                     <th>Date_de_fin contrat</th>
@@ -371,7 +391,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             </thead>
                             <tbody>
                                 <?php
-                                $affichage = "SELECT mode_operatoire.*, adhesion.*, resiliation.* FROM mode_operatoire LEFT JOIN adhesion on mode_operatoire.id = adhesion.id_operatoire LEFT JOIN resiliation ON mode_operatoire.id = resiliation.id_mode ORDER BY mode_operatoire.id ASC";
+                                $affichage = "SELECT mode_operatoire.*, adhesion.*, resiliation.* FROM mode_operatoire LEFT JOIN adhesion on mode_operatoire.id = adhesion.id_operatoire LEFT JOIN resiliation ON mode_operatoire.id = resiliation.id_mode ORDER BY mode_operatoire.id DESC";
                                 $requete = $bdd->prepare($affichage);
                                 $requete->execute();
                                 $nbResultat = $requete->rowCount();
@@ -400,6 +420,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                                 echo $caution; ?>
                                             </td>
                                             <td><?php echo $resultat['revision_loyer']; ?></td>
+                                            <td><?php echo $resultat['taux_revision']; ?></td>
                                             <td><?php echo $resultat['pénalites_retard']; ?></td>
                                             <td><?php $dateStart = new DateTime($resultat['date_debut_contrat']);
                                                 $dateStart = $dateStart->format('d-m-Y');
@@ -419,7 +440,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                             </td>
                                             <td><?php echo $resultat['nom_GI']; ?></td>
                                             <td><?php echo $resultat['numero_dossier']; ?></td>
-                                            <td class="ft-w <?php echo $resultat['etat']; ?>" data-idClient="<?php echo $resultat['id_operatoire']; ?>" data-ville="<?= $resultat['ville']; ?>">
+                                            <td class="ft-w <?php echo $resultat['etat']; ?>" data-idClient="<?php echo $resultat['id_operatoire']; ?>" data-ville="<?= $resultat['ville']; ?>" data-date_debut="<?= $resultat['date_debut_contrat']; ?>" data-date_resiliation="<?= $resultat['date_resiliation']; ?>">
                                                 <a href="<?= ($resultat['etat'] == "En-cours" || $resultat['etat'] == "Actif") ? '#main3' : '#main4'; ?>" title="Cliquez pour voir le dossier">
                                                     <?php
                                                     $percent = 0;
@@ -445,12 +466,12 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                             <td class="edition">
                                                 <ion-icon name="create-outline" size="small" title="Modifiez" data-numDoc="numDoc<?php echo $resultat['id']; ?>" data-etat="false"></ion-icon>
                                                 <ion-icon data-id_operatoire="<?= $resultat['id_operatoire']; ?>" name="remove-circle-outline" size="small" title="Résilié ce dossier"></ion-icon>
+                                                <form action="" method="get" class="favoris">
+                                                    <button type="button" name="favori" data-id="<?= $resultat['id']; ?>" value="<?= ($resultat['favori'] == 0) ? 1 : 0; ?>">
+                                                        <ion-icon name="<?= ($resultat['favori'] == 0) ? "bookmark-outline" : "bookmark"; ?>" size="small" title="Marquez comme important"></ion-icon>
+                                                    </button>
+                                                </form>
                                                 <?php if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin") { ?>
-                                                    <form action="" method="get" class="favoris">
-                                                        <button type="button" name="favori" data-id="<?= $resultat['id']; ?>" value="<?= ($resultat['favori'] == 0) ? 1 : 0; ?>">
-                                                            <ion-icon name="<?= ($resultat['favori'] == 0) ? "bookmark-outline" : "bookmark"; ?>" size="small" title="Marquez comme important"></ion-icon>
-                                                        </button>
-                                                    </form>
                                                     <ion-icon name="trash-outline" size="small" title="Supprimez" data-id_contrat="<?= $resultat['id_operatoire']; ?>" data-type="<?= $resultat['etat']; ?>"></ion-icon>
                                                 <?php } ?>
                                             </td>
@@ -466,11 +487,12 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                         </table>
                         <div id="modification">
                             <form action="updateContrat.php" method="post" onsubmit="return veriform(this);">
-                                <h2>Modification contrat</h2>
+                                <h2>Modification contrat<span title="fermer" onclick="closePopup(document.querySelector('#modification'));">&times;</span></h2>
                                 <hr noshade="">
                                 <div class="champs">
                                     <div class="input-group"><label for="siteM">Site <span class="obligatoire">*</span></label>
                                         <select name="siteM" id="siteM" required>
+                                            <option disabled>Choisissez une site</option>
                                             <?php foreach ($sites as $site) {
                                             ?>
                                                 <option value="<?= $site['site'] ?>"><?= $site['site'] ?></option>
@@ -481,6 +503,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     </div>
                                     <div class="input-group"><label for="entiteM">Entite <span class="obligatoire">*</span></label>
                                         <select name="entiteM" id="entiteM" required onchange="verifEntite(this,'#erreurentiteM');" onblur="verifEntite(this,'#erreurEntiteM')">
+                                            <option disabled>Choisissez une entité</option>
                                             <?php foreach ($entites as $entite) {
                                             ?>
                                                 <option value="<?= $entite['entite'] ?>"><?= $entite['entite'] ?></option>
@@ -492,6 +515,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     </div>
                                     <div class="input-group"><label for="villeM">Ville <span class="obligatoire">*</span></label>
                                         <select name="villeM" id="villeM" required>
+                                            <option disabled>Choisissez une ville</option>
                                             <?php foreach ($villes as $ville) {
                                             ?>
                                                 <option value="<?= $ville['ville'] ?>"><?= $ville['ville'] ?></option>
@@ -502,8 +526,10 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     </div>
                                     <div class="input-group"><label for="natureBailM">Nature Bail <span class="obligatoire">*</span></label>
                                         <select name="natureBailM" id="natureBailM" required>
+                                            <option disabled>Choisissez la ntaure du bail</option>
+                                            <option value="Commercial">Commercial</option>
                                             <option value="Habitation">Habitation</option>
-                                            <option value="Commerciale">Commerciale</option>
+                                            <option value="Professionnel">Professionnel</option>
                                         </select>
                                     </div>
                                     <div class="input-group"><label for="nomM">Nom Locataire <span class="obligatoire">*</span></label><input type="text" name="nomM" id="nomM" required onblur="verifNom(this,'#erreurNomM');"><span id="erreurNomM" style="color: red; font-size: 10px;"></span></div>
@@ -513,6 +539,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <div class="input-group"><label for="loyerM">Loyer Mensuel (Fcfa) <span class="obligatoire">*</span></label><input type="number" name="loyerM" id="loyerM" required onblur="verifChampVide(this,'#erreurLoyerM');"><span id="erreurLoyerM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="frequenceM">Fréquence Paiement <span class="obligatoire">*</span> </label>
                                         <select name="frequenceM" id="frequenceM" required>
+                                            <option disabled>Choisissez une fréquence de paiement</option>
                                             <option value="Annuelle">Annuelle</option>
                                             <option value="Semestrielle">Semestrielle</option>
                                             <option value="Trimestrielle">Trimestrielle</option>
@@ -521,33 +548,42 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     </div>
                                     <div class="input-group"><label for="modePaiementM">Mode Paiement <span class="obligatoire">*</span></label>
                                         <select name="modePaiementM" id="modePaiementM" required>
+                                            <option disabled>Choisissez un mode de paiement</option>
                                             <option value="Chèque">Chèque</option>
                                             <option value="Carte">Carte</option>
                                             <option value="Espèces">Espèces</option>
                                             <option value="Momo">MoMo</option>
                                             <option value="OM">OM</option>
                                             <option value="Virement">Virement</option>
+                                            <option value="Tous les modes">Tous les modes</option>
                                         </select>
                                     </div>
                                     <div class="input-group"><label for="nombreMoisM">Nombre mois <span class="obligatoire">*</span></label><input type="number" name="nombreMoisM" id="nombreMoisM" required onblur="verifChampVide(this,'#erreurNbMoisM');"><span id="erreurNbMmoisM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="montantCautionM">Montant Caution <span class="obligatoire">*</span></label><input type="number" name="montantCautionM" id="montantCautionM" required onblur="verifChampVide(this,'#erreurCautionM');"><span id="erreurCautionM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="revisionM">Révision Loyer <span class="obligatoire">*</span></label>
                                         <select name="revisionM" id="revisionM" required>
+                                            <option disabled>Choisissez une fréquence de révision</option>
+                                            <option value="Annuelle">Annuelle</option>
                                             <option value="Biennale">Biennale</option>
                                             <option value="Triennale">Triennale</option>
                                             <option value="Autre">Autre</option>
                                         </select>
                                     </div>
+                                    <div class="input-group"><label for="taux_revisionM">Taux révision (%) <span class="obligatoire">*</span></label><input type="number" name="taux_revisionM" id="taux_revisionM" required onblur="verifChampVide(this,'#erreurRevisionM');"><span id="erreurRevisionM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="penaliteM">Pénaités Retard (%) <span class="obligatoire">*</span></label><input type="number" name="penaliteM" id="penaliteM" required onblur="verifChampVide(this,'#erreurPenaliteM');"><span id="erreurPenaliteM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="debutM">Date Debut Contrat <span class="obligatoire">*</span></label><input type="date" name="debutM" id="debutM" required onblur="verifChampVide(this,'#erreurDatestartM');"><span id="erreurDatestartM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="finM">Date Fin Contrat <span class="obligatoire">*</span></label><input type="date" name="finM" id="finM" required onblur="verifChampVide(this,'#erreurDatefinM');"><span id="erreurDatefinM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="saveM">D. Enregistrement <span class="obligatoire">*</span></label><input type="number" name="saveM" id="saveM" required onblur="verifChampVide(this,'#erreurSaveM');"><span id="erreurSaveM" style="color: red; font-size: 10px;"></span></div>
                                     <div class="input-group"><label for="giM">Nom GI <span class="obligatoire">*</span></label>
                                         <select name="giM" id="giM" required>
-                                            <option value="Mme Kapche">Mme Kapche</option>
-                                            <option value="Mr Thierry">Mr Thierry</option>
-                                            <option value="Mr Tsafack">Mr Tsafack</option>
-                                            <option value="Mr Yannick">Mr Yannick</option>
+                                            <option disabled>Choisissez un GI</option>
+                                            <?php
+                                            foreach ($Gis as $Gi) {
+                                            ?>
+                                                <option value="<?= $Gi['nom']; ?>" <?= ($_SESSION['nom'] == $Gi['nom']) ? "selected" : ""; ?>><?= $Gi['nom']; ?></option>
+                                            <?php
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                     <div class="input-group"><label for="numDocM">Numéro Dossier</label><input type="text" name="numDocM" id="numDocM"><span id="erreurnumdocM" style="color: red; font-size: 10px;"></span></div>
@@ -579,24 +615,20 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                         <h1><ion-icon name="bar-chart"></ion-icon> Contrats En Cours</h1>
                         <form action="" method="get" id="form_search">
                             <select name="zone" id="zone">
-                                <option value="Bafoussam">Bafoussam</option>
-                                <option value="Bamenda">Bamenda</option>
-                                <option value="Bertoua">Bertoua</option>
-                                <option value="Buéa">Buéa</option>
-                                <option value="Douala" selected>Douala</option>
-                                <option value="Kribi">Kribi</option>
-                                <option value="Kumbo">Kumbo</option>
-                                <option value="Kyossi">Kyossi</option>
-                                <option value="Limbé">Limbé</option>
-                                <option value="Mfou">Mfou</option>
-                                <option value="Ngaoundéré">Ngaoundéré</option>
-                                <option value="Obala">Obala</option>
-                                <option value="Soa">Soa</option>
-                                <option value="Yaoundé">Yaoundé</option>
+                                <?php foreach ($villes as $ville) {
+                                ?>
+                                    <option value="<?= $ville['ville']; ?>" <?= $ville['ville'] == "Douala" ? "selected" : null; ?>>
+                                        <?= $ville['ville']; ?>
+                                    </option>
+                                <?php
+                                }
+                                ?>
                             </select>
                             <input type="month" id="month">
+                            <div id="revision"><span></span><ion-icon name="eye-outline"></ion-icon></div>
                             <input type="search" name="search" id="search" value="" placeholder="search: tapez au moins 2 lettres" oninput="searchContrat();">
                         </form>
+                        <div id="revise"></div>
                         <div id="allContrats" data-resultat=" <?php echo htmlspecialchars(json_encode($data)); ?>"></div>
                         <div id="table">
                             <!-- liste des contrats -->
@@ -708,6 +740,86 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             </form>
                         </div>
 
+                        <div id="modeOperatoire">
+                            <h2>Mode operatoire <span onclick="closePopup(document.querySelector('#modeOperatoire'));" title="fermer le mode opraoire">&times;</span></h2>
+                            <table>
+                                <tr>
+                                    <td>Site : </td>
+                                    <td id="siteO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Entite : </td>
+                                    <td id="entiteO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Ville : </td>
+                                    <td id="villeO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Nature du bail : </td>
+                                    <td id="bailO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Nom locataire : </td>
+                                    <td id="locataireO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Contact : </td>
+                                    <td id="contactO">
+                                        </tdc>
+                                </tr>
+                                <tr>
+                                    <td>Logement : </td>
+                                    <td id="logementO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Durée du contrat : </td>
+                                    <td id="duree_contratO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Loyer mensuel : </td>
+                                    <td id="loyerO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Fréquence paiement : </td>
+                                    <td id="frequenceO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Mode de paiement : </td>
+                                    <td id="modeO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Montant loyer paiyé : </td>
+                                    <td id="montant_loyerO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Montant caution : </td>
+                                    <td id="montant_CautionO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Révision Loyé : </td>
+                                    <td id="revision_loyerO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Pénalités retard : </td>
+                                    <td id="penaliteO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Date debut contrat : </td>
+                                    <td id="date_debutO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Date fin contrat : </td>
+                                    <td id="date_finO"></td>
+                                </tr>
+                                <tr>
+                                    <td>Droit d'enregistrement : </td>
+                                    <td id="droit_enregistrementO"></td>
+                                </tr>
+                            </table>
+                            <button title="appliquer le taux de révision">Réviser le contrat <ion-icon size="small" name="reload-outline"></ion-icon></button>
+                        </div>
+
                         <!-- bloc maj checkliste -->
                         <?php
                         if (isset($_GET['maj'])) {
@@ -727,20 +839,14 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
 
                         <form action="" method="get" id="formMain4">
                             <select name="zone" id="zoneR">
-                                <option value="Bafoussam">Bafoussam</option>
-                                <option value="Bamenda">Bamenda</option>
-                                <option value="Bertoua">Bertoua</option>
-                                <option value="Buéa">Buéa</option>
-                                <option value="Douala" selected>Douala</option>
-                                <option value="Kribi">Kribi</option>
-                                <option value="Kumbo">Kumbo</option>
-                                <option value="Kyossi">Kyossi</option>
-                                <option value="Limbé">Limbé</option>
-                                <option value="Mfou">Mfou</option>
-                                <option value="Ngaoundéré">Ngaoundéré</option>
-                                <option value="Obala">Obala</option>
-                                <option value="Soa">Soa</option>
-                                <option value="Yaoundé">Yaoundé</option>
+                                <?php foreach ($villes as $ville) {
+                                ?>
+                                    <option value="<?= $ville['ville']; ?>" <?= $ville['ville'] == "Douala" ? "selected" : null; ?>>
+                                        <?= $ville['ville']; ?>
+                                    </option>
+                                <?php
+                                }
+                                ?>
                             </select>
                             <input type="month" id="monthR">
                             <input type="search" name="search" id="searchResilie" value="" placeholder="search: tapez au moins 2 lettres" oninput="">
@@ -886,51 +992,61 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                         }
                         ?>
                     </div>
-                    <div id="main5" class="main">
-                        <h1><ion-icon name="podium"></ion-icon> Statistiques</h1>
-                        <div id="dashboard">
-                            <div id="statistique">
-                                <div class="stats">
-                                    <div style="background-color: rgba(255, 99, 132, 0.2); border-color: rgba(255, 99, 132, 1);"><?= $actif[0]['nbactif']; ?></div> Actifs
-                                </div>
-                                <div class="stats">
-                                    <div style="background-color: rgba(54, 162, 235, 0.2); border-color: rgba(54, 162, 235, 1);"><?= $resilie[0]['nbresilie']; ?></div> Résiliés
-                                </div>
-                                <div class="stats">
-                                    <div style="background-color: rgba(255, 206, 86, 0.2); border-color: rgba(255, 206, 86, 1);"><?= $adhesion[0]['nbadhesion']; ?></div> En cours d'adhésion
-                                </div>
-                                <div class="stats">
-                                    <div style="background-color: rgba(75, 192, 192, 0.2); border-color: rgba(75, 192, 192, 1);"><?= $resiliation[0]['nbresiliation']; ?></div> En cours de résiliation
-                                </div>
-                                <div class="stats">
-                                    <div style="background-color: rgba(153, 102, 255, 0.2); border-color: rgba(153, 102, 255, 1);"><?= $favori[0]['nbfavori']; ?></div> Contrats en favori
-                                </div>
-                            </div>
-                            <div class="iframe-container" style="height: 250px">
-                                <iframe src="graphes/contrat_par_mois.php" allowfullscreen title="Iframe 1"></iframe>
-                            </div>
-                            <div class="iframe-container" style="height: 250px">
-                                <iframe src="graphes/contrat_par_gi.php" allowfullscreen title="Iframe 2"></iframe>
-                            </div>
-                            <div class="iframe-container">
-                                <iframe src="graphes/contrat_par_ville.php" allowfullscreen title="Iframe 3"></iframe>
-                            </div>
-                            <div class="iframe-container">
-                                <iframe src="graphes/contrat_par_site.php" allowfullscreen title="Iframe 4"></iframe>
-                            </div>
-                            <div class="iframe-container">
-                                <iframe src="graphes/resiliation_par_ville.php" allowfullscreen title="Iframe 4"></iframe>
-                            </div>
-                            <div class="iframe-container">
-                                <iframe src="graphes/resiliation_par_site.php" allowfullscreen title="Iframe 4"></iframe>
-                            </div>
-                            <div id="chat">
-                                <div id="messages"></div>
-                                <input type="text" id="user-input" placeholder="Type your message here">
-                            </div>
-                        </div>
-                    </div>
                     <?php
+                    if ($_SESSION['type'] == "super admin" || $_SESSION['type'] == "admin") {
+                    ?>
+                        <div id="main5" class="main">
+                            <h1><ion-icon name="podium"></ion-icon> Statistiques</h1>
+                            <div id="dashboard">
+                                <div id="statistique">
+                                    <div class="stats">
+                                        <div style="background-color: rgba(255, 99, 132, 0.2); border-color: rgba(255, 99, 132, 1);"><?= $actif[0]['nbactif']; ?></div> Actifs
+                                    </div>
+                                    <div class="stats">
+                                        <div style="background-color: rgba(54, 162, 235, 0.2); border-color: rgba(54, 162, 235, 1);"><?= $resilie[0]['nbresilie']; ?></div> Résiliés
+                                    </div>
+                                    <div class="stats">
+                                        <div style="background-color: rgba(255, 206, 86, 0.2); border-color: rgba(255, 206, 86, 1);"><?= $adhesion[0]['nbadhesion']; ?></div> En cours d'adhésion
+                                    </div>
+                                    <div class="stats">
+                                        <div style="background-color: rgba(75, 192, 192, 0.2); border-color: rgba(75, 192, 192, 1);"><?= $resiliation[0]['nbresiliation']; ?></div> En cours de résiliation
+                                    </div>
+                                    <div class="stats">
+                                        <div style="background-color: rgba(153, 102, 255, 0.2); border-color: rgba(153, 102, 255, 1);"><?= $favori[0]['nbfavori']; ?></div> Contrats en favori
+                                    </div>
+                                </div>
+                                <div class="iframe-container" style="height: 250px">
+                                    <iframe src="graphes/contrat_par_mois.php" allowfullscreen title="Iframe 1"></iframe>
+                                </div>
+                                <div class="iframe-container" style="height: 250px">
+                                    <iframe src="graphes/contrat_par_gi.php" allowfullscreen title="Iframe 2"></iframe>
+                                </div>
+                                <div class="iframe-container">
+                                    <iframe src="graphes/contrat_par_ville.php" allowfullscreen title="Iframe 3"></iframe>
+                                </div>
+                                <div class="iframe-container">
+                                    <iframe src="graphes/contrat_par_site.php" allowfullscreen title="Iframe 4"></iframe>
+                                </div>
+                                <div class="iframe-container">
+                                    <iframe src="graphes/resiliation_par_ville.php" allowfullscreen title="Iframe 4"></iframe>
+                                </div>
+                                <div class="iframe-container">
+                                    <iframe src="graphes/resiliation_par_site.php" allowfullscreen title="Iframe 4"></iframe>
+                                </div>
+                            </div>
+                            <div class="chat-icon" onclick="toggleChatBox()">💬</div>
+                            <div class="chat-box" id="chatBox">
+                                <div class="chat-question" onclick="showResponse('Dans quelle ville il y a plus de contrats actifs')">Dans quelle ville il y a plus de contrats actifs</div>
+                                <div class="chat-question" onclick="showResponse('Quel site a le plus de contrats actifs')">Quel site a le plus de contrats actifs</div>
+                                <div class="chat-question" onclick="showResponse('Quel est le pourcentage de résiliation en cette année?')">Quel est le pourcentage de résiliation en cette année?</div>
+                                <div class="chat-question" onclick="showResponse('Quel site ramène plus de bénéfice cette année?')">Quel site ramène plus de bénéfice ctte année?</div>
+                                <div class="chat-question" onclick="showResponse('En quelle année a-t-on eu le plus de client?')">En quelle année a-t-on eu le plus de client?</div>
+                                <div class="chat-question" onclick="showResponse('Bonjour, peux tu me pretter ton aide?')">Bonjour, peux tu me pretter ton aide?</div>
+                            </div>
+                            <div id="reponse"></div>
+                        </div>
+                    <?php
+                    }
                     if ($_SESSION['type'] == "super admin") {
                     ?>
                         <div id="main6" class="main">
@@ -1084,6 +1200,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
         $nb_mois_paye = strip_tags(htmlspecialchars($_POST['nb_mois_paye']));
         $caution = strip_tags(htmlspecialchars($_POST['caution']));
         $rev_loyer = strip_tags(htmlspecialchars($_POST['rev_loyer']));
+        $taux_revision = strip_tags(htmlspecialchars($_POST['taux_revision']));
         $pen_retard = strip_tags(htmlspecialchars($_POST['pen_retard']));
         $droit_reg = strip_tags(htmlspecialchars($_POST['droit_reg']));
         $date_start = strip_tags(htmlspecialchars($_POST['date_start']));
@@ -1092,14 +1209,30 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
         //$num_doc = strip_tags(htmlspecialchars($_POST['num_doc']));
 
         $etat = "En-cours";
+        $dateRevision = new DateTime($date_start);
+        switch ($rev_loyer) {
+            case 'Annuelle':
+                $dateRevision->modify('+1 year');
+                break;
+            case 'Biennale':
+                $dateRevision->modify('+2 year');
+                break;
+            case 'Triennale':
+                $dateRevision->modify('+3 year');
+                break;
+            default:
+                $dateRevision->modify('+1 year');
+                break;
+        }
+        $newDaterevision = $dateRevision->format('Y-m-d');
 
         try {
             $connexion = new PDO("mysql:host=localhost;dbname=gestcontrapp;charset=utf8", 'root', '');
             $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-            $requete = $connexion->prepare("INSERT INTO mode_operatoire VALUE ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'',?,0)");
-            $requete->execute(array($site, $entite, $ville, $natbail, $nom, $contact, $logement, $time_c, $loy_mens, $freq_paie, $mode_paie, $nb_mois_paye, $caution, $rev_loyer, $pen_retard, $date_start, $date_end, $droit_reg, $gi, $etat));
+            $requete = $connexion->prepare("INSERT INTO mode_operatoire VALUE ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'',?,0)");
+            $requete->execute(array($site, $entite, $ville, $natbail, $nom, $contact, $logement, $time_c, $loy_mens, $freq_paie, $mode_paie, $nb_mois_paye, $caution, $rev_loyer, $taux_revision, $newDaterevision, $pen_retard, $date_start, $date_end, $droit_reg, $gi, $etat));
 
             //récupération de l'id du dernier élément ajouter
             $last_id = $connexion->lastInsertId();

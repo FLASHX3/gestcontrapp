@@ -8,8 +8,8 @@ $dbname = "gestcontrapp";
 
 $id = isset($_GET["id"]) ? strip_tags(htmlspecialchars($_GET["id"])) : null;
 
-if($id == null){
-    header('location: index.php?erreurDonnée=Erreur lors de la recuperation des donnée#main2');
+if ($id == null) {
+    header('location: index.php?modif=Erreur lors de la recuperation des donnée#main2');
 }
 
 try {

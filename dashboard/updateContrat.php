@@ -18,6 +18,7 @@ if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin" || $_SESS
         $nombreMoisM = isset($_POST["nombreMoisM"]) ? strip_tags(htmlspecialchars($_POST["nombreMoisM"])) : null;
         $montantCautionM = isset($_POST["montantCautionM"]) ? strip_tags(htmlspecialchars($_POST["montantCautionM"])) : null;
         $revisionM = isset($_POST["revisionM"]) ? strip_tags(htmlspecialchars($_POST["revisionM"])) : null;
+        $taux_revisionM = isset($_POST["taux_revisionM"]) ? strip_tags(htmlspecialchars($_POST["taux_revisionM"])) : null;
         $penaliteM = isset($_POST["penaliteM"]) ? strip_tags(htmlspecialchars($_POST["penaliteM"])) : null;
         $debutM = isset($_POST["debutM"]) ? strip_tags(htmlspecialchars($_POST["debutM"])) : null;
         $finM = isset($_POST["finM"]) ? strip_tags(htmlspecialchars($_POST["finM"])) : null;
@@ -30,32 +31,49 @@ if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin" || $_SESS
             $siteM == null || $entiteM == null || $villeM || $natureBailM == null
             || $nomM == null || $contactM == null || $logementM == null || $timeM == null
             || $loyerM == null || $frequenceM == null || $modePaiementM == null || $nombreMoisM == null
-            || $montantCautionM == null || $revisionM == null || $penaliteM == null || $debutM == null
+            || $montantCautionM == null || $revisionM == null || $taux_revisionM == null || $penaliteM == null || $debutM == null
             || $finM == null || $saveM == null || $giM == null
         ) {
             header('location: index.php?modif = Erreur! une/des donnée(s) n\'a/ont pas été spécifiée(s) ⚠');
         }
+
+        $dateRevision = new DateTime($debutM);
+        switch ($revisionM) {
+            case 'Annuelle':
+                $dateRevision->modify('+1 year');
+                break;
+            case 'Biennale':
+                $dateRevision->modify('+2 year');
+                break;
+            case 'Triennale':
+                $dateRevision->modify('+3 year');
+                break;
+            default:
+                $dateRevision->modify('+1 year');
+                break;
+        }
+        $newDaterevision = $dateRevision->format('Y-m-d');
 
         try {
             $bdd = new PDO("mysql:host=localhost;dbname=gestcontrapp;charset=utf8", 'root', '');
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-            $updateModeoperatoire = $bdd->prepare("UPDATE mode_operatoire SET site = ?, entite = ?, ville = ?, nature_bail = ?, nom_locataire = ?, contact = ?, logement = ?, duree_contrat = ?, loyer_mensuel = ?, frequence_paiement = ?, mode_paiement = ?, nombre_mois = ?, montant_caution = ?, revision_loyer = ?, pénalites_retard = ?, date_debut_contrat = ?, date_fin_contrat = ?, droit_enregistrement = ?, nom_GI = ?, numero_dossier = ? WHERE id = ?");
-            $updateModeoperatoire->execute(array($siteM, $entiteM, $villeM, $natureBailM, $nomM, $contactM, $logementM, $timeM, $loyerM, $frequenceM, $modePaiementM, $nombreMoisM, $montantCautionM, $revisionM, $penaliteM, $debutM, $finM, $saveM, $giM, $numDoc, $idM));
+            $updateModeoperatoire = $bdd->prepare("UPDATE mode_operatoire SET site = ?, entite = ?, ville = ?, nature_bail = ?, nom_locataire = ?, contact = ?, logement = ?, duree_contrat = ?, loyer_mensuel = ?, frequence_paiement = ?, mode_paiement = ?, nombre_mois = ?, montant_caution = ?, revision_loyer = ?, taux_revision = ?, date_revision = ?, pénalites_retard = ?, date_debut_contrat = ?, date_fin_contrat = ?, droit_enregistrement = ?, nom_GI = ?, numero_dossier = ? WHERE id = ?");
+            $updateModeoperatoire->execute(array($siteM, $entiteM, $villeM, $natureBailM, $nomM, $contactM, $logementM, $timeM, $loyerM, $frequenceM, $modePaiementM, $nombreMoisM, $montantCautionM, $revisionM, $taux_revisionM, $newDaterevision, $penaliteM, $debutM, $finM, $saveM, $giM, $numDoc, $idM));
             $updateModeoperatoire->closeCursor();
 
             setlog($_SESSION['id'], 3, "Modification du contrat № $idM");
 
-            header("Location: index.php?modif=Modification effectuée#main2"); // Correcte le format de l'en-tête
+            header("Location: index.php?modif=Modification du contrat № $idM effectuée#main2"); // Correcte le format de l'en-tête
             exit; // Assurez-vous de terminer l'exécution du script après la redirection
         } catch (PDOException $e) {
             die('Erreur : ' . $e->getMessage());
         }
-    }else{
+    } else {
         header('location: index.php#main2');
     }
-}else{
+} else {
     setlog($_SESSION['id'], -1, "Déconnexion de la plateforme!");
     session_destroy();
     header('location: index.php');
