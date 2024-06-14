@@ -6,12 +6,8 @@ function onPageLoad() {
     var url = window.location.href;
     main = url.split("#")[1];
     lien = `a[href="#${main}"]`;
-    // activeLi(document.querySelector(lien).parentElement);
-    document.querySelector(lien).parentElement.click();
-    const site = document.querySelector('#site');
-    if (site && site.value) {
-        getlogement(site.value);
-    }
+    activeLi(document.querySelector(lien).parentElement);
+    //document.querySelector(lien).parentElement.click();
 }
 
 function activeIcon(icon) {
@@ -55,6 +51,8 @@ function activeLi(li) {
         const formDelUser = document.querySelector("#main7 #delUser");
         formNewUser.style.display = "none";
         formDelUser.style.display = "none";
+        document.querySelector('#chatBox').style.display = 'none';
+        document.querySelector('#reponse').style.display = 'none';
     }
 }
 
@@ -181,7 +179,7 @@ function verifNom(nom, idChampErreur) {
 }
 
 function verifContact(contact, idChampErreur) {
-    var regex = /^(\+237[- ]?)?6([-. ]?[0-9]{2}){4}$/;
+    var regex = /^6([-. ]?[0-9]{2}){4}$/;
     const champErreur = document.querySelector(idChampErreur);
 
     if (contact.value == "") {
@@ -235,6 +233,17 @@ numbers.forEach((number) => {
             this.value = 0;
         }
     });
+});
+
+const loyerInput = document.querySelector('#loy_mens');
+loyerInput.addEventListener('input', function () {
+    const cautionInput = document.querySelector('#caution');
+    const valeurLoyer = parseFloat(this.value);
+    if (!isNaN(valeurLoyer)) {
+        cautionInput.value = valeurLoyer * 3;
+    } else {
+        cautionInput.value = '';
+    }
 });
 
 async function getlogement(sitel) {
@@ -306,6 +315,7 @@ site.addEventListener('change', (event) => {
     getlogement(event.target.value);
 });
 
+getlogement(site.value);
 // Récupérer les éléments de date de début et de fin
 const dateDebut = document.querySelector('#date_start');
 const dateFin = document.querySelector('#date_end');
@@ -596,6 +606,14 @@ const searchKeyword = async () => {
                 icon3.setAttribute('title', 'Résilié ce dossier');
                 icon3.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
                 td.appendChild(icon3);
+                if (substringDate(post['date_revision']) <= date) {
+                    let iconRew = document.createElement('ion-icon');
+                    iconRew.setAttribute('name', 'reload-circle-outline');
+                    iconRew.setAttribute('size', 'small');
+                    iconRew.setAttribute('title', 'Renouveller le contrat');
+                    iconRew.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                    td.appendChild(iconRew);
+                }
                 let form = document.createElement('form');
                 form.classList.add('favoris');
                 form.setAttribute('method', 'get');
@@ -628,6 +646,7 @@ const searchKeyword = async () => {
             showContratSelect();
             attacherEcouteursEdition();
             resiliation();
+            renew();
             activeEtat();
             gestionnaireFavori();
             deleteContrat();
@@ -780,6 +799,14 @@ selectTrie.addEventListener('change', async () => {
                 icon3.setAttribute('title', 'Résilié ce dossier');
                 icon3.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
                 td.appendChild(icon3);
+                if (substringDate(post['date_revision']) <= date) {
+                    let iconRew = document.createElement('ion-icon');
+                    iconRew.setAttribute('name', 'reload-circle-outline');
+                    iconRew.setAttribute('size', 'small');
+                    iconRew.setAttribute('title', 'Renouveller le contrat');
+                    iconRew.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                    td.appendChild(iconRew);
+                }
                 let form = document.createElement('form');
                 form.classList.add('favoris');
                 form.setAttribute('method', 'get');
@@ -812,6 +839,7 @@ selectTrie.addEventListener('change', async () => {
             showContratSelect();
             attacherEcouteursEdition();
             resiliation();
+            renew();
             activeEtat();
             gestionnaireFavori();
             deleteContrat();
@@ -979,9 +1007,17 @@ btnFav.addEventListener('click', async () => {
                     let icon3 = document.createElement('ion-icon');
                     icon3.setAttribute('name', 'remove-circle-outline');
                     icon3.setAttribute('size', 'small');
-                    icon3.setAttribute('title', 'Résilié ce dossier');
+                    icon3.setAttribute('title', 'Renouveller le contrat');
                     icon3.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
                     td.appendChild(icon3);
+                    if (substringDate(post['date_revision']) <= date) {
+                        let iconRew = document.createElement('ion-icon');
+                        iconRew.setAttribute('name', 'reload-circle-outline');
+                        iconRew.setAttribute('size', 'small');
+                        iconRew.setAttribute('title', 'Renouveller le contrat');
+                        iconRew.setAttribute('data-id_operatoire', parseInt(post['id_operatoire']));
+                        td.appendChild(iconRew);
+                    }
                     let form = document.createElement('form');
                     form.classList.add('favoris');
                     form.setAttribute('method', 'get');
@@ -1015,6 +1051,7 @@ btnFav.addEventListener('click', async () => {
                 activeEtat();
                 attacherEcouteursEdition();
                 resiliation();
+                renew();
                 gestionnaireFavori();
                 deleteContrat();
             } else {        //aucun resultat correspndant
@@ -1201,7 +1238,7 @@ function attacherEcouteursEdition() {
                 try {
                     const req = await fetch(`getDonnee.php?id=${numero}`);
                     const json = await req.json();
-                    console.log("Nom entité à modifier: " + json[0].entite);
+                    console.log("Nom locataire à modifier: " + json[0].nom_locataire);
 
                     document.querySelector('#siteM').value = json[0].site;
                     document.querySelector('#entiteM').value = json[0].entite;
@@ -1466,7 +1503,7 @@ function comparerJourMoisAnnee(date1, date2) {
 
 //transforme le texte en date
 function substringDate(parts) {
-    var parts = parts.split("-");
+    parts = parts.split("-");
     var jour = parseInt(parts[2], 10); // parseInt pour convertir en nombre entier
     var mois = parseInt(parts[1], 10) - 1; // Mois commence à 0, donc on soustrait 1
     var annee = parseInt(parts[0], 10);
@@ -1478,6 +1515,7 @@ function verifDelai() {
     revision = 0;
     tabVille = [];
     tabRevision = [];
+
     dataContrat.forEach(contrat => {
         var DateFin = substringDate(contrat['date_fin_contrat']);
         DateFin = normaliserDate(DateFin);
@@ -1501,8 +1539,11 @@ function verifDelai() {
                 tabVille.push(contrat['ville']);
             }
         }
-        
-        var dateRevision = substringDate(contrat['date_revision']);
+
+    });
+
+    dataContrat.forEach(contrat => {
+        let dateRevision = substringDate(contrat['date_revision']);
         dateRevision = normaliserDate(dateRevision);
         // date = normaliserDate(date);
 
@@ -1527,10 +1568,11 @@ function verifDelai() {
             // console.log("la date de révision du contrat " + contrat['id'] + " est passée");
         }
     });
+
     console.log(compte + " Contrats à surveiller en tout");
     console.log(tabVille);
     console.log('Nombre de révisions:', revision);
-    console.log('Contrats à réviser:', tabRevision);
+    // console.log('Contrats à réviser:', tabRevision);
 
     const contrats = document.querySelectorAll(".contrat");
     contrats.forEach((contrat) => {
@@ -1546,7 +1588,7 @@ function verifDelai() {
         icnonRenew = document.createElement('ion-icon');
         icnonRenew.setAttribute('name', 'reload-circle-outline');
         icnonRenew.setAttribute('size', 'small');
-        icnonRenew.setAttribute('title', 'Rénouveller le contrat');
+        icnonRenew.setAttribute('title', 'Renouveller le contrat');
         icnonRenew.setAttribute('data-id_operatoire', contrat.getAttribute('data-id_operatoire'));
 
         if (comparerJourMoisAnnee(date, date_fin)) {    //La date d'expiration est aujourd'hui
@@ -1921,23 +1963,31 @@ selectMonth.addEventListener('change', (event) => {
 });
 
 function renew() {
-    const iconsRenew = document.querySelectorAll('#main3 [name="reload-circle-outline"]');
+    const iconsRenew = document.querySelectorAll('#main3 [name="reload-circle-outline"], #main2 [name="reload-circle-outline"]');
     if (iconsRenew) {
         iconsRenew.forEach((iconRenew) => {
             iconRenew.addEventListener('click', (e) => {
-                activeRenew = confirm("Voulez-vous renoveller ce contrat ?");
+                activeRenew = confirm("Voulez-vous renouveller ce contrat?");
                 if (activeRenew) {
-                    regex = /^([0-9]{2}[-/]){2}[0-9]{4}$/;
-                    dateRenew = prompt("Entrez la nouvelle date de fin de ce dossier", "01/01/2024");
-
-                    while (!regex.test(dateRenew)) {
-                        alert("Etrez la date dans le bon format ex: 01/01/2024");
+                    regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+                    while (true) {
                         dateRenew = prompt("Entrez la nouvelle date de fin de ce dossier", "01/01/2024");
+
+                        if (dateRenew === null) {
+                            break;  // L'utilisateur a cliqué sur "Annuler"
+                        }
+                        if (regex.test(dateRenew)) {
+                            break; // La date est au bon format, sortir de la boucle
+                        } else {
+                            alert("Entrez la date dans le bon format ex: 01/01/2024");
+                        }
                     }
 
-                    let idRenew = iconRenew.getAttribute('data-id_operatoire');
-                    console.log(dateRenew);
-                    window.location = `activeRenew.php?id=${idRenew}&dateRenew=${dateRenew}`;
+                    if (dateRenew !== null) {
+                        let idRenew = iconRenew.getAttribute('data-id_operatoire');
+                        console.log(dateRenew);
+                        window.location = `activeRenew.php?id=${idRenew}&dateRenew=${dateRenew}`;
+                    }
                 }
                 e.stopPropagation();
             });
@@ -1949,19 +1999,27 @@ function resiliation() {
     const iconsResiliation = document.querySelectorAll('#main3 [name="remove-circle-outline"], #main2 #synthese [name="remove-circle-outline"]');
     iconsResiliation.forEach((iconResiliation) => {
         iconResiliation.addEventListener('click', (e) => {
-            activeResilition = confirm("Activez la résiliation de ce dossier ?");
+            activeResilition = confirm("Activez la résiliation de ce dossier?");
             if (activeResilition) {
-                regex = /^([0-9]{2}[-/]){2}[0-9]{4}$/;
-                dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
+                regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+                while (true) {
+                    let dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
 
-                while (!regex.test(dateResiliation)) {
-                    alert("Etrez la date dans le bon format ex: 01/01/2024");
-                    dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
+                    if (dateResiliation === null) {
+                        break;  // L'utilisateur a cliqué sur "Annuler"
+                    }
+                    if (regex.test(dateResiliation)) {
+                        break; // La date est au bon format, sortir de la boucle
+                    } else {
+                        alert("Etrez la date dans le bon format ex: 01/01/2024");
+                    }
                 }
 
-                let idResiliation = iconResiliation.getAttribute('data-id_operatoire');
-                console.log(dateResiliation);
-                window.location = `activeResiliation.php?id=${idResiliation}&dateResiliation=${dateResiliation}`;
+                if (dateResiliation !== null) {
+                    let idResiliation = iconResiliation.getAttribute('data-id_operatoire');
+                    console.log(dateResiliation);
+                    window.location = `activeResiliation.php?id=${idResiliation}&dateResiliation=${dateResiliation}`;
+                }
             }
             e.stopPropagation();
         });
@@ -2029,7 +2087,7 @@ function showContratResilies(defaultSelected = "Douala", month = currentMonth) {
     document.querySelector("#tableResilie").innerHTML = "";
     if (dataResiliation.length >= 0) {
         dataResiliation.forEach((resilie) => {
-            let parts = resilie['date_resiliation'].split('-');
+            var parts = resilie['date_resiliation'].split('-');
             let yearMonth = parts[0] + '-' + parts[1];
             if (resilie['ville'] == defaultSelected && month == "") {
                 var percent = 0;
@@ -2466,21 +2524,19 @@ if (sessionType == "super admin" || sessionType == "admin") {
 
     function showResponse(question) {
         messageContainer.style.display = 'flex';
-        if (question !== '') {
-            if (question != '') {
-                addMessage('User', question);
-                fetch('chatbot.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: question })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        addMessage('Bot', data.response, true);
-                    });
-            }
+        if (question.textContent !== '') {
+            addMessage('User', question.textContent);
+            fetch('chatbot.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: question.textContent })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    addMessage('Bot', data.response, true);
+                });
         }
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }

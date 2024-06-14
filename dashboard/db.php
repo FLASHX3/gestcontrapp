@@ -9,5 +9,7 @@ try {
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (PDOException $e) {
-    die("Erreur de connexion: " . $e->getMessage());
+    echo json_encode(['response' => 'Erreur de connexion à la base de données: ' . $e->getMessage()]);
+    exit;
 }
+

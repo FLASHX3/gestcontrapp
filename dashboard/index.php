@@ -102,7 +102,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             }
                             if ($_SESSION['type'] == "super admin") {
                             ?>
-                                <li onclick="activeLi(this);"><a href="#main6"> <ion-icon name="desktop-outline"></ion-icon> Audits du système</a></li>
+                                <li onclick="activeLi(this);"><a href="#main6"> <ion-icon name="desktop-outline"></ion-icon> Audit du système</a></li>
                             <?php
                             }
                             if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin") {
@@ -386,7 +386,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <th>Nom GI</th>
                                     <th>Numero dossier</th>
                                     <th>Etat_contrat <span style="font-size:10px">(Cliquez pour voir le contrat)</span></th>
-                                    <th>Modification </th>
+                                    <th>Actions_Rapides </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -466,6 +466,9 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                             <td class="edition">
                                                 <ion-icon name="create-outline" size="small" title="Modifiez" data-numDoc="numDoc<?php echo $resultat['id']; ?>" data-etat="false"></ion-icon>
                                                 <ion-icon data-id_operatoire="<?= $resultat['id_operatoire']; ?>" name="remove-circle-outline" size="small" title="Résilié ce dossier"></ion-icon>
+                                                <?php if (new DateTime($resultat['date_revision']) <= new DateTime()) { ?>
+                                                    <ion-icon name="reload-circle-outline" size="small" title="Renouveller le contrat" data-id_operatoire="<?= $resultat['id_operatoire']; ?>"></ion-icon>
+                                                <?php } ?>
                                                 <form action="" method="get" class="favoris">
                                                     <button type="button" name="favori" data-id="<?= $resultat['id']; ?>" value="<?= ($resultat['favori'] == 0) ? 1 : 0; ?>">
                                                         <ion-icon name="<?= ($resultat['favori'] == 0) ? "bookmark-outline" : "bookmark"; ?>" size="small" title="Marquez comme important"></ion-icon>
@@ -1000,19 +1003,19 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             <div id="dashboard">
                                 <div id="statistique">
                                     <div class="stats">
-                                        <div style="background-color: rgba(255, 99, 132, 0.2); border-color: rgba(255, 99, 132, 1);"><?= $actif[0]['nbactif']; ?></div> Actifs
+                                        <div style="background-color: rgba(255, 99, 132, 0.2); border-color: rgba(255, 99, 132, 1);"><?= $actif[0]['nbactif']; ?></div> <span>Actifs</span>
                                     </div>
                                     <div class="stats">
-                                        <div style="background-color: rgba(54, 162, 235, 0.2); border-color: rgba(54, 162, 235, 1);"><?= $resilie[0]['nbresilie']; ?></div> Résiliés
+                                        <div style="background-color: rgba(54, 162, 235, 0.2); border-color: rgba(54, 162, 235, 1);"><?= $resilie[0]['nbresilie']; ?></div> <span>Résiliés</span>
                                     </div>
                                     <div class="stats">
-                                        <div style="background-color: rgba(255, 206, 86, 0.2); border-color: rgba(255, 206, 86, 1);"><?= $adhesion[0]['nbadhesion']; ?></div> En cours d'adhésion
+                                        <div style="background-color: rgba(255, 206, 86, 0.2); border-color: rgba(255, 206, 86, 1);"><?= $adhesion[0]['nbadhesion']; ?></div> <span>En cours d'adhésion</span>
                                     </div>
                                     <div class="stats">
-                                        <div style="background-color: rgba(75, 192, 192, 0.2); border-color: rgba(75, 192, 192, 1);"><?= $resiliation[0]['nbresiliation']; ?></div> En cours de résiliation
+                                        <div style="background-color: rgba(75, 192, 192, 0.2); border-color: rgba(75, 192, 192, 1);"><?= $resiliation[0]['nbresiliation']; ?></div> <span>En cours de résiliation</span>
                                     </div>
                                     <div class="stats">
-                                        <div style="background-color: rgba(153, 102, 255, 0.2); border-color: rgba(153, 102, 255, 1);"><?= $favori[0]['nbfavori']; ?></div> Contrats en favori
+                                        <div style="background-color: rgba(153, 102, 255, 0.2); border-color: rgba(153, 102, 255, 1);"><?= $favori[0]['nbfavori']; ?></div> <span>Contrats en favori</span>
                                     </div>
                                 </div>
                                 <div class="iframe-container" style="height: 250px">
@@ -1036,12 +1039,14 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             </div>
                             <div class="chat-icon" onclick="toggleChatBox()">💬</div>
                             <div class="chat-box" id="chatBox">
-                                <div class="chat-question" onclick="showResponse('Dans quelle ville il y a plus de contrats actifs')">Dans quelle ville il y a plus de contrats actifs</div>
-                                <div class="chat-question" onclick="showResponse('Quel site a le plus de contrats actifs')">Quel site a le plus de contrats actifs</div>
-                                <div class="chat-question" onclick="showResponse('Quel est le pourcentage de résiliation en cette année?')">Quel est le pourcentage de résiliation en cette année?</div>
-                                <div class="chat-question" onclick="showResponse('Quel site ramène plus de bénéfice cette année?')">Quel site ramène plus de bénéfice ctte année?</div>
-                                <div class="chat-question" onclick="showResponse('En quelle année a-t-on eu le plus de client?')">En quelle année a-t-on eu le plus de client?</div>
-                                <div class="chat-question" onclick="showResponse('Bonjour, peux tu me pretter ton aide?')">Bonjour, peux tu me pretter ton aide?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Dans quelle ville il y a plus de contrats actifs?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Quel site a le plus de contrats actifs?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Quel est le pourcentage de résiliation en cette année?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Quel site ramène plus de bénéfice ctte année?</div>
+                                <div class="chat-question" onclick="showResponse(this);">En quelle année a-t-on eu le plus de client?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Quels sont les dossiers en cours d'adhesion?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Quel GI gère le site le plus actif?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Bonjour, peux-tu me pretter ton aide?</div>
                             </div>
                             <div id="reponse"></div>
                         </div>
@@ -1057,7 +1062,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             $logs = $requetelog->fetchAll(PDO::FETCH_ASSOC);
                             ?>
                             <div style="display: flex">
-                                <button id="exportLog" onclick="exportToExcel('#allLog','logs')"><ion-icon name="download-outline"></ion-icon>Exportez les logs</button>
+                                <button title="Cliquez pour exporter les logs" id="exportLog" onclick="exportToExcel('#allLog','logs')"><ion-icon name="download-outline"></ion-icon>Exportez les logs</button>
                             </div>
 
                             <table id="allLog">
@@ -1106,7 +1111,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <button id="deleteCompte"><ion-icon name="person-remove" size="small"></ion-icon> Supprimer un compte Utilisateur</button>
                             </div>
                             <form action="newUser.php" method="post" id="newUser" onsubmit="return verifFormNew(this);">
-                                <h2>Créer un nouveau compte <span>&times;</span></h2>
+                                <h2>Créer un nouveau compte <span title="Fermer">&times;</span></h2>
                                 <label for="newName">Nom <span class="obligatoire">*</span></label>
                                 <input type="text" id="newName" name="newName" placeholder="Entrez le nom de l'Utilisateur" required onblur="verifNom(this,'#erreurNomNew');">
                                 <span id="erreurNomNew" style="color: red; font-size: 10px;"></span>
@@ -1122,8 +1127,8 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <input type="submit" value="Créez le compte" name="creez">
                             </form>
                             <form action="deleteUser.php" method="post" id="delUser" onsubmit="return verifDelete();">
-                                <h2>Supprimer un compte <span>&times;</span></h2>
-                                <span style="font-size: 13px; text-align: center; color: red;">(Attention cette opération est irréversible)</span>
+                                <h2>Supprimer un compte <span title="fermer">&times;</span></h2>
+                                <span style="font-size: 13px; text-align: center; color: red;background-color:White; font-weight:bold;">(Attention cette opération est irréversible)</span>
                                 <label for="delnom">Sélectionnez le nom du compte à supprimer</label>
                                 <select name="delnom" id="delnom" required>
                                     <?php

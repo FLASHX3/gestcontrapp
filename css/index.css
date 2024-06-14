@@ -24,7 +24,7 @@
     background-image: url("../images/background.png");
 }
 
-#container #logo img{
+#container #logo img {
     width: 100%;
     margin: auto;
     height: 100%;
@@ -47,7 +47,7 @@ h2 {
     color: white;
 }
 
-input {
+#container form input {
     width: 70%;
     height: 30px;
     border: none;
@@ -60,11 +60,11 @@ input {
     border-bottom: 1px solid white;
 }
 
-input:focus{
+#container form input:focus {
     box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
 }
 
-[type="submit"] {
+#container form [type="submit"] {
     width: 60%;
     padding: 0;
     height: 30px;
@@ -77,7 +77,7 @@ input:focus{
     background-color: transparent;
 }
 
-[type="submit"]:hover {
+#container form [type="submit"]:hover {
     color: brown;
     background-color: white;
 }
@@ -122,24 +122,28 @@ input:focus{
     color: rgb(224, 181, 179);
 }
 
-.forgot {
+#container form .forgot {
     color: black;
     font-size: 12px;
 }
 
-.forgot a {
+#container form .forgot a {
     text-decoration: none;
     color: rgb(224, 181, 179);
 }
 
-.erreur {
+#container form .forgot a:hover {
+    text-decoration: underline;
+}
+
+#container form .erreur {
     color: red;
     font-size: 10px;
     text-align: center;
     display: inline-block;
 }
 
-#forgot{
+#container #forgot {
     top: 0;
     height: 0%;
     opacity: 0;
@@ -151,8 +155,56 @@ input:focus{
     background-color: rgba(224, 181, 79, 0.8);
 }
 
-#forgot:target {
+#container #forgot:target {
     opacity: 1;
     height: 100%;
     pointer-events: all;
+}
+
+#container #forgot form {
+    width: 390px;
+    height: 280px;
+    padding: 5px;
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid black;
+    background-color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#container #forgot form h2 a {
+    top: 0;
+    right: 5px;
+    position: absolute;
+    text-decoration: none;
+}
+
+#container #forgot form h2 a:hover {
+    color: var(--secondary-color);
+}
+
+#container #forgot form button {
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    border-radius: 10px;
+    border: 1px dashed white;
+    background-color: transparent;
+}
+
+#container #forgot form button:hover {
+    background-color: white;
+    color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+#container #forgot form button:hover ion-icon{
+    color: var(--primary-color);
+}
+
+#container #forgot form button ion-icon{
+    top: 2px;
+    right: 2px;
+    position: relative;
 }

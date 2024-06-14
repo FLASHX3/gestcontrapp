@@ -37,30 +37,30 @@ if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin" || $_SESS
             header('location: index.php?modif = Erreur! une/des donnée(s) n\'a/ont pas été spécifiée(s) ⚠');
         }
 
-        $dateRevision = new DateTime($debutM);
-        switch ($revisionM) {
-            case 'Annuelle':
-                $dateRevision->modify('+1 year');
-                break;
-            case 'Biennale':
-                $dateRevision->modify('+2 year');
-                break;
-            case 'Triennale':
-                $dateRevision->modify('+3 year');
-                break;
-            default:
-                $dateRevision->modify('+1 year');
-                break;
-        }
-        $newDaterevision = $dateRevision->format('Y-m-d');
+        // $dateRevision = new DateTime($debutM);
+        // switch ($revisionM) {
+        //     case 'Annuelle':
+        //         $dateRevision->modify('+1 year');
+        //         break;
+        //     case 'Biennale':
+        //         $dateRevision->modify('+2 year');
+        //         break;
+        //     case 'Triennale':
+        //         $dateRevision->modify('+3 year');
+        //         break;
+        //     default:
+        //         $dateRevision->modify('+1 year');
+        //         break;
+        // }
+        // $newDaterevision = $dateRevision->format('Y-m-d');
 
         try {
             $bdd = new PDO("mysql:host=localhost;dbname=gestcontrapp;charset=utf8", 'root', '');
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-            $updateModeoperatoire = $bdd->prepare("UPDATE mode_operatoire SET site = ?, entite = ?, ville = ?, nature_bail = ?, nom_locataire = ?, contact = ?, logement = ?, duree_contrat = ?, loyer_mensuel = ?, frequence_paiement = ?, mode_paiement = ?, nombre_mois = ?, montant_caution = ?, revision_loyer = ?, taux_revision = ?, date_revision = ?, pénalites_retard = ?, date_debut_contrat = ?, date_fin_contrat = ?, droit_enregistrement = ?, nom_GI = ?, numero_dossier = ? WHERE id = ?");
-            $updateModeoperatoire->execute(array($siteM, $entiteM, $villeM, $natureBailM, $nomM, $contactM, $logementM, $timeM, $loyerM, $frequenceM, $modePaiementM, $nombreMoisM, $montantCautionM, $revisionM, $taux_revisionM, $newDaterevision, $penaliteM, $debutM, $finM, $saveM, $giM, $numDoc, $idM));
+            $updateModeoperatoire = $bdd->prepare("UPDATE mode_operatoire SET site = ?, entite = ?, ville = ?, nature_bail = ?, nom_locataire = ?, contact = ?, logement = ?, duree_contrat = ?, loyer_mensuel = ?, frequence_paiement = ?, mode_paiement = ?, nombre_mois = ?, montant_caution = ?, revision_loyer = ?, taux_revision = ?, pénalites_retard = ?, date_debut_contrat = ?, date_fin_contrat = ?, droit_enregistrement = ?, nom_GI = ?, numero_dossier = ? WHERE id = ?");
+            $updateModeoperatoire->execute(array($siteM, $entiteM, $villeM, $natureBailM, $nomM, $contactM, $logementM, $timeM, $loyerM, $frequenceM, $modePaiementM, $nombreMoisM, $montantCautionM, $revisionM, $taux_revisionM, $penaliteM, $debutM, $finM, $saveM, $giM, $numDoc, $idM));
             $updateModeoperatoire->closeCursor();
 
             setlog($_SESSION['id'], 3, "Modification du contrat № $idM");

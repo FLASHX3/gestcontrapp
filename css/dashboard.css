@@ -658,6 +658,7 @@ td {
 }
 
 #main2 td.edition {
+    width: 150px;
     color: white;
     background-color: var(--primary-color);
 }
@@ -854,7 +855,7 @@ td {
 
 #main3 #form_search #month,
 #main4 #formMain4 #monthR {
-    width: 15%;
+    width: 17%;
     height: 100%;
     border: none;
     padding: 5px;
@@ -864,7 +865,7 @@ td {
 }
 
 #main3 #form_search #revision {
-    width: 50px;
+    width: 60px;
     display: flex;
     color: white;
     cursor: pointer;
@@ -932,7 +933,7 @@ td {
 #main3 #form_search input#search,
 #main4 #formMain4 #searchResilie {
     margin: 0;
-    width: 60%;
+    width: 55%;
     outline: none;
     display: block;
     font-size: 17px;
@@ -1038,7 +1039,7 @@ td {
 #main3 #checkliste,
 #main4 #checklisteResiliation {
     top: 70px;
-    left: 50%;
+    left: 25%;
     z-index: 2;
     width: 500px;
     padding: 5px;
@@ -1437,6 +1438,11 @@ td {
     justify-content: center;
 }
 
+#main5 #dashboard #statistique .stats:hover span{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 #main5 .iframe-container {
     width: 50%;
     padding: 5px;
@@ -1451,6 +1457,7 @@ td {
 
 .chat-icon {
     right: 20px;
+    z-index: 10;
     width: 50px;
     bottom: 20px;
     height: 50px;
@@ -1462,21 +1469,25 @@ td {
     border-radius: 50%;
     align-items: center;
     justify-content: center;
+    border: 1px solid white;
     background-color: var(--primary-color);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
 .chat-box {
     right: 20px;
-    width: 300px;
+    z-index: 10;
+    width: 310px;
     display: none;
     bottom: 120px;
     position: fixed;
     overflow-y: auto;
     max-height: 250px;
+    border-radius: 1.5rem;
     flex-direction: column;
     border: 1px solid #ccc;
     background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.1);
 }
 
 .chat-box::-webkit-scrollbar{
@@ -1484,7 +1495,7 @@ td {
 }
 
 .chat-box:hover {
-    z-index: 2;
+    z-index: 11;
 }
 
 .chat-question {
@@ -1498,6 +1509,7 @@ td {
 }
 
 #reponse {
+    z-index: 10;
     right: 80px;
     width: 350px;
     bottom: 20px;
@@ -1514,7 +1526,7 @@ td {
 }
 
 #reponse:hover {
-    z-index: 2;
+    z-index: 11;
 }
 
 #reponse::-webkit-scrollbar {
