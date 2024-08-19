@@ -21,16 +21,16 @@ if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin" || $_SESS
         die('Erreur : ' . $e->getMessage());
     }
 
-    $req = $bdd->prepare("SELECT `entite`, `ville`, `logement` FROM `immeubles_entites` WHERE `site`= ? ORDER BY logement");
-    $req->execute(array($site));
+    $req = $bdd->prepare("SELECT `entite`, `ville`, `logement` FROM `immeubles_entites` WHERE `site`= ? AND logement != ? ORDER BY logement");
+    $req->execute(array($site, "")); 
     $res = $req->fetchAll(PDO::FETCH_ASSOC);
     $nb = $req->rowCount();
     
     if($nb != 0){
         // var_dump($res);
         echo json_encode($res);
-    }else{
-        
+    }else{ 
+        echo json_encode("0");
     }
 
 }

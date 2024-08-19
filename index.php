@@ -13,7 +13,7 @@ if (!isset($_POST['login']) and !isset($_POST['password'])) {
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
         <script src="javascript/index.js" defer></script>
-        <title>GestContrApp</title>
+        <title>SmartContrApp</title>
     </head>
 
     <body>

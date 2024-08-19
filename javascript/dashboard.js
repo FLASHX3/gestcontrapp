@@ -1,5 +1,193 @@
+document.addEventListener("DOMContentLoaded", function () {
+    //onPageLoad();
+    document.querySelector("#site").querySelector(':nth-child(3)').selected = "true";
+    getlogement(site.value);
+});
+
+const customSelects = document.querySelectorAll(".custom-select");
+
+function updateSelectedOptions(customSelect) {
+    const selectedOptions = Array.from(customSelect.querySelectorAll(".option.active")).filter(option => option !== customSelect.querySelector(".option.all-tags")).map(function (option) {
+        return {
+            value: option.getAttribute("data-value"),
+            text: option.textContent.trim()
+        };
+    });
+
+    const selectedValues = selectedOptions.map(function (option) {
+        return option.value;
+    });
+
+    customSelect.querySelector(".tags_input").value = selectedValues.join(';');
+
+    let tagsHTML = "";
+
+    if (selectedOptions.length === 0) {
+        tagsHTML = '<span class="placeholder" style="color:rgb(107,107,107)">Choisissez le(s) logement(s)</span>';
+    } else {
+        const maxTagsToShow = 3;
+        let addtionalTagsCounts = 0;
+
+        selectedOptions.forEach(function (option, index) {
+            if (index < maxTagsToShow) {
+                tagsHTML += '<span class="tag">' + option.text + '<span class="remove-tag" data-value="' + option.value + '">&times;</span></span>';
+            } else {
+                addtionalTagsCounts++;
+            }
+        });
+
+        if (addtionalTagsCounts > 0) {
+            tagsHTML += '<span class="tag">+' + addtionalTagsCounts + '</span>';
+        }
+    }
+
+    customSelect.querySelector('.selected-options').innerHTML = tagsHTML;
+}
+
+function searchTag() {
+    customSelects.forEach(function (customSelect) {
+        const searchInput = customSelect.querySelector(".search-tags");
+        const optionsContainer = customSelect.querySelector(".options");
+        const noResultMessage = customSelect.querySelector(".no-result-message");
+        const options = customSelect.querySelectorAll(".option");
+
+        searchInput.addEventListener("input", function () {
+            const searchTerm = searchInput.value.toLowerCase();
+            const tagErrorMsg = customSelect.querySelector(".tag_error_msg");
+
+            if (searchTerm == "") {
+                noResultMessage.style.display = "none";
+                tagErrorMsg.style.display = "none";
+            }
+
+            options.forEach(function (option) {
+                const optionText = option.textContent.trim().toLowerCase();
+                const shouldShow = optionText.includes(searchTerm);
+                option.style.display = shouldShow ? "block" : "none";
+            });
+
+            const anyOptionsMatch = Array.from(options).some(option => option.style.display === "block");
+            noResultMessage.style.display = anyOptionsMatch ? "none" : "block";
+
+            if (searchTerm) {
+                optionsContainer.classList.add("option-search-active");
+            } else {
+                optionsContainer.classList.remove("option-search-active");
+            }
+        });
+    });
+} searchTag();
+
+function choixtag() {
+    customSelects.forEach(function (customSelect) {
+        const options = customSelect.querySelectorAll(".option");
+        const tagErrorMsg = customSelect.querySelector(".tag_error_msg");
+        options.forEach(function (option) {
+            option.addEventListener("click", function () {
+                if (option.getAttribute("data-value") === "autre") {
+                    handleAutreOption();
+                } else {
+                    option.classList.toggle("active");
+                    verif = surligne(document.querySelector(".select-box"), false);
+                    tagErrorMsg.textContent = "";
+                    tagErrorMsg.style.display = "none";
+                    console.log('Logement correcte');
+                    updateSelectedOptions(customSelect);
+                }
+            });
+        });
+    });
+} choixtag();
+
+function handleAutreOption() {
+    // Fonction pour gérer l'ajout d'un nouveau logement
+    if (document.querySelector('#new_logement')) {
+        document.querySelector('#new_logement').remove();
+    }
+    const autreInput = document.createElement('input');
+    autreInput.type = 'text';
+    autreInput.id = 'new_logement';
+    autreInput.name = 'new_logement';
+    autreInput.setAttribute('onblur', 'verifChampVide(this, "#erreurLogement")');
+    autreInput.placeholder = 'Entrez le nom/numéro du logement';
+
+    // Insérez le nouvel input avant le span avec l'id 'erreurLogement'
+    const logementContainer = document.querySelector("#logement-container");
+    const erreurLogementSpan = document.querySelector('#erreurLogement');
+    logementContainer.insertBefore(autreInput, erreurLogementSpan);
+    document.querySelector('.custom-select').style.display = "none";
+}
+
+function removeTag() {
+    document.addEventListener("click", function (event) {
+        const removeTag = event.target.closest(".remove-tag");
+        if (removeTag) {
+            const customSelect = removeTag.closest(".custom-select");
+            const valueToRemove = removeTag.getAttribute("data-value");
+            const optionToRemove = customSelect.querySelector(".option[data-value='" + valueToRemove + "']");
+            optionToRemove.classList.remove("active");
+
+            updateSelectedOptions(customSelect);
+        }
+    });
+} removeTag();
+
+function showSelectBox() {
+    const selectBoxes = document.querySelectorAll(".select-box");
+    selectBoxes.forEach(function (selectBox) {
+        selectBox.addEventListener("click", function (event) {
+            console.log('Select box clicked:', selectBox);
+            if (!event.target.closest(".tag")) {
+                selectBox.parentNode.classList.toggle("open");
+                console.log('Toggled open class:', selectBox.parentNode.classList.contains('open'));
+            }
+        });
+    });
+}
+showSelectBox();
+
+function activeOption() {
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".custom-select") && !event.target.classList.contains("remove-tag")) {
+            customSelects.forEach(function (customSelect) {
+                customSelect.classList.remove("open");
+            });
+        }
+    });
+} activeOption();
+
+function resetCustomSelects() {
+    customSelects.forEach(function (customSelect) {
+        customSelect.querySelectorAll(".option.actve").forEach(function (option) {
+            option.classList.remove("active");
+        });
+        customSelect.querySelector(".option.all-tags").classList.remove("active");
+        updateSelectedOptions(customSelect);
+    });
+}
+updateSelectedOptions(customSelects[0]);
+
+function autre(select){
+    if(select.value == "autre"){
+        const input_groupe = select.parentElement;
+        const id = select.id;
+        const name = select.name;
+        const erreurspan = select.nextElementSibling;
+        select.remove();
+        const input = document.createElement('input');
+        input.type = "text";
+        input.id = id;
+        input.name = name;
+        input.placeholder = id;
+        input.addEventListener('blur', function() {
+            verifChampVide(this, '#'+erreurspan.id);
+        });
+        input_groupe.insertBefore(input,erreurspan);
+        console.log("new "+id);
+    }
+}
+
 /*-------------------------------------------navbar----------------------------------------*/
-document.addEventListener("DOMContentLoaded", onPageLoad);
 const audio = document.querySelector("#notificationSound");
 
 function onPageLoad() {
@@ -7,7 +195,7 @@ function onPageLoad() {
     main = url.split("#")[1];
     lien = `a[href="#${main}"]`;
     activeLi(document.querySelector(lien).parentElement);
-    //document.querySelector(lien).parentElement.click();
+    // document.querySelector(lien).parentElement.click();
 }
 
 function activeIcon(icon) {
@@ -43,7 +231,7 @@ function activeLi(li) {
     document.querySelector('#checkliste').style.display = "none";
     document.querySelector('#checklisteResiliation').style.display = "none";
     document.querySelector('#customConfirm').style.display = "none";
-    revise.style.display = "none";
+    document.querySelector('#revise').style.display = "none";
     modification.style.display = "none";
     modeOperatoire.style.display = "none";
     if (sessionType == "super admin" || sessionType == "admin") {
@@ -153,7 +341,7 @@ function verifEntite(entite, idChampErreur) {
 }
 
 function verifNom(nom, idChampErreur) {
-    var regex = /^[a-zA-Zéèêâôï -]{3,25}$/;
+    var regex = /^[a-zA-Zéèêâôï -]{3,}$/;
     const champErreur = document.querySelector(idChampErreur);
 
     if (nom.value == "") {
@@ -180,6 +368,7 @@ function verifNom(nom, idChampErreur) {
 
 function verifContact(contact, idChampErreur) {
     var regex = /^6([-. ]?[0-9]{2}){4}$/;
+    var regex2 = /^233([-. ]?[0-9]{2}){3}$/;
     const champErreur = document.querySelector(idChampErreur);
 
     if (contact.value == "") {
@@ -189,7 +378,7 @@ function verifContact(contact, idChampErreur) {
         return false;
     }
     else {
-        if (!regex.test(contact.value)) {
+        if (!regex.test(contact.value) && !regex2.test(contact.value)) {
             champErreur.innerHTML = "Le numéro de téléphone est invalide!";
             console.log("Le numéro de téléphone est invalide!");
             surligne(contact, true);
@@ -208,23 +397,16 @@ function verifChampVide(champ, idChampErreur) {
     const champErreur = document.querySelector(idChampErreur);
     if (champ.value == "") {
         surligne(champ, true);
-        champErreur.innerHTML = "Veuillez remplir ce champ";
-        console.log("Veuillez remplir ce champ");
+        champErreur.innerHTML = `Veuillez remplir ${champ.id}`;
+        console.log(`Veuillez remplir ${champ.id}`);
         return false;
     } else {
         surligne(champ, false);
         champErreur.innerHTML = "";
-        console.log("Le champ est correcte!");
+        console.log("Le champ "+champ.id+" est correcte!");
         return true;
     }
 }
-
-const site = document.querySelector('#site');
-const entite = document.querySelector('#entite');
-const ville = document.querySelector('#ville');
-let logementSelect = document.querySelector('#logement');
-let logementInput = document.querySelector('#logement-input');
-let erreurLogement = document.querySelector('#erreurLogement');
 
 const numbers = document.querySelectorAll('input[type="number"]');
 numbers.forEach((number) => {
@@ -246,76 +428,83 @@ loyerInput.addEventListener('input', function () {
     }
 });
 
-async function getlogement(sitel) {
+const site = document.querySelector('#site');
+const entite = document.querySelector('#entite');
+const ville = document.querySelector('#ville');
+
+async function getlogement(site) {
+    const new_logement = document.querySelector('#new_logement');
+    const erreurLogement = document.querySelector('#erreurLogement');
+    const tagErreurLogement = document.querySelector('.tag_error_msg');
+
+    if (erreurLogement) {
+        erreurLogement.textContent = "";
+        erreurLogement.style.display = "none";
+    }
+    if (tagErreurLogement) {
+        tagErreurLogement.textContent = "";
+        tagErreurLogement.style.display = "none";
+    }
+
     try {
-        const req = await fetch(`entite.php?site=${sitel}`);
+        const req = await fetch(`entite.php?site=${site}`);
         const json = await req.json();
 
+        // Mettre à jour les champs entite et ville
         entite.value = json[0].entite;
         ville.value = json[0].ville;
-        if (json[0].logement == "") { alert('Nous n\'avons pas encore tous les logements de ce site!\nMais vous pouvez saisir le nom/numero du logement'); }
 
-        if (json && json.length > 0 && json[0].logement != "") {
-            // Supprimer l'input s'il existe
-            if (logementInput) {
-                logementInput.remove();
-                logementInput = null;
+        if (json[0] == 0) {
+            handleAutreOption();
+        } else {
+            document.querySelector('.custom-select').style.display = "block";
+            surligne(document.querySelector('.custom-select'), false);
+            if (new_logement) {
+                new_logement.remove(); // Supprimer l'input si présent
             }
 
-            // Créer le select s'il n'existe pas
-            if (!logementSelect) {
-                logementSelect = document.createElement('select');
-                logementSelect.id = 'logement';
-                logementSelect.name = 'logement';
-                logementSelect.setAttribute('onblur', "verifChampVide(this, '#erreurLogement')");
-                document.querySelector('#logement-container').appendChild(logementSelect);
-            }
+            const optionsContainer = document.querySelector('.options');
 
-            logementSelect.innerHTML = "";
-            const placeholderOption = document.createElement('option');
-            placeholderOption.textContent = 'Choisissez un logement';
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            logementSelect.appendChild(placeholderOption);
+            // Supprimer les anciennes options
+            const options = document.querySelectorAll(".option");
+            options.forEach((option) => {
+                option.remove();
+            });
+
+            // Ajout de l'option 'autre'
+            const autreOption = document.createElement('div');
+            autreOption.setAttribute('data-value', "autre");
+            autreOption.classList.add('option');
+            autreOption.textContent = "Autres";
+            optionsContainer.appendChild(autreOption);
+
+            // Ajouter les nouvelles options
             json.forEach((post) => {
-                if (post['logement'] != "") {
-                    const option = document.createElement('option');
-                    option.setAttribute('value', post['logement']);
+                if (post['logement'] !== "") {
+                    const option = document.createElement('div');
+                    option.setAttribute('data-value', post['logement']);
+                    option.classList.add('option');
                     option.textContent = post['logement'];
-                    logementSelect.appendChild(option);
+                    optionsContainer.appendChild(option);
                 }
             });
-            logementSelect.value = json[0].logement;
-        } else {
-            // Supprimer le select s'il existe
-            if (logementSelect) {
-                logementSelect.remove();
-                logementSelect = null;
-            }
 
-            // Créer l'input s'il n'existe pas
-            if (!logementInput) {
-                logementInput = document.createElement('input');
-                logementInput.type = 'text';
-                logementInput.id = 'logement-input';
-                logementInput.name = "logement";
-                logementInput.setAttribute('onblur', "verifChampVide(this, '#erreurLogement')");
-                logementInput.placeholder = 'Entrez le nom/numero du logement';
-                document.querySelector('#logement-container').appendChild(logementInput);
-            }
-
-            logementInput.value = '';
+            // Réinitialiser les événements
+            updateSelectedOptions(document.querySelector('.custom-select'));
+            choixtag();
+            searchTag();
         }
+
     } catch (error) {
         console.log('Erreur lors de la mise à jour des entités : ' + error.message);
     }
-};
+}
 
 site.addEventListener('change', (event) => {
     getlogement(event.target.value);
 });
 
-getlogement(site.value);
+
 // Récupérer les éléments de date de début et de fin
 const dateDebut = document.querySelector('#date_start');
 const dateFin = document.querySelector('#date_end');
@@ -359,6 +548,7 @@ const nextBtns = document.querySelectorAll(".btn-next");
 const wrapperList = document.querySelector("#wrapper-list");
 const progress = document.querySelector("#progress");
 const progressSteps = document.querySelectorAll(".progress-step");
+const customSelect = document.querySelector('.custom-select');
 
 let translate = 0;
 let formStepsNum = 0;
@@ -373,7 +563,8 @@ nextBtns.forEach((btn) => {
             inputsWrapp.forEach((element) => {
                 if (element.value == "") {
                     verif = surligne(element, true);
-                    console.log('Remplissez le champ');
+                    verifChampVide(element, '#'+element.nextElementSibling.id)
+                    console.log(`Remplissez le ${element.id}`);
                 }
             });
             if (verif == false) {
@@ -386,14 +577,36 @@ nextBtns.forEach((btn) => {
         }
         if (btn.id == "next2") {
             wrapper2 = document.querySelector("#main1 form #wrapper2");
-            inputsWrapp = wrapper2.querySelectorAll('input, select');
+            inputsWrapp = wrapper2.querySelectorAll('input:not([type="search"],[type="hidden"]), .selected-options');
+            const tagErrorMsg = document.querySelector(".tag_error_msg");
+            const erreurLogement = document.querySelector("#erreurLogement");
             inputsWrapp.forEach((element) => {
-                if (element.value == "") {
+                if(element.id == "selected-options"){
+                    if (element.textContent == "Choisissez le(s) logement(s)" && !document.querySelector('#new_logement')) {
+                        verif = surligne(element.parentNode, true);
+                        if (tagErrorMsg) {
+                            tagErrorMsg.textContent = "Veuillez remplir ce champ";
+                            tagErrorMsg.style.display = "block";
+                        } else if (erreurLogement) {
+                            erreurLogement.textContent = "Veuillez remplir ce champ";
+                            erreurLogement.style.display == "block";
+                        }
+                    }else if(document.querySelector('#new_logement')){
+                        if (document.querySelector('#new_logement').value == "" ) {
+                            verif = surligne(document.querySelector('#new_logement'), true);
+                        }
+                    } 
+                }
+                else if (element.value == "" ) {
                     verif = surligne(element, true);
-                    console.log('Remplissez le champ');
                 }
             });
             if (verif == false) {
+                if (tagErrorMsg) {
+                    tagErrorMsg.textContent = "";
+                } else if (erreurLogement) {
+                    erreurLogement.style.display = "";
+                }
                 translate -= 376;
                 translate = (translate < -1504) ? -1504 : translate;
                 wrapperList.style.transform = `translateX(${translate}px)`;
@@ -1664,7 +1877,6 @@ function activeCheckliste() {
     const contrats = document.querySelectorAll(".contrat"); //liste des contrats
     const checkliste = document.querySelector("#checkliste"); //checkliste
 
-    divRevision.style = "none";
     revise.style.display = "none";
     modeOperatoire.style.display = "none";
     contrats.forEach((contrat) => {
@@ -2003,7 +2215,7 @@ function resiliation() {
             if (activeResilition) {
                 regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
                 while (true) {
-                    let dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/01/2024");
+                    dateResiliation = prompt("Entrez la date de résiliation de ce dossier", "01/09/2024");
 
                     if (dateResiliation === null) {
                         break;  // L'utilisateur a cliqué sur "Annuler"
@@ -2258,7 +2470,7 @@ selectMonthR.addEventListener('change', (event) => {
 
 searchMain4 = document.querySelector("#searchResilie");
 
-searchMain4.addEventListener('input', async (event) => {
+searchMain4.addEventListener('input', async () => {
     let keyword = document.querySelector('#searchResilie').value;
     if (keyword.length >= 2 || keyword.length == 0) {
         document.querySelector('#tableResilie').innerHTML = "";
@@ -2267,79 +2479,79 @@ searchMain4.addEventListener('input', async (event) => {
         const json = await req.json();
         if (json.length > 0) {
             json.forEach((resilie) => {
-                let parts = resilie['date_resiliation'].split('-');
-                let yearMonth = parts[0] + '-' + parts[1];
-                if (yearMonth == selectMonthR.value) {
-                    var percent = 0;
-                    var control_val = (parseInt(resilie['controle_validation_dossier']) === 1 || parseInt(resilie['controle_validation_dossier']) === 0) ? 1 : 0;
-                    percent = parseInt(resilie['lettre_preavis']) + control_val + parseInt(resilie['transmition_elements']) + parseInt(resilie['prevalidation_dossier']) + parseInt(resilie['validation_provisoire']) + parseInt(resilie['transmition_element_provisoire']) + parseInt(resilie['transmition_reponse']) + parseInt(resilie['etat_lieux']) + parseInt(resilie['transmition_elements_complet']) + parseInt(resilie['approbation_dossier']) + parseInt(resilie['paiement_locataire']) + parseInt(resilie['archivage_resiliation']);
-                    percent = parseFloat(percent * 100 / 12).toFixed(2);
+                // let parts = resilie['date_resiliation'].split('-');
+                // let yearMonth = parts[0] + '-' + parts[1];
+                // if (yearMonth == selectMonthR.value) {
+                var percent = 0;
+                var control_val = (parseInt(resilie['controle_validation_dossier']) === 1 || parseInt(resilie['controle_validation_dossier']) === 0) ? 1 : 0;
+                percent = parseInt(resilie['lettre_preavis']) + control_val + parseInt(resilie['transmition_elements']) + parseInt(resilie['prevalidation_dossier']) + parseInt(resilie['validation_provisoire']) + parseInt(resilie['transmition_element_provisoire']) + parseInt(resilie['transmition_reponse']) + parseInt(resilie['etat_lieux']) + parseInt(resilie['transmition_elements_complet']) + parseInt(resilie['approbation_dossier']) + parseInt(resilie['paiement_locataire']) + parseInt(resilie['archivage_resiliation']);
+                percent = parseFloat(percent * 100 / 12).toFixed(2);
 
-                    var divResilie = document.createElement('div');
-                    divResilie.title = "Cliquez pour voir la checkliste";
-                    divResilie.classList.add('contratResilie');
-                    iconDoc = document.createElement('ion-icon');
-                    iconDoc.setAttribute('name', 'document-text-outline');
-                    pId = document.createElement('p');
-                    pId.textContent = resilie['id_mode'];
-                    pNumero = document.createElement('p');
-                    pNumero.textContent = resilie['numero_dossier'];
-                    pNom = document.createElement('p');
-                    pNom.textContent = resilie['nom_locataire'];
-                    pNomGi = document.createElement('p');
-                    pNomGi.textContent = resilie['nom_GI'];
-                    pLogement = document.createElement('p');
-                    pLogement.textContent = resilie['logement'];
-                    pDateResiliation = document.createElement('p');
-                    pDateResiliation.textContent = resilie['date_resiliation'];
-                    divPercent = document.createElement('div');
-                    divPercent.classList.add('percent');
-                    p1 = document.createElement('p');
-                    p1.style.fontSize = "12px";
-                    p1.textContent = `${percent}%`;
-                    divProgressDivBar = document.createElement('div');
-                    divProgressDivBar.classList.add('progressDivBar');
-                    divProgressDiv = document.createElement('div');
-                    divProgressDiv.classList.add('progressDiv');
-                    divProgressDiv.style.width = `${percent}%`;
-                    if (percent == 100) {
-                        divProgressDiv.style.backgroundColor = "green";
-                    }
-                    divResilie.appendChild(iconDoc);
-                    divResilie.appendChild(pId);
-                    divResilie.appendChild(pNumero);
-                    divResilie.appendChild(pNom);
-                    divResilie.appendChild(pNomGi);
-                    divResilie.appendChild(pLogement);
-                    divResilie.appendChild(pDateResiliation);
-                    divPercent.appendChild(p1);
-                    divProgressDivBar.appendChild(divProgressDiv);
-                    divPercent.appendChild(divProgressDivBar);
-                    divResilie.appendChild(divPercent);
-                    //meta-data
-                    divResilie.setAttribute('id', 'contrat' + parseInt(resilie['id_mode']));
-                    divResilie.setAttribute('data-logement', resilie['logement']);
-                    divResilie.setAttribute('data-nom_client', resilie['nom_locataire']);
-                    divResilie.setAttribute('data-numero_dossier', resilie['numero_dossier']);
-                    divResilie.setAttribute('data-nom_GI', resilie['nom_GI']);
-                    divResilie.setAttribute('data-site', resilie['site']);
-                    divResilie.setAttribute('data-id_mode', resilie['id_mode']);
-                    divResilie.setAttribute('data-lettre_preavis', resilie['lettre_preavis']);
-                    divResilie.setAttribute('data-transmition_elements', resilie['transmition_elements']);
-                    divResilie.setAttribute('data-prevalidation_dossier', resilie['prevalidation_dossier']);
-                    divResilie.setAttribute('data-validation_provisoire', resilie['validation_provisoire']);
-                    divResilie.setAttribute('data-transmition_element_provisoire', resilie['transmition_element_provisoire']);
-                    divResilie.setAttribute('data-transmition_reponse', resilie['transmition_reponse']);
-                    divResilie.setAttribute('data-etat_lieux', resilie['etat_lieux']);
-                    divResilie.setAttribute('data-transmition_elements_complet', resilie['transmition_elements_complet']);
-                    divResilie.setAttribute('data-controle_validation_dossier', resilie['controle_validation_dossier']);
-                    divResilie.setAttribute('data-approbation_dossier', resilie['approbation_dossier']);
-                    divResilie.setAttribute('data-paiement_locataire', resilie['paiement_locataire']);
-                    divResilie.setAttribute('data-archivage_resiliation', resilie['archivage_resiliation']);
-                    divResilie.setAttribute('data-date_activation_resiliation', resilie['date_activation_resiliation']);
-                    divResilie.setAttribute('data-date_resiliation', resilie['date_resiliation']);
-                    document.querySelector("#tableResilie").appendChild(divResilie);
+                var divResilie = document.createElement('div');
+                divResilie.title = "Cliquez pour voir la checkliste";
+                divResilie.classList.add('contratResilie');
+                iconDoc = document.createElement('ion-icon');
+                iconDoc.setAttribute('name', 'document-text-outline');
+                pId = document.createElement('p');
+                pId.textContent = resilie['id_mode'];
+                pNumero = document.createElement('p');
+                pNumero.textContent = resilie['numero_dossier'];
+                pNom = document.createElement('p');
+                pNom.textContent = resilie['nom_locataire'];
+                pNomGi = document.createElement('p');
+                pNomGi.textContent = resilie['nom_GI'];
+                pLogement = document.createElement('p');
+                pLogement.textContent = resilie['logement'];
+                pDateResiliation = document.createElement('p');
+                pDateResiliation.textContent = resilie['date_resiliation'];
+                divPercent = document.createElement('div');
+                divPercent.classList.add('percent');
+                p1 = document.createElement('p');
+                p1.style.fontSize = "12px";
+                p1.textContent = `${percent}%`;
+                divProgressDivBar = document.createElement('div');
+                divProgressDivBar.classList.add('progressDivBar');
+                divProgressDiv = document.createElement('div');
+                divProgressDiv.classList.add('progressDiv');
+                divProgressDiv.style.width = `${percent}%`;
+                if (percent == 100) {
+                    divProgressDiv.style.backgroundColor = "green";
                 }
+                divResilie.appendChild(iconDoc);
+                divResilie.appendChild(pId);
+                divResilie.appendChild(pNumero);
+                divResilie.appendChild(pNom);
+                divResilie.appendChild(pNomGi);
+                divResilie.appendChild(pLogement);
+                divResilie.appendChild(pDateResiliation);
+                divPercent.appendChild(p1);
+                divProgressDivBar.appendChild(divProgressDiv);
+                divPercent.appendChild(divProgressDivBar);
+                divResilie.appendChild(divPercent);
+                //meta-data
+                divResilie.setAttribute('id', 'contrat' + parseInt(resilie['id_mode']));
+                divResilie.setAttribute('data-logement', resilie['logement']);
+                divResilie.setAttribute('data-nom_client', resilie['nom_locataire']);
+                divResilie.setAttribute('data-numero_dossier', resilie['numero_dossier']);
+                divResilie.setAttribute('data-nom_GI', resilie['nom_GI']);
+                divResilie.setAttribute('data-site', resilie['site']);
+                divResilie.setAttribute('data-id_mode', resilie['id_mode']);
+                divResilie.setAttribute('data-lettre_preavis', resilie['lettre_preavis']);
+                divResilie.setAttribute('data-transmition_elements', resilie['transmition_elements']);
+                divResilie.setAttribute('data-prevalidation_dossier', resilie['prevalidation_dossier']);
+                divResilie.setAttribute('data-validation_provisoire', resilie['validation_provisoire']);
+                divResilie.setAttribute('data-transmition_element_provisoire', resilie['transmition_element_provisoire']);
+                divResilie.setAttribute('data-transmition_reponse', resilie['transmition_reponse']);
+                divResilie.setAttribute('data-etat_lieux', resilie['etat_lieux']);
+                divResilie.setAttribute('data-transmition_elements_complet', resilie['transmition_elements_complet']);
+                divResilie.setAttribute('data-controle_validation_dossier', resilie['controle_validation_dossier']);
+                divResilie.setAttribute('data-approbation_dossier', resilie['approbation_dossier']);
+                divResilie.setAttribute('data-paiement_locataire', resilie['paiement_locataire']);
+                divResilie.setAttribute('data-archivage_resiliation', resilie['archivage_resiliation']);
+                divResilie.setAttribute('data-date_activation_resiliation', resilie['date_activation_resiliation']);
+                divResilie.setAttribute('data-date_resiliation', resilie['date_resiliation']);
+                document.querySelector("#tableResilie").appendChild(divResilie);
+                // }
             });
             activeChecklisteResiliation();
         } else {
@@ -2574,7 +2786,12 @@ function verifPassword(password, idChampErreur) {
     var regex = /^[a-zA-Z0-9éèêâôï$#* -]{3,9}$/;
     const champErreur = document.querySelector(idChampErreur);
 
-    if (password.value == "") {
+    if (password.value.length < 9) {
+        surligne(password, true);
+        champErreur.innerHTML = "Le mot de passe doit contenir au moins 9 caractères";
+        return false;
+    }
+    else if (password.value == "") {
         surligne(password, true);
         champErreur.innerHTML = "Veuillez entrez un password";
         return false;
@@ -2620,6 +2837,33 @@ function verifCpassword(cpassword, idChampErreur) {
     }
 }
 
+function verifupdateCpassword(cpassword, idChampErreur) {
+    var regex = /^[a-zA-Z0-9éèêâôï$#* -]{3,9}$/;
+    const champErreur = document.querySelector(idChampErreur);
+
+    if (cpassword.value == "") {
+        surligne(cpassword, true);
+        champErreur.innerHTML = "Veuillez entrez un password";
+        return false;
+    }
+    else {
+        if (!regex.test(cpassword.value)) {
+            surligne(cpassword, true);
+            champErreur.innerHTML = "Password invalide!";
+            return false;
+        }
+        else if (cpassword.value != document.querySelector('#updatePassword').value) {
+            surligne(cpassword, true);
+            champErreur.innerHTML = "Les mots de passe ne sont pas identiques";
+            return false;
+        } else {
+            surligne(cpassword, false);
+            champErreur.innerHTML = "";
+            return true;
+        }
+    }
+}
+
 function verifFormNew(form) {
     nomOk = verifNom(form.newName, "#erreurNomNew");
     loginOk = verifNom(form.newLogin, "#erreurLoginnNew");
@@ -2630,16 +2874,20 @@ function verifFormNew(form) {
 
 if (sessionType == "super admin" || sessionType == "admin") {
     const btncreatCompte = document.querySelector("#main7 #creatCompte");
+    const btnupdateCompte = document.querySelector("#main7 #updateCompte");
     const btndeleteCompte = document.querySelector("#main7 #deleteCompte");
     const formNewUser = document.querySelector("#main7 #newUser");
+    const formupdateUser = document.querySelector("#main7 #updateUser");
     const formDelUser = document.querySelector("#main7 #delUser");
     const fermer1 = document.querySelector('#main7 form#newUser h2 span');
     const fermer2 = document.querySelector('#main7 form#delUser h2 span');
+    const fermer3 = document.querySelector('#main7 form#updateUser h2 span');
 
 
     btncreatCompte.addEventListener('click', () => {
         formNewUser.style.display = "flex";
         formDelUser.style.display = "none";
+        formupdateUser.style.display = "none";
     })
 
     fermer1.addEventListener('click', () => {
@@ -2649,11 +2897,23 @@ if (sessionType == "super admin" || sessionType == "admin") {
     btndeleteCompte.addEventListener('click', () => {
         formDelUser.style.display = "flex";
         formNewUser.style.display = "none";
+        formupdateUser.style.display = "none";
     });
 
     fermer2.addEventListener('click', () => {
         formDelUser.style.display = "none";
     });
+
+    btnupdateCompte.addEventListener('click', () => {
+        formupdateUser.style.display = "flex";
+        formDelUser.style.display = "none";
+        formNewUser.style.display = "none";
+    });
+
+    fermer3.addEventListener('click', () => {
+        formupdateUser.style.display = "none";
+    });
+
 }
 
 function verifDelete() {

@@ -16,14 +16,16 @@ if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin" || $_SESS
         die("Erreur de connexion! " . $e->getMessage());
     }
 
-    if ($searchMain3 === null) {
-        $reqSearch = "SELECT mode_operatoire.nom_GI, mode_operatoire.entite, mode_operatoire.site, mode_operatoire.logement, mode_operatoire.nom_locataire, mode_operatoire.numero_dossier, mode_operatoire.date_fin_contrat, mode_operatoire.etat, adhesion.* FROM adhesion, mode_operatoire WHERE mode_operatoire.id = adhesion.id_operatoire AND ville = ? AND (`mode_operatoire`.`etat` = \"En-cours\" OR `mode_operatoire`.`etat` = \"Actif\")";
+    if ($searchMain3 == null) {
+        $reqSearch = "SELECT mode_operatoire.nom_GI, mode_operatoire.entite, mode_operatoire.site, mode_operatoire.logement, mode_operatoire.nom_locataire, mode_operatoire.numero_dossier, mode_operatoire.date_fin_contrat, mode_operatoire.etat, adhesion.* FROM adhesion, mode_operatoire WHERE mode_operatoire.id = adhesion.id_operatoire AND mode_operatoire.ville = ? AND (`mode_operatoire`.`etat` = \"En-cours\" OR `mode_operatoire`.`etat` = \"Actif\")";
+        $smtp = $bdd->prepare($reqSearch);
+        $smtp->execute(array($ville));
     } else {
-        $reqSearch = "SELECT mode_operatoire.nom_GI, mode_operatoire.entite, mode_operatoire.site, mode_operatoire.logement, mode_operatoire.nom_locataire, mode_operatoire.numero_dossier, mode_operatoire.date_fin_contrat, mode_operatoire.etat, adhesion.* FROM adhesion, mode_operatoire WHERE mode_operatoire.id = adhesion.id_operatoire AND ville = ? AND (`nom_locataire` LIKE ? OR `numero_dossier` LIKE ?) AND (`mode_operatoire`.`etat` = \"En-cours\" OR `mode_operatoire`.`etat` = \"Actif\")";
+        $reqSearch = "SELECT mode_operatoire.nom_GI, mode_operatoire.entite, mode_operatoire.site, mode_operatoire.logement, mode_operatoire.nom_locataire, mode_operatoire.numero_dossier, mode_operatoire.date_fin_contrat, mode_operatoire.etat, adhesion.* FROM adhesion, mode_operatoire WHERE mode_operatoire.id = adhesion.id_operatoire AND (`nom_locataire` LIKE ? OR `numero_dossier` LIKE ?) AND (`mode_operatoire`.`etat` = \"En-cours\" OR `mode_operatoire`.`etat` = \"Actif\")";
+        $smtp = $bdd->prepare($reqSearch);
+        $smtp->execute(array('%' . $searchMain3 . '%', '%' . $searchMain3 . '%'));
     }
 
-    $smtp = $bdd->prepare($reqSearch);
-    $smtp->execute(array($ville, '%' . $searchMain3 . '%', '%' . $searchMain3 . '%'));
     $res = $smtp->fetchAll(PDO::FETCH_ASSOC);
 
     // var_dump($res);

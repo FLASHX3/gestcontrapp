@@ -91,7 +91,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                     <div id="nav">
                         <ul>
                             <li onclick="activeLi(this);"><a href="#main1"> <ion-icon name="add-outline"></ion-icon> Ajouter un contrat</a></li>
-                            <li onclick="activeLi(this);"><a href="#main2" class="on"> <ion-icon name="clipboard-outline"></ion-icon> Synthèse des contrats</a></li>
+                            <li onclick="activeLi(this);" class="actif"><a href="#main2" class="on"> <ion-icon name="clipboard-outline"></ion-icon> Synthèse des contrats</a></li>
                             <li onclick="activeLi(this);"><a href="#main3"> <ion-icon name="bar-chart-outline"></ion-icon> Evolution des contrats </a></li>
                             <li onclick="activeLi(this);"><a href="#main4"> <ion-icon name="document-text-outline"></ion-icon> Contrats Résiliés </a></li>
                             <?php
@@ -132,8 +132,9 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <div class="wrapper" id="wrapper1">
                                     <div class="input-group">
                                         <label for="site">Site <span class="obligatoire">*</span></label>
-                                        <select name="site" id="site" required>
-                                            <option disabled>Choisissez un site</option>
+                                        <select name="site" id="site" required oninput="autre(this)">
+                                            <option value="none" disabled>--Choisissez un site--</option>
+                                            <option value="autre">Autre</option>
                                             <?php foreach ($sites as $site) {
                                             ?>
                                                 <option value="<?= $site['site'] ?>"><?= $site['site'] ?></option>
@@ -141,11 +142,13 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                             }
                                             ?>
                                         </select>
+                                        <span id="erreurSite" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="entite">Entité <span class="obligatoire">*</span></label>
-                                        <select name="entite" id="entite" required onchange="verifEntite(this, '#erreurEntite')" onblur="verifEntite(this, '#erreurEntite')">
-                                            <option disabled>Choisissez une entité</option>
+                                        <select name="entite" id="entite" required onchange="verifEntite(this, '#erreurEntite')" onblur="verifEntite(this, '#erreurEntite')" oninput="autre(this)">
+                                            <option value="none" selected disabled>--Choisissez une entité--</option>
+                                            <option value="autre">Autre</option>
                                             <?php foreach ($entites as $entite) {
                                             ?>
                                                 <option value="<?= $entite['entite'] ?>"><?= $entite['entite'] ?></option>
@@ -157,8 +160,9 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     </div>
                                     <div class="input-group">
                                         <label for="ville">Ville <span class="obligatoire">*</span></label>
-                                        <select name="ville" id="ville" required>
-                                            <option disabled>Choisissez une ville</option>
+                                        <select name="ville" id="ville" required onchange="verifChampVide(this, '#erreurVille');" oninput="autre(this)">
+                                            <option value="none" selected disabled>--Choisissez une ville--</option>
+                                            <option value="autre">Autre</option>
                                             <?php foreach ($villes as $ville) {
                                             ?>
                                                 <option value="<?= $ville['ville'] ?>"><?= $ville['ville'] ?></option>
@@ -166,15 +170,18 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                             }
                                             ?>
                                         </select>
+                                        <span id="erreurVille" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
                                         <label for="natbail">Nature du bail <span class="obligatoire">*</span></label>
-                                        <select name="natbail" id="natbail" required>
-                                            <option disabled>Choisissez la nature du bail</option>
+                                        <select name="natbail" id="natbail" required oninput="autre(this)">
+                                            <option value="none" selected disabled>--Choisissez la nature du bail--</option>
+                                            <option value="autre">Autre</option>
                                             <option value="Commercial">Commercial</option>
-                                            <option value="Habitation">Habitation</option>
+                                            <option value="Habitation" selected>Habitation</option>
                                             <option value="Professionnel">Professionnel</option>
                                         </select>
+                                        <span id="erreurNatBail" style="color: red; font-size: 14px;"></span>
                                     </div>
                                     <div class="">
                                         <a href="#" id="next1" class="btn btn-next width-50 ml-auto">Next<ion-icon name="chevron-forward" size="large"></ion-icon></a>
@@ -193,10 +200,23 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     </div>
                                     <div class="input-group" id="logement-container">
                                         <label for="logement">Logement / Boutique / Référence du lieu <span class="obligatoire">*</span></label>
-                                        <select name="logement" id="logement" required onblur="verifChampVide(this,'#erreurLogement')">
-                                            <option disabled>Choisissez un logement</option>
-                                            <option value="autres">Autres</option>
-                                        </select>
+                                        <div class="custom-select" id="logement-select">
+                                            <div class="select-box">
+                                                <input type="hidden" class="tags_input" name="logement" hidden>
+                                                <div class="selected-options" id="selected-options">
+                                                </div>
+                                                <div class="arrow">
+                                                    <ion-icon name="chevron-down-outline" size="small"></ion-icon>
+                                                </div>
+                                            </div>
+                                            <div class="options">
+                                                <div class="option-search-tags">
+                                                    <input type="search" class="search-tags" id="logement" name="search" placeholder="Search tags...">
+                                                </div>
+                                                <div class="no-result-message" style="display:none;">No result match</div>
+                                            </div>
+                                            <span class="tag_error_msg error" style="color:red; font-size: 14px;"></span>
+                                        </div>
                                         <span id="erreurLogement" style="color:red; font-size: 14px;"></span>
                                     </div>
                                     <div class="input-group">
@@ -258,14 +278,15 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                         <label for="rev_loyer">Révision loyer <span class="obligatoire">*</span></label>
                                         <select name="rev_loyer" id="rev_loyer" required>
                                             <option disabled>Choisissez un fréquence de révision</option>
+                                            <option value="autre">Autre</option>
                                             <option value="Annuelle">Annuelle</option>
-                                            <option value="Biennale">Biennale</option>
+                                            <option value="Biennale" selected>Biennale</option>
                                             <option value="Triennale">Triennale</option>
                                             <option value="Autre">Autre</option>
                                         </select>
                                     </div>
                                     <div class="input-group">
-                                        <label for="taux">Taux de révision (en %) <span class="obligatoire">*</span></label>
+                                        <label for="taux_revision">Taux de révision (en %) <span class="obligatoire">*</span></label>
                                         <input type="number" name="taux_revision" id="taux_revision" value="10" placeholder="Entrez le taux de révision" required onblur="verifChampVide(this, '#erreurRevision');">
                                         <span id="erreurRevision" style="color: red; font-size: 14px;"></span>
                                     </div>
@@ -852,7 +873,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 ?>
                             </select>
                             <input type="month" id="monthR">
-                            <input type="search" name="search" id="searchResilie" value="" placeholder="search: tapez au moins 2 lettres" oninput="">
+                            <input type="search" name="search" id="searchResilie" value="" placeholder="search: tapez au moins 2 lettres">
                         </form>
 
                         <div id="allResiliations" data-resultat="<?php echo  htmlspecialchars(json_encode($dataResiliation)); ?> "></div>
@@ -880,7 +901,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                     <tr>
                                         <td id="dateAjoutR">Date : </td>
                                         <td>N° D'ESPACE : </td>
-                                        <td id="numEspaceR"><input type="text" style="width: 100%; height: 100%;" placeholder="id"></td>
+                                        <td id="numEspaceR"><input type="text" style="width: 100%; height: 100%;" placeholder="id_espace" name="numEspaceR"></td>
                                     </tr>
                                     <tr>
                                         <td id="nomClientR">Nom client : </td>
@@ -1046,7 +1067,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <div class="chat-question" onclick="showResponse(this);">En quelle année a-t-on eu le plus de client?</div>
                                 <div class="chat-question" onclick="showResponse(this);">Quels sont les dossiers en cours d'adhesion?</div>
                                 <div class="chat-question" onclick="showResponse(this);">Quel GI gère le site le plus actif?</div>
-                                <div class="chat-question" onclick="showResponse(this);">Bonjour, peux-tu me pretter ton aide?</div>
+                                <div class="chat-question" onclick="showResponse(this);">Bonjour, peux-tu me preter ton aide?</div>
                             </div>
                             <div id="reponse"></div>
                         </div>
@@ -1108,6 +1129,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                             </div>
                             <div style="display: flex;">
                                 <button id="creatCompte"><ion-icon name="person-add" size="small"></ion-icon> Créer un compte Utilisateur</button>
+                                <button id="updateCompte"><ion-icon name="person" size="small"></ion-icon> Modifier un compte Utilisateur</button>
                                 <button id="deleteCompte"><ion-icon name="person-remove" size="small"></ion-icon> Supprimer un compte Utilisateur</button>
                             </div>
                             <form action="newUser.php" method="post" id="newUser" onsubmit="return verifFormNew(this);">
@@ -1116,8 +1138,8 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <input type="text" id="newName" name="newName" placeholder="Entrez le nom de l'Utilisateur" required onblur="verifNom(this,'#erreurNomNew');">
                                 <span id="erreurNomNew" style="color: red; font-size: 10px;"></span>
                                 <label for="newLogin">Login <span class="obligatoire">*</span></label>
-                                <input type="text" id="newLogin" name="newLogin" placeholder="Entrez le login de l'utilisateur" required onblur="verifNom(this,'#erreurLoginnNew');">
-                                <span id="erreurLoginnNew" style="color: red; font-size: 10px;"></span>
+                                <input type="text" id="newLogin" name="newLogin" placeholder="Entrez le login de l'utilisateur" required onblur="verifNom(this,'#erreurLoginNew');">
+                                <span id="erreurLoginNew" style="color: red; font-size: 10px;"></span>
                                 <label for="newPassword">Password <span class="obligatoire">*</span></label>
                                 <input type="password" id="newPassword" name="newPassword" maxlength="9" placeholder="Créez un nouveau mot de passe" required onblur="verifPassword(this,'#erreurPasswordNew');">
                                 <span id="erreurPasswordNew" style="color: red; font-size: 10px;"></span>
@@ -1125,6 +1147,29 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
                                 <input type="password" id="newCPassword" name="newCPassword" maxlength="9" placeholder="Rentrez le même mot de passe" required onblur="verifCpassword(this,'#erreurCpasswordNew');">
                                 <span id="erreurCpasswordNew" style="color: red; font-size: 10px;"></span>
                                 <input type="submit" value="Créez le compte" name="creez">
+                            </form>
+                            <form action="updateUser.php" method="post" id="updateUser" onsubmit="return verifupdateCpassword();">
+                                <h2>Modifier un compte <span>&times;</span></h2>
+                                <label for="updnom">Sélectionner le nom du compte à modifier <span class="obligatoire">*</span></label>
+                                <select name="updnom" id="updnom" required>
+                                    <?php
+                                    foreach ($users as $user) {
+                                    ?>
+                                        <option value="<?= $user['nom']; ?>"><?= $user['nom']; ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
+                                <label for="updatelogin">Login <span class="obligatoire">*</span></label>
+                                <input type="text" name="updatelogin" id="updatelogin" placeholder="Entrez le login de l'utilisateur" required onblur="verifNom(this,'#erreurupdateLogin');">
+                                <span id="erreurupdateLogin" style="color: red; font-size: 10px;"></span>
+                                <label for="updatePassword">Password <span class="obligatoire">*</span></label>
+                                <input type="password" id="updatePassword" name="updatePassword" maxlength="9" placeholder="Modifier le mot de passe" required onblur="verifPassword(this,'#erreurupdatePassword');">
+                                <span id="erreurupdatePassword" style="color: red; font-size: 10px;"></span>
+                                <label for="updateCPassword">Confirmez le password <span class="obligatoire">*</span></label>
+                                <input type="password" id="updateCPassword" name="updateCPassword" maxlength="9" placeholder="Rentrez le même mot de passe" required onblur="verifupdateCpassword(this,'#erreurupdateCPassword');">
+                                <span id="erreurupdateCPassword" style="color: red; font-size: 10px;"></span>
+                                <input type="submit" name="update" value="Modifier le compte">
                             </form>
                             <form action="deleteUser.php" method="post" id="delUser" onsubmit="return verifDelete();">
                                 <h2>Supprimer un compte <span title="fermer">&times;</span></h2>
@@ -1198,6 +1243,7 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
         $nom = strip_tags(htmlspecialchars($_POST['nom']));
         $contact = strip_tags(htmlspecialchars($_POST['contact']));
         $logement = strip_tags(htmlspecialchars($_POST['logement']));
+        $new_logement = (isset($_POST['new_logement'])) ? htmlspecialchars(strip_tags($_POST['new_logement'])) : null;
         $time_c = strip_tags(htmlspecialchars($_POST['time_c']));
         $loy_mens = strip_tags(htmlspecialchars($_POST['loy_mens']));
         $freq_paie = strip_tags(htmlspecialchars($_POST['freq_paie']));
@@ -1235,6 +1281,46 @@ if (isset($_SESSION["id"]) && $_SESSION['id'] != 0) {
             $connexion = new PDO("mysql:host=localhost;dbname=gestcontrapp;charset=utf8", 'root', '');
             $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+            $requeteVille = $connexion->prepare("SELECT DISTINCT ville FROM immeubles_entites WHERE ville = ?");
+            $requeteVille->execute(array($ville));
+            $villes = $requeteVille->fetchAll(PDO::FETCH_ASSOC);
+    
+            $requeteSite = $connexion->prepare("SELECT DISTINCT site FROM immeubles_entites WHERE site = ?");
+            $requeteSite->execute(array($site));
+            $sites = $requeteSite->fetchAll(PDO::FETCH_ASSOC);
+    
+            $requeteEntite = $connexion->prepare("SELECT DISTINCT entite FROM immeubles_entites WHERE entite = ?");
+            $requeteEntite->execute(array($entite));
+            $entites = $requeteEntite->fetchAll(PDO::FETCH_ASSOC);
+    
+            if(count($sites) == 0 || count($villes) == 0 || count($entites) == 0){
+                if($new_logement != null){
+                    $logement .= $new_logement;
+                }
+                $ajoutsite = $connexion->prepare("INSERT INTO immeubles_entites VALUES ('',?,?,?,'','',?)");
+                $ajoutsite->execute(array($entite,$site,$ville,$logement));
+            }
+
+            if($new_logement != null && (count($sites) != 0 && count($villes) != 0 && count($entites) != 0)){
+                $logement .= $new_logement;
+                echo $logement;
+                
+                $tableau = explode(";", $logement);
+                echo '<pre>';
+                print_r($tableau);
+                echo '</pre>';
+                foreach($tableau as $element){
+                    $verifyLogement = $connexion->prepare("SELECT DISTINCT * FROM immeubles_entites WHERE logement = ? AND site = ?");
+                    $verifyLogement->execute(array($element,$site));
+                    $logementexist = $verifyLogement->rowCount();
+                    if($logementexist == 0){
+                        $ajoutLogement = $connexion->prepare("INSERT INTO immeubles_entites VALUES ('',?,?,?,'','',?)");
+                        $ajoutLogement->execute(array($entite,$site,$ville,$element));
+                    }else{
+                    }
+                }
+            }
 
             $requete = $connexion->prepare("INSERT INTO mode_operatoire VALUE ('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'',?,0)");
             $requete->execute(array($site, $entite, $ville, $natbail, $nom, $contact, $logement, $time_c, $loy_mens, $freq_paie, $mode_paie, $nb_mois_paye, $caution, $rev_loyer, $taux_revision, $newDaterevision, $pen_retard, $date_start, $date_end, $droit_reg, $gi, $etat));

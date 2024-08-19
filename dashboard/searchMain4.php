@@ -16,14 +16,16 @@ if ($_SESSION['type'] == "admin" || $_SESSION['type'] == "super admin" || $_SESS
         die("Erreur de connexion! " . $e->getMessage());
     }
 
-    if ($searchMain4 === null) {
+    if ($searchMain4 == null) {
         $reqSearch = "SELECT mode_operatoire.nom_locataire, mode_operatoire.ville, mode_operatoire.logement, mode_operatoire.numero_dossier, mode_operatoire.nom_GI, mode_operatoire.site, `resiliation`.* FROM `mode_operatoire`, `resiliation` WHERE `mode_operatoire`.`id` = `resiliation`.`id_mode` AND mode_operatoire.ville = ?";
+        $smtp = $bdd->prepare($reqSearch);
+        $smtp->execute(array($ville));
     } else {
-        $reqSearch = "SELECT mode_operatoire.nom_locataire, mode_operatoire.ville, mode_operatoire.logement, mode_operatoire.numero_dossier, mode_operatoire.nom_GI, mode_operatoire.site, `resiliation`.* FROM `mode_operatoire`, `resiliation` WHERE `mode_operatoire`.`id` = `resiliation`.`id_mode` AND mode_operatoire.ville = ? AND CONCAT_WS('|', mode_operatoire.numero_dossier, mode_operatoire.nom_locataire, mode_operatoire.nom_GI, mode_operatoire.logement) LIKE ?";
+        $reqSearch = "SELECT mode_operatoire.nom_locataire, mode_operatoire.ville, mode_operatoire.logement, mode_operatoire.numero_dossier, mode_operatoire.nom_GI, mode_operatoire.site, `resiliation`.* FROM `mode_operatoire`, `resiliation` WHERE `mode_operatoire`.`id` = `resiliation`.`id_mode` AND CONCAT_WS('|', mode_operatoire.numero_dossier, mode_operatoire.nom_locataire, mode_operatoire.nom_GI, mode_operatoire.logement) LIKE ?";
+        $smtp = $bdd->prepare($reqSearch);
+        $smtp->execute(array('%' . $searchMain4 . '%'));
     }
 
-    $smtp = $bdd->prepare($reqSearch);
-    $smtp->execute(array($ville, '%' . $searchMain4 . '%'));
     $res = $smtp->fetchAll(PDO::FETCH_ASSOC);
 
     // var_dump($res);

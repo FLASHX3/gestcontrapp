@@ -411,6 +411,9 @@ select {
     margin-left: auto;
 }
 
+
+
+
 /*----------------------------------------main2---------------------------------------*/
 
 #main2 {
@@ -1674,6 +1677,7 @@ td {
 }
 
 #main7 #creatCompte,
+#main7 #updateCompte,
 #main7 #deleteCompte {
     width: 250px;
     height: 50px;
@@ -1691,11 +1695,13 @@ td {
 }
 
 #main7 #creatCompte:hover,
+#main7 #updateCompte:hover,
 #main7 #deleteCompte:hover {
     transform: scale(0.95);
 }
 
 #main7 form#newUser,
+#main7 #updateUser,
 #main7 #delUser {
     top: 110px;
     width: 400px;
@@ -1720,11 +1726,13 @@ td {
 }
 
 #main7 form#newUser h2,
+#main7 #updateUser h2,
 #main7 form#delUser h2 {
     text-align: center;
 }
 
 #main7 form#newUser h2 span,
+#main7 #updateUser h2 span,
 #main7 form#delUser h2 span {
     float: right;
     font-size: 30px;
@@ -1732,11 +1740,13 @@ td {
 }
 
 #main7 form#newUser h2 span:hover,
+#main7 #updateUser h2 span:hover,
 #main7 form#delUser h2 span:hover {
     color: var(--secondary-color);
 }
 
 #main7 form#newUser input,
+#main7 #updateUser input,
 #main7 form#delUser input {
     width: 100%;
     outline: none;
@@ -1748,12 +1758,22 @@ td {
 }
 
 #main7 form#newUser input[type="submit"],
+#main7 #updateUser input[type="submit"],
 #main7 form#delUser input[type="submit"] {
     color: green;
     cursor: pointer;
     font-weight: bold;
     transition: all 0.5;
     background-color: white;
+}
+
+#main7 #updateUser input[type="submit"] {
+    color: var(--secondary-color);
+}
+
+#main7 #updateUser input[type="submit"]:hover {
+    color: white;
+    background-color: var(--secondary-color);
 }
 
 #main7 form#delUser input[type="submit"] {
@@ -1796,4 +1816,122 @@ td {
 
 #main7 table#allusers tr:nth-child(even) {
     background-color: var(--thirty-color);
+}
+
+.custom-select{
+    position: relative;
+    width: 100%;
+    height: 56px;
+}
+
+.select-box{
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 47px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.selected-options{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0;
+}
+
+.tag{
+    background-color: #f2f2f2;
+    color: #000;
+    border-radius: 5px;
+    margin-right: 5px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.remove-tag{
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.arrow{
+    margin: 0 10px;
+}
+
+[name="chevron-down-outline"]{
+    color: #404040;
+    /* font-size: 30px; */
+}
+
+.options{
+    display: none;
+    position: absolute;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-top: none;
+    max-height: 225px;
+    overflow-y: auto;
+    z-index: 1;
+    box-shadow: 0 4px 8px rgb(0,0,0,0.1);
+}
+
+.open .options{
+    display: block;
+}
+
+.options-search-tags{
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    padding: 8px 0px;
+    margin: 8px;
+}
+
+.search-tags{
+    width: 100%;
+    bottom: none;
+    outline: none;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.clear{
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0;
+    color: #000;
+    top: 10px;
+    left: auto;
+    right: 15px;
+}
+
+.option{
+    padding: 12px;
+    cursor: pointer;
+}
+
+.option.active{
+    color: #000;
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.tag:hover,
+.option:hover{
+    background-color: #eaeaea;
+}
+
+.no-result-message{
+    padding: 0px 0px 12px 12px;
+}
+
+.error{
+    color: #ff1a2a;
+    margin-top: 8px;
 }
